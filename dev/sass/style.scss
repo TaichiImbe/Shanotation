@@ -1,0 +1,15 @@
+header{
+    position: fixed;
+}
+
+.canvas-wrapper{
+    position: relative;
+    margin: 0;
+    font-size: 0;
+    & canvas{
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        border: 1px solid #000000;
+    }
+}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<html>
+  <head>
+      <% include common/_head %>
+      <!-- とりあえずコネクション周りは残しておく -->
+    <script src = '/socket.io/socket.io.js'></script>
+    <script>
+        var socket = io.connect('http://localhost:4000');
+  
+        socket.on('connect', function (msg) {
+          console.log('connect');
+        });
+        function send(obj){
+          socket.emit('object',obj);
+
+        }
+      </script>
+
+  </head>
+  <body>
+    <script src = './js/test.js'></script>
+    <% include common/_function %>
+    <% include common/_fabric %>
+    <script src = './js/test2.js'></script>
+  </body>
+</html><!DOCTYPE html></html>
