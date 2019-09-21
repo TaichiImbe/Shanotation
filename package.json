@@ -41,6 +41,7 @@
     "gulp-webserver": "^0.9.1",
     "jquery": "^3.4.1",
     "minimist": "^1.2.0",
+    "nodemon": "^1.19.2",
     "pdfjs-dist": "^2.2.228",
     "socket.io": "^2.2.0",
     "spectrum-colorpicker": "^1.8.0",
