@@ -8,7 +8,7 @@ function listen(req, res, server) {
 
     io = socketIO.listen(server);
     console.log(req.ip);
-    filename = 'analysdata.txt';
+    filename = req.ip.toString() + 'analysdata.txt';
     io.sockets.on('connection', function (socket) {
         // console.log('connection');
         socket.on('massage', function (data) {
@@ -34,7 +34,7 @@ function listen(req, res, server) {
 }
 
 function fileWrite(data) {
-    fs.open('Annolog.txt', 'a', function (err, fd) {
+    fs.open(filename, 'a', function (err, fd) {
 
         if (err) throw err;
         fs.writeFileSync(fd, data + '\n', 'utf8', function (err) {
