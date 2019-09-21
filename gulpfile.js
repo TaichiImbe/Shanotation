@@ -12,9 +12,10 @@ var source = require('vinyl-source-stream');
 var transform = require('vinyl-transform');
 var buffer = require('vinyl-buffer');
 var minimist = require('minimist');
-var app = require('./app');
+// var app = require('./server/app');
+var nodemon = require('nodemon');
 
-var defaultlist = ['sass','ejs','js','serve','watch']
+var defaultlist = ['sass','ejs','js','watch','serve']
 // var defaultlist = ['sass','js','serve','watch']
 
 var options = minimist(process.argv.slice(2),{
@@ -83,7 +84,27 @@ gulp.task('ejs', function (err) {
     err();
 });
 gulp.task('serve', function (err) {
-    app.serve();
+	nodemon({
+		script: './app.js',
+		ignore:['dev/*','node_modules/*','pdf/*','views/*'],
+		env:{
+			'NODE_ENV': 'development'
+		},
+	})
+	.on('start',function(){
+		console.log('start');
+	})
+	.on('restart',function(files){
+		console.log('restart', files);
+		// this.stdout.on('data',function(chunk){
+
+		// });
+		// this.stderr.on('data',function(chunk){
+		// 	process.stderr.write(chunk);
+		// });
+	});
+
+    // app.serve();
     err();
 });
 
@@ -96,5 +117,6 @@ gulp.task('watch', function (err) {
 });
 
 gulp.task('default', gulp.series(gulp.parallel(defaultlist)) ,function (err) {
+// gulp.task('default', gulp.series(gulp.parallel('serve')) ,function (err) {
     err();
 });

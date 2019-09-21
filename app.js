@@ -9,7 +9,7 @@ var fabric = require('fabric').fabric;
 var sock = require('./server/sock');
 var server;
 
-function serve(route, handle) {
+// function serve(route, handle) {
     // if (server) {
     //     server.close(function () {
     //         // console.log('server is close');
@@ -65,9 +65,6 @@ function serve(route, handle) {
     // });
 
     
-}
-function rebuild() {
-    
-}
+// }
 
-exports.serve = serve;
+// exports.serve = serve;
