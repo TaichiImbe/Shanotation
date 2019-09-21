@@ -91,6 +91,7 @@ gulp.task('watch', function (err) {
     gulp.watch('dev/sass/*.scss', gulp.task(['sass']));
     gulp.watch('dev/ejs/**/*.ejs', gulp.task(['ejs']));
 	gulp.watch('dev/js/**/*.js', gulp.task(['js']));
+	// gulp.watch(['server/**/*.js','app.js'], gulp.task(['serve']));
     err();
 });
 

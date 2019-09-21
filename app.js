@@ -6,12 +6,20 @@ var route = express.Router();
 var url = require('url');
 
 var fabric = require('fabric').fabric;
-var sock = require('./sock');
+var sock = require('./server/sock');
+var server;
 
 function serve(route, handle) {
-    var server = app.listen(4000, function () {
+    // if (server) {
+    //     server.close(function () {
+    //         // console.log('server is close');
+    //     });
+    // }
+    server = app.listen(4000, function () {
         console.log('Node js is listening to PORT:' + server.address().port);
     });
+
+    // server = spawn()
 
     app.use(bodyParser.urlencoded({
         extended: true
@@ -34,10 +42,11 @@ function serve(route, handle) {
     //     res.sendFile(path.resolve('./' + req.url));
     // })
 
-    app.get('/', function (req, res, next) {
+    app.get('/index', function (req, res, next) {
         // console.log(req.url);
         // console.log(req);
         // console.log(__dirname);
+        sock.listen(req,res,server);
         res.render('./index', { fs: fs, fabric: fabric });
     });
     app.get('/pdf', function (req, res, next) {
@@ -45,14 +54,19 @@ function serve(route, handle) {
         console.log('pdf local load');
         res.sendFile(req.url); 
     });
-    app.post('/', (req, res) => {
-        // console.log('POST');
-        // console.log(req.body);
-        res.render('./index', { fs: fs, fabric: fabric });
-    });
+    app.get('/teacher', function (req, res, next) {
+        sock.listen(req, res, server);
+        res.render('./teacher');
+    })
+    // app.post('/', (req, res) => {
+    //     // console.log('POST');
+    //     // console.log(req.body);
+    //     res.render('./index', { fs: fs, fabric: fabric });
+    // });
 
-    sock.listen(server);
-
+    
+}
+function rebuild() {
     
 }
 
