@@ -31,6 +31,9 @@ function listen(req, res, server) {
             // console.log('disconnect');
         });
     });
+    io.use(function (socket, next) {
+        // app.session(socket.request, socket.request.res, next);
+    })
 }
 
 function fileWrite(data) {

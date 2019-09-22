@@ -25,6 +25,7 @@
     "browserify": "^16.5.0",
     "canvas": "^2.6.0",
     "express": "^4.17.1",
+    "express-session": "^1.16.2",
     "fabric": "^3.2.0",
     "glob": "^7.1.4",
     "gulp": "^4.0.2",
