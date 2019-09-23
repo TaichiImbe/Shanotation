@@ -7,8 +7,11 @@ var router = express.Router();
 var url = require('url');
 
 var fabric = require('fabric').fabric;
-var sock = require('./server/sock');
+// var sock = require('./server/sock');
+var socketIO = require('socket.io');
+var IO;
 var server;
+var filename;
 
 // function serve(route, handle) {
 // if (server) {
@@ -69,7 +72,8 @@ app.get('/index', function (req, res, next) {
     // console.log(req.url);
     // console.log(req);
     // console.log(__dirname);
-    sock.listen(req, res, server);
+    // sock.listen(req, res, server);
+
     res.render('./index', { fs: fs, fabric: fabric });
 });
 app.get('/pdf', function (req, res, next) {
@@ -86,7 +90,51 @@ app.get('/teacher', function (req, res, next) {
     //     // console.log(req.body);
     //     res.render('./index', { fs: fs, fabric: fabric });
     // });
+    io = socketIO.listen(server);
+    // console.log(req.ip);
+    filename = 'analysdata.txt';
+    io.sockets.on('connection', function (socket) {
+        // console.log('connection');
+        socket.on('massage', function (data) {
+            console.log('massage');
+            io.sockets.emit('massage', { value: data.value });
+        });
+        socket.on('object', function (data) {
+            if (data.type === 'path') {
+                // console.log(data.path);
+                // console.log(data.left + " " + data.top);
+                // console.log(data);
+                fileWrite(data);
+            } else {
 
+                console.log(data);
+            }
+
+        })
+        socket.on('disconnect', function (data) {
+            // console.log('disconnect');
+        });
+    });
+    io.use(function (socket, next) {
+        // console.log(socket);
+        // fileWrite(socket.request);
+        app.session(socket.request, socket.request.res, next);
+        fileWrite(app.session);
+    });
+
+function fileWrite(data) {
+    fs.open(filename, 'a', function (err, fd) {
+
+        if (err) throw err;
+        fs.appendFile(fd, data , 'utf8', function (err) {
+            if (err) throw err;
+            fs.close(fd, function (err) {
+                if (err) throw err;
+            })
+        });
+    });
+
+}
 
 // }
 
