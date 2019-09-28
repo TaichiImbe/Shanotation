@@ -9,7 +9,7 @@ var url = require('url');
 var fabric = require('fabric').fabric;
 // var sock = require('./server/sock');
 var socketIO = require('socket.io');
-var IO;
+var io;
 var server;
 var filename;
 
@@ -32,7 +32,7 @@ var sessionMiddleware = session({
 
 app.use(bodyParser.urlencoded({
     extended: true
-}))
+}));
 app.session = sessionMiddleware;
 app.use(sessionMiddleware);
 //__dirnameはapp.jsがあるところのまでのpathが通る
@@ -85,48 +85,51 @@ app.get('/teacher', function (req, res, next) {
     sock.listen(req, res, server);
     res.render('./teacher');
 })
-    // app.post('/', (req, res) => {
-    //     // console.log('POST');
-    //     // console.log(req.body);
-    //     res.render('./index', { fs: fs, fabric: fabric });
-    // });
-    io = socketIO.listen(server);
-    // console.log(req.ip);
-    filename = 'analysdata.txt';
-    io.sockets.on('connection', function (socket) {
-        // console.log('connection');
-        socket.on('massage', function (data) {
-            console.log('massage');
-            io.sockets.emit('massage', { value: data.value });
-        });
-        socket.on('object', function (data) {
-            if (data.type === 'path') {
-                // console.log(data.path);
-                // console.log(data.left + " " + data.top);
-                // console.log(data);
-                fileWrite(data);
-            } else {
-
-                console.log(data);
-            }
-
-        })
-        socket.on('disconnect', function (data) {
-            // console.log('disconnect');
-        });
+// app.post('/', (req, res) => {
+//     // console.log('POST');
+//     // console.log(req.body);
+//     res.render('./index', { fs: fs, fabric: fabric });
+// });
+io = socketIO.listen(server);
+// console.log(req.ip);
+filename = 'analysdata.txt';
+io.sockets.on('connection', function (socket) {
+    // console.log('connection');
+    var handshake = socket.handshake;
+    socket.on('massage', function (data) {
+        console.log('massage');
+        io.sockets.emit('massage', { value: data.value });
     });
-    io.use(function (socket, next) {
-        // console.log(socket);
-        // fileWrite(socket.request);
-        app.session(socket.request, socket.request.res, next);
-        fileWrite(app.session);
+    socket.on('object', function (data) {
+        if (data.type === 'path') {
+            // console.log(data.path);
+            // console.log(data.left + " " + data.top);
+            // console.log(data);
+            fileWrite(handshake,data.path);
+        } else {
+            console.log(data);
+        }
+    })
+    socket.on('disconnect', function (data) {
+        // console.log('disconnect');
     });
+});
 
-function fileWrite(data) {
+io.use(function (socket, next) {
+    // console.log(socket);
+    // fileWrite(socket.request);
+    sessionMiddleware(socket.request, socket.request.res, next);
+    fileWrite(app.session);
+});
+
+function fileWrite(handshake,data) {
     fs.open(filename, 'a', function (err, fd) {
 
         if (err) throw err;
-        fs.appendFile(fd, data , 'utf8', function (err) {
+        // // // for (i in req) {
+        // //     console.log(i );
+        // }
+        fs.appendFile(fd, handshake.address + data+'\n', 'utf8', function (err) {
             if (err) throw err;
             fs.close(fd, function (err) {
                 if (err) throw err;
