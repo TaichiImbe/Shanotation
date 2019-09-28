@@ -3,11 +3,13 @@ var socketIO = require('socket.io');
 var fs = require('fs');
 var io;
 var filename;
+var ip;
 
 function listen(req, res, server) {
 
     io = socketIO.listen(server);
     console.log(req.ip);
+    ip = req.ip;
     filename = req.ip.toString() + 'analysdata.txt';
     io.sockets.on('connection', function (socket) {
         // console.log('connection');
@@ -19,8 +21,8 @@ function listen(req, res, server) {
             if (data.type === 'path') {
                 // console.log(data.path);
                 // console.log(data.left + " " + data.top);
-                console.log(data);
-                fileWrite(data);
+                // console.log(data);
+                fileWrite(req,data.path);
             } else {
 
                 console.log(data);
@@ -31,16 +33,16 @@ function listen(req, res, server) {
             // console.log('disconnect');
         });
     });
-    io.use(function (socket, next) {
-        // app.session(socket.request, socket.request.res, next);
-    })
+    // io.use(function (socket, next) {
+    //     // app.session(socket.request, socket.request.res, next);
+    // })
 }
 
-function fileWrite(data) {
+function fileWrite(req,data) {
     fs.open(filename, 'a', function (err, fd) {
 
         if (err) throw err;
-        fs.writeFileSync(fd, data + '\n', 'utf8', function (err) {
+        fs.writeFileSync(fd,req.ip + ' ' +  data + '\n', 'utf8', function (err) {
             if (err) throw err;
             fs.close(fd, function (err) {
                 if (err) throw err;
