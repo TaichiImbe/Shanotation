@@ -42,7 +42,7 @@ Canvas.on('object:added',function(e){
     // logPrint(y+"/"+m+"/"+d+" "+hh+":"+mm+":"+ss);
     // logPrint(e);
     AnnoCollection.set(realTime,e.target);
-    send(e.target);
+    send(e.target,realTime);
 });
 
 global.Canvas = Canvas;

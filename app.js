@@ -13,6 +13,10 @@ var io;
 var server;
 var filename;
 
+var fileWrite = require('./server/fileio').fileWrite;
+
+var analys = require('./server/analys');
+
 // function serve(route, handle) {
 // if (server) {
 //     server.close(function () {
@@ -92,7 +96,6 @@ app.get('/teacher', function (req, res, next) {
 // });
 io = socketIO.listen(server);
 // console.log(req.ip);
-filename = 'analysdata.txt';
 io.sockets.on('connection', function (socket) {
     // console.log('connection');
     var handshake = socket.handshake;
@@ -100,12 +103,19 @@ io.sockets.on('connection', function (socket) {
         console.log('massage');
         io.sockets.emit('massage', { value: data.value });
     });
-    socket.on('object', function (data) {
+    socket.on('object', function (data,time) {
         if (data.type === 'path') {
-            // console.log(data.path);
+            console.log(time);
+            console.log(data.path.length);
+            var path = data.path;
             // console.log(data.left + " " + data.top);
             // console.log(data);
-            fileWrite(handshake,data.path);
+            analys.dataset(handshake.address, data);
+            // for (i = 0; i < path.length; i++){
+                // console.log(path[i]);
+                // fileWrite(handshake, path[i]);
+            // }
+            fileWrite(handshake, data.path);
         } else {
             console.log(data);
         }
@@ -119,25 +129,27 @@ io.use(function (socket, next) {
     // console.log(socket);
     // fileWrite(socket.request);
     sessionMiddleware(socket.request, socket.request.res, next);
-    fileWrite(app.session);
 });
 
-function fileWrite(handshake,data) {
-    fs.open(filename, 'a', function (err, fd) {
+// function fileWrite(handshake, data) {
+//     fs.open(filename, 'a', function (err, fd) {
 
-        if (err) throw err;
-        // // // for (i in req) {
-        // //     console.log(i );
-        // }
-        fs.appendFile(fd, handshake.address + data+'\n', 'utf8', function (err) {
-            if (err) throw err;
-            fs.close(fd, function (err) {
-                if (err) throw err;
-            })
-        });
-    });
+//         if (err) throw err;
+//         // if (data instanceof Array) {
+//             // for (i = 0; i < data.length; i++) {
+//                 // console.log(i);
+//                 // fs.appendFile(fd, handshake.address + " " + data[i] + '\n', 'utf8', function (err) {
+//                 fs.appendFile(fd, handshake.address + " " + data + '\n', 'utf8', function (err) {
+//                     if (err) throw err;
+//                     fs.close(fd, function (err) {
+//                         if (err) throw err;
+//                     })
+//                 });
+//             // }
+//         // }
+//     });
 
-}
+// }
 
 // }
 
