@@ -63,10 +63,14 @@ app.get('/', function (req, res, next) {
 
 app.post('/', function (req, res, next) {
     console.log(req.body);
-    if (req.body.userName) {
+    let userName = req.body.userName;
+    if (userName === 'student') {
         req.session.user = { name: req.body.userName };
         res.redirect('/index');
-    } else {
+    } else if (userName === 'teacher') {
+        req.session.user = { name: req.body.userName };
+        res.redirect('/teacher');
+    }else {
         var err = '入力が正しくありません.'
         res.render('/login', { error: err });
     }
@@ -86,7 +90,7 @@ app.get('/pdf', function (req, res, next) {
     res.sendFile(req.url);
 });
 app.get('/teacher', function (req, res, next) {
-    sock.listen(req, res, server);
+    // sock.listen(req, res, server);
     res.render('./teacher');
 })
 // app.post('/', (req, res) => {
@@ -116,6 +120,7 @@ io.sockets.on('connection', function (socket) {
                 // fileWrite(handshake, path[i]);
             // }
             fileWrite(handshake, data.path);
+            io.sockets.emit('teacher', data);
         } else {
             console.log(data);
         }

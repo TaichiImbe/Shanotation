@@ -49,6 +49,9 @@ function pageRender(pageNum) {
             viewport: viewport
         };
         page.render(renderContext);
+        page.getTextContent().then(function (textContent) {
+            console.log(textContent);
+        })
     });
 }
 // console.log(loadingTask);
