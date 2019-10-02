@@ -107,6 +107,10 @@ io.sockets.on('connection', function (socket) {
         console.log('massage');
         io.sockets.emit('massage', { value: data.value });
     });
+    socket.on('AXT', function (data) {
+        console.log(socket.userName);
+        // fileWrite('handshake.txt', handshake, handshake);
+    });
     socket.on('object', function (data,time) {
         if (data.type === 'path') {
             console.log(time);
@@ -119,7 +123,7 @@ io.sockets.on('connection', function (socket) {
                 // console.log(path[i]);
                 // fileWrite(handshake, path[i]);
             // }
-            fileWrite(handshake, data.path);
+            fileWrite('analysdata.txt',handshake, data.path);
             io.sockets.emit('teacher', data);
         } else {
             console.log(data);

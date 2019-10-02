@@ -5,14 +5,23 @@ var io;
 var filename;
 var ip;
 
-function listen(req, res, server) {
+var fileWrite = require('./fileio').fileWrite;
+
+var analys = require('./analys');
+
+// var sessionMiddleware = session({
+//     secret: 'secret',
+//     resave: false,
+//     saveUninitilized: false,
+//     cookie: { secure: true }
+// });
+
+function listen(app,server) {
 
     io = socketIO.listen(server);
-    console.log(req.ip);
-    ip = req.ip;
-    filename = req.ip.toString() + 'analysdata.txt';
     io.sockets.on('connection', function (socket) {
         // console.log('connection');
+        var handshake = socket.handshake;
         socket.on('massage', function (data) {
             console.log('massage');
             io.sockets.emit('massage', { value: data.value });
@@ -22,7 +31,7 @@ function listen(req, res, server) {
                 // console.log(data.path);
                 // console.log(data.left + " " + data.top);
                 // console.log(data);
-                fileWrite(req,data.path);
+                fileWrite('analysdata.txt',handshake,data);
             } else {
 
                 console.log(data);
@@ -33,23 +42,12 @@ function listen(req, res, server) {
             // console.log('disconnect');
         });
     });
-    // io.use(function (socket, next) {
-    //     // app.session(socket.request, socket.request.res, next);
-    // })
+    io.use(function (socket, next) {
+        app.session(socket.request, socket.request.res, next);
+        // sessionMiddleware(socket.request, socket.request.res, next);
+    })
 }
 
-function fileWrite(req,data) {
-    fs.open(filename, 'a', function (err, fd) {
-
-        if (err) throw err;
-        fs.writeFileSync(fd,req.ip + ' ' +  data + '\n', 'utf8', function (err) {
-            if (err) throw err;
-            fs.close(fd, function (err) {
-                if (err) throw err;
-            })
-        });
-    });
-
-}
 
 exports.listen = listen;
+// exports.sessionMiddleware = sessionMiddleware;

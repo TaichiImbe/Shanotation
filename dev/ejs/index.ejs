@@ -4,7 +4,8 @@
   <head>
       <% include common/_head %>
       <!-- とりあえずコネクション周りは残しておく -->
-    <script src = '/socket.io/socket.io.js'></script>
+      <% include common/_socket %>
+    <!-- <script src = '/socket.io/socket.io.js'></script>
     <script>
         // var socket = io.connect('localhost:4000');
         var socket = io.connect('192.168.2.110:4000');
@@ -13,13 +14,14 @@
         socket.on('connect', function (msg) {
           console.log('connect');
         });
+        socket.emit('AXT','test');
         function send(obj,time){
           username = document.getElementById('name');
           // console.log(username);
           console.log(obj);
           socket.emit('object',obj,time);
         }
-      </script>
+      </script> -->
 
   </head>
   <body>

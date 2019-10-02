@@ -1,0 +1,18 @@
+<script src='/socket.io/socket.io.js'></script>
+<script>
+    // var socket = io.connect('http://192.168.178.118:4000');
+    var socket = io.connect('http://192.168.2.110:4000');
+
+    socket.on('connect',function(msg){
+        console.log('connect');
+    });
+
+    function send(dist,obj,time){
+        socket.emit(dist,obj,time);
+    }
+
+    socket.on('teacher',function(data){
+        console.log(data);
+    });
+
+</script>
