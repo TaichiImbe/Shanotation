@@ -1,18 +1,23 @@
 <script src='/socket.io/socket.io.js'></script>
 <script>
     // var socket = io.connect('http://192.168.178.118:4000');
-    var socket = io.connect('http://192.168.2.110:4000');
+    // var socket = io.connect('http://192.168.2.110:4000');
+    var socket = io.connect('localhost:4000');
 
-    socket.on('connect',function(msg){
-        console.log('connect');
-    });
+    // socket.on('connect',function(msg){
+        // console.log('connect');
+    // });
 
     function send(dist,obj,time){
-        socket.emit(dist,obj,time);
+        if(dist == 'object'){
+            socket.emit(dist,obj,time);
+        }else{
+            socket.emit(dist,obj);
+        }
     }
 
-    socket.on('teacher',function(data){
-        console.log(data);
-    });
+    // function send(dist,obj){
+        // socket.emit(dist,obj);
+    // }
 
 </script>

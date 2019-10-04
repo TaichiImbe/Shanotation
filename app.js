@@ -51,10 +51,10 @@ app.post('/', function (req, res, next) {
     console.log(req.body);
     let userName = req.body.userName;
     if (userName === 'student') {
-        req.session.user = { name: req.body.userName };
+        // req.session.user = { name: req.body.userName };
         res.redirect('/index');
     } else if (userName === 'teacher') {
-        req.session.user = { name: req.body.userName };
+        // req.session.user = { name: req.body.userName };
         res.redirect('/teacher');
     }else {
         var err = '入力が正しくありません.'
@@ -63,8 +63,7 @@ app.post('/', function (req, res, next) {
 });
 
 app.get('/index', function (req, res, next) {
-
-    res.render('./index', { fs: fs, fabric: fabric });
+    res.render('./index', {});
 });
 app.get('/pdf', function (req, res, next) {
     console.log(__dirname);
@@ -75,6 +74,7 @@ app.get('/teacher', function (req, res, next) {
     res.render('./teacher');
 })
 
+var userList = new Map();
 io = socketIO.listen(server);
 io.sockets.on('connection', function (socket) {
     // console.log('connection');
@@ -83,18 +83,23 @@ io.sockets.on('connection', function (socket) {
         console.log('massage');
         io.sockets.emit('massage', { value: data.value });
     });
-    socket.on('AXT', function (data) {
-        console.log(socket.userName);
-        // fileWrite('handshake.txt', handshake, handshake);
-    });
+    socket.on('userName', function (name) {
+        socket.username = name;
+        userList.set(handshake.address, name);
+        console.log(socket.username);
+    })
     socket.on('object', function (data,time) {
         if (data.type === 'path') {
-            console.log(time);
-            console.log(data.path.length);
+            // console.log(time);
+            // console.log(data.path.length);
             var path = data.path;
+            // console.log(socket.username);
             analys.dataset(handshake.address, data);
-            fileWrite('analysdata.txt',handshake, data.path);
-            io.sockets.emit('teacher', data);
+            fileWrite('analysdata.txt',handshake, data,time);
+            if (userList.get(handshake.address) == 'student') {
+                console.log('send teacher');
+                io.sockets.emit('teacher', data);
+            }
         } else {
             console.log(data);
         }

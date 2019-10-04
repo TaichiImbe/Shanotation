@@ -4,13 +4,23 @@
 
 <head>
     <% include common/_head %>
+    <% include common/_socket %>
 </head>
 <body>
-    <form action="/" method="post">
-        <input type='text' name='userName'>
-        <button type='submit' value='Login'>ログイン</button>
+    <form action='/' method='post'>
+        <input id='name' type='text' name='userName'>
+        <button id='login'type='submit' value='Login'>ログイン</button>
     </form>
 
 </body>
+<script>
+
+$('#login').click( function(){
+    var name = $('#name').val();
+    console.log(name);
+    send('userName',name);
+});
+
+</script>
 
 </html>

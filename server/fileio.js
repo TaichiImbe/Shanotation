@@ -1,13 +1,14 @@
 var fs = require('fs');
 // var filename = 'analysdatatest.txt';
 
-function fileWrite(filename, handshake, datas) {
+function fileWrite(filename, handshake, datas,time) {
+    console.log(datas.type);
     if (datas.type == 'path') {
         var data = datas.path;
         var array = new Array();
         for (i = 0; i < data.length; i++) {
             var ip = handshake.address.split(":");
-            array.push(ip[3] + ' ' + data[i] + '\n');
+            array.push(ip[3] + ' ' + data[i] + ' '+ time +'\n');
         }
         fs.open(filename, 'a', function (err, fd) {
 
