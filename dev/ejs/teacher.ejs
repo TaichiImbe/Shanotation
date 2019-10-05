@@ -4,10 +4,12 @@
   <head>
       <% include common/_head %>
       <!-- とりあえずコネクション周りは残しておく -->
+      <% include common/_head %>
     <script src = '/socket.io/socket.io.js'></script>
     <script>
         // var socket = io.connect('http://192.168.178.118:4000');
-        var socket = io.connect('http://192.168.2.110:4000');
+        // var socket = io.connect('http://192.168.2.110:4000');
+        var socket = io.connect('192.168.11.64:4000');
   
         socket.on('connect', function (msg) {
           console.log('connect');
@@ -18,12 +20,13 @@
 
         socket.on('teacher',function(data){
           console.log(data);
-        })
+          makeLine(data);
+          // Canvas.add(data);
+        });
       </script>
 
   </head>
   <body>
-    <% include common/_function %>
     <% include common/_fabric %>
   </body>
 </html><!DOCTYPE html></html>

@@ -91,7 +91,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('object', function (data,time) {
         if (data.type === 'path') {
             // console.log(time);
-            // console.log(data.path.length);
+            console.log(data);
             var path = data.path;
             // console.log(socket.username);
             analys.dataset(handshake.address, data);
