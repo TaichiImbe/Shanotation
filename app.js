@@ -48,7 +48,7 @@ app.get('/', function (req, res, next) {
 });
 
 app.post('/', function (req, res, next) {
-    console.log(req.body);
+    // console.log(req.body);
     let userName = req.body.userName;
     if (userName === 'student') {
         // req.session.user = { name: req.body.userName };
@@ -86,12 +86,12 @@ io.sockets.on('connection', function (socket) {
     socket.on('userName', function (name) {
         socket.username = name;
         userList.set(handshake.address, name);
-        console.log(socket.username);
+        // console.log(socket.username);
     })
     socket.on('object', function (data,time) {
         if (data.type === 'path') {
             // console.log(time);
-            console.log(data);
+            // console.log(data);
             var path = data.path;
             // console.log(socket.username);
             analys.dataset(handshake.address, data);
