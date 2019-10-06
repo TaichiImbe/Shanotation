@@ -5,6 +5,13 @@ var session = require('express-session');
 var app = express();
 var router = express.Router();
 var url = require('url');
+var config = require('config');
+
+var port = config.port;
+var user = config.user;
+
+var os = require('os');
+var hostname = os.hostname() || '127.0.0.1';
 
 var fabric = require('fabric').fabric;
 // var sock = require('./server/sock');
@@ -17,7 +24,7 @@ var fileWrite = require('./server/fileio').fileWrite;
 
 var analys = require('./server/analys');
 
-server = app.listen(80, function () {
+server = app.listen(port, function () {
     console.log('Node js is listening to PORT:' + server.address().port);
 });
 var sessionMiddleware = session({
