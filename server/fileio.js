@@ -2,7 +2,7 @@ var fs = require('fs');
 // var filename = 'analysdatatest.txt';
 
 function fileWrite(filename, handshake, datas,time) {
-    console.log(datas.type);
+    // console.log(datas.type);
     if (datas.type == 'path') {
         var data = datas.path;
         var array = new Array();

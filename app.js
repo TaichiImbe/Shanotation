@@ -57,16 +57,21 @@ app.get('/', function (req, res, next) {
 app.post('/', function (req, res, next) {
     // console.log(req.body);
     let userName = req.body.userName;
-    if (userName === 'student') {
-        // req.session.user = { name: req.body.userName };
-        res.redirect('/index');
-    } else if (userName === 'teacher') {
-        // req.session.user = { name: req.body.userName };
+    if (userName === 'teacher') {
         res.redirect('/teacher');
-    }else {
-        var err = '入力が正しくありません.'
-        res.render('/login', { error: err });
+    } else {
+        res.redirect('/index');
     }
+    // if (userName === 'student') {
+    //     // req.session.user = { name: req.body.userName };
+    //     res.redirect('/index');
+    // } else if (userName === 'teacher') {
+    //     // req.session.user = { name: req.body.userName };
+    //     res.redirect('/teacher');
+    // }else {
+    //     var err = '入力が正しくありません.'
+    //     res.render('/login', { error: err });
+    // }
 });
 
 app.get('/index', function (req, res, next) {
@@ -103,7 +108,8 @@ io.sockets.on('connection', function (socket) {
             // console.log(socket.username);
             analys.dataset(handshake.address, data);
             fileWrite('analysdata.txt',handshake, data,time);
-            if (userList.get(handshake.address) == 'student') {
+            console.log(handshake.address);
+            if (userList.get(handshake.address) != 'teacher') {
                 console.log('send teacher');
                 io.sockets.emit('teacher', data);
             }
