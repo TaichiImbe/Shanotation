@@ -17,7 +17,7 @@ var fileWrite = require('./server/fileio').fileWrite;
 
 var analys = require('./server/analys');
 
-server = app.listen(4000, function () {
+server = app.listen(80, function () {
     console.log('Node js is listening to PORT:' + server.address().port);
 });
 var sessionMiddleware = session({
