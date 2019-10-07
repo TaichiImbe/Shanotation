@@ -50,7 +50,7 @@ function pageRender(pageNum) {
         };
         page.render(renderContext);
         page.getTextContent().then(function (textContent) {
-            console.log(textContent);
+            // console.log(textContent);
         })
     });
 }

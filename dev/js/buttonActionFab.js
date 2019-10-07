@@ -46,14 +46,7 @@ window.addEventListener('load', () => {
         // textArea.textContent = pageNum + "/" + pdf.numPages;
     }
 
-    function AnnotationSet(pageNum) {
-        const Anno = PageAnno.get(pageNum);
-        if (Anno != null) {
-            Anno.forEach(element => {
-                Canvas.add(element);
-            });
-        }
-    }
+    
 
     //canvas上の絵を全部消す
     clearEI.onclick = function () {
@@ -157,3 +150,25 @@ window.addEventListener('load', () => {
         // Pen.brushWidth = Canvas.freeDrawingBrush.width;
     }
 })
+
+function setPage(data, page) {
+    var collection = new Array();
+    if (PageAnno.has(page)){
+        collection = PageAnno.get(page);
+        collection.push(data);
+    } else {
+        collection.push(data);
+    }
+    // Canvas.add(data);
+    PageAnno.set(page, collection);
+    AnnotationSet(pageNum);
+}
+function AnnotationSet(pageNum) {
+    const Anno = PageAnno.get(pageNum);
+    if (Anno != null) {
+        Anno.forEach(element => {
+            Canvas.add(element);
+        });
+    }
+}
+global.setPage = setPage;

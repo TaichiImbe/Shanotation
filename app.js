@@ -51,6 +51,7 @@ app.use('/css', express.static(__dirname + '/views/css'));
 app.set('view engine', 'ejs');
 
 app.get('/', function (req, res, next) {
+    // console.log(os.networkInterfaces().en0[1].address);
     res.render('./login');
 });
 
@@ -75,7 +76,8 @@ app.post('/', function (req, res, next) {
 });
 
 app.get('/index', function (req, res, next) {
-    res.render('./index', {});
+    var ip = os.networkInterfaces().en0[1].address;
+    res.render('./index', {ip : ip});
 });
 app.get('/pdf', function (req, res, next) {
     console.log(__dirname);
@@ -100,18 +102,19 @@ io.sockets.on('connection', function (socket) {
         userList.set(handshake.address, name);
         // console.log(socket.username);
     })
-    socket.on('object', function (data,time) {
+    socket.on('object', function (data,oCoords,pageNum,time) {
         if (data.type === 'path') {
             // console.log(time);
             // console.log(data);
             var path = data.path;
+            // console.log(oCoords);
+            // console.log(pageNum);
             // console.log(socket.username);
             analys.dataset(handshake.address, data);
             fileWrite('analysdata.txt',handshake, data,time);
-            console.log(handshake.address);
             if (userList.get(handshake.address) != 'teacher') {
-                console.log('send teacher');
-                io.sockets.emit('teacher', data);
+                // console.log('send teacher');
+                io.sockets.emit('teacher', data,pageNum);
             }
         } else {
             console.log(data);

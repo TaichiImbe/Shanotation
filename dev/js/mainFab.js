@@ -30,7 +30,7 @@ window.addEventListener('load',() =>{
 });
 
 Canvas.on('object:added',function(e){
-    console.log(e.target);
+    // console.log(e.target);
     Canvas.getObjects().forEach(element => {
         console.log(element);
     });
@@ -46,10 +46,10 @@ Canvas.on('object:added',function(e){
     // logPrint(y+"/"+m+"/"+d+" "+hh+":"+mm+":"+ss);
     // logPrint(e);
     AnnoCollection.set(realTime,e.target);
-    send('object',e.target,realTime);
+    send('object',e.target,e.target.oCoords,pageNum,realTime);
 });
 
-function makeLine(data) {
+function makeLine(data,pageNum) {
     var m, l;
     data.path.forEach(element => {
         if (element[0] == 'M') {
@@ -57,7 +57,7 @@ function makeLine(data) {
         } else if (element[0] == 'L') {
             l = element;
         } else {
-            console.log(element);
+            // console.log(element);
         }
     });
     var path = [m[1], m[2], l[1], l[2]];
@@ -68,7 +68,8 @@ function makeLine(data) {
         selectable: false,
         evented: false,
       });
-    Canvas.add(line);
+    // Canvas.add(line);
+    setPage(line,pageNum);
 }
 
 global.Canvas = Canvas;

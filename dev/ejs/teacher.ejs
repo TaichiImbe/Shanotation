@@ -5,12 +5,11 @@
 <head>
   <% include common/_head %>
   <!-- とりあえずコネクション周りは残しておく -->
-  <% include common/_head %>
   <script src='/socket.io/socket.io.js'></script>
   <script>
-    // var socket = io.connect('http://192.168.178.118:4000');
+    var socket = io.connect('http://192.168.178.107:4000');
     // var socket = io.connect('http://192.168.2.110:4000');
-    var socket = io.connect('ec2-18-221-83-167.us-east-2.compute.amazonaws.com:4000');
+    // var socket = io.connect('ec2-18-221-83-167.us-east-2.compute.amazonaws.com:4000');
     // var socket = io.connect('192.168.11.64:4000');
 
     socket.on('connect', function (msg) {
@@ -20,9 +19,9 @@
       // socket.emit('object',obj);
     }
 
-    socket.on('teacher', function (data) {
+    socket.on('teacher', function (data,pageNum) {
       console.log(data);
-      makeLine(data);
+      makeLine(data,pageNum);
       // Canvas.add(data);
     });
   </script>
@@ -30,6 +29,7 @@
 </head>
 
 <body>
+  <% include common/_function %>
   <% include common/_fabric %>
 </body>
 
