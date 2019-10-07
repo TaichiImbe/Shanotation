@@ -76,8 +76,8 @@ app.post('/', function (req, res, next) {
 });
 
 app.get('/index', function (req, res, next) {
-    var ip = os.networkInterfaces().en0[1].address;
-    res.render('./index', {ip : ip});
+    // var ip = os.networkInterfaces().en0[1].address;
+    res.render('./index');
 });
 app.get('/pdf', function (req, res, next) {
     console.log(__dirname);
