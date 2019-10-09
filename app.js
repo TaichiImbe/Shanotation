@@ -44,6 +44,7 @@ app.use('/js', express.static(__dirname + '/views/js'));
 // pdfのリクエストがあった時のルーティング?
 app.use('/pdf', express.static(__dirname + '/pdf'));
 
+console.log(__dirname);
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 app.use('/views', express.static(__dirname + '/views'));
 app.use('/css', express.static(__dirname + '/views/css'));
