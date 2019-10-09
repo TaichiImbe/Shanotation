@@ -110,7 +110,7 @@ io.sockets.on('connection', function (socket) {
             // console.log(oCoords);
             // console.log(pageNum);
             // console.log(socket.username);
-            analys.dataset(handshake.address, data);
+            analys.dataset(handshake.address, data,oCoords);
             fileWrite('analysdata.txt',handshake, data,time);
             if (userList.get(handshake.address) != 'teacher') {
                 // console.log('send teacher');

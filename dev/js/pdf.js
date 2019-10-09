@@ -50,7 +50,17 @@ function pageRender(pageNum) {
         };
         page.render(renderContext);
         page.getTextContent().then(function (textContent) {
-            // console.log(textContent);
+            console.log(textContent);
+            textContent.items.forEach(text => {
+                var tx = pdfjsLib.Util.transform(viewport.transform, text.transform);
+                console.log(text);
+                console.log(tx);   
+            });
+            // pdfjsLib.renderTextLayer({
+                // textContent: textContent,
+                // viewport: viewport,
+                // textDivs:[]
+            // })
         })
     });
 }

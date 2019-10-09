@@ -19,9 +19,9 @@
       // socket.emit('object',obj);
     }
 
-    socket.on('teacher', function (data,pageNum) {
+    socket.on('teacher', function (data, pageNum) {
       console.log(data);
-      makeLine(data,pageNum);
+      makeLine(data, pageNum);
       // Canvas.add(data);
     });
   </script>
@@ -31,6 +31,28 @@
 <body>
   <% include common/_function %>
   <% include common/_fabric %>
+  <script>
+    Canvas.isDrawingMode = false;
+    $f = function (id) {
+      return document.getElementById(id);
+    }
+    window.addEventListener('load', function () {
+      var text = $f('picker'),
+        penSize = $f('penSize');
+      select = $f('select');
+      draw = $f('draw');
+      clearButton = $f('clear-button');
+      eraser = $f('eraser');
+
+      text.style.display = 'none';
+      penSize.style.display = 'none';
+      select.style.display = 'none';
+      draw.style.display = 'none';
+      clearButton.style.display = 'none';
+      eraser.style.display = 'none';
+
+    })
+  </script>
 </body>
 
 </html>

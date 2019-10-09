@@ -19,7 +19,6 @@ window.addEventListener('load', () => {
         nextButton = $f('next'),
         textArea = $f('text');
 
-
     prevButton.onclick = function () {
         if (pageNum <= 1) {
             return;

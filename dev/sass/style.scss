@@ -1,5 +1,11 @@
-header{
-    position: fixed;
+.header{
+    // position: fixed;
+
+    & button{
+        background-color: white;
+        color: black;
+        text-align: center;
+    }
 }
 
 .canvas-wrapper{
