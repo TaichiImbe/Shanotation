@@ -48,6 +48,7 @@ console.log(__dirname);
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
 app.use('/views', express.static(__dirname + '/views'));
 app.use('/css', express.static(__dirname + '/views/css'));
+app.use('/config',express.static(__dirname + '/config'))
 
 app.set('view engine', 'ejs');
 
@@ -55,6 +56,10 @@ app.get('/', function (req, res, next) {
     // console.log(os.networkInterfaces().en0[1].address);
     res.render('./login');
 });
+
+app.get('/config', function (req, res) {
+    console.log(req);
+})
 
 app.post('/', function (req, res, next) {
     // console.log(req.body);
