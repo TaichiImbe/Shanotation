@@ -20,13 +20,18 @@ var io;
 var server;
 var filename;
 
+//ファイル書き出し処理
 var fileWrite = require('./server/fileio').fileWrite;
 
+//分析処理
 var analys = require('./server/analys');
 
+//express server
 server = app.listen(port, function () {
     console.log('Node js is listening to PORT:' + server.address().port);
 });
+
+//express session initialization
 var sessionMiddleware = session({
     secret: 'secret',
     resave: false,
@@ -34,33 +39,35 @@ var sessionMiddleware = session({
     cookie: { secure: true }
 });
 
+//parser
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
 app.session = sessionMiddleware;
 app.use(sessionMiddleware);
 //__dirnameはapp.jsがあるところのまでのpathが通る
 app.use('/js', express.static(__dirname + '/views/js'));
 // pdfのリクエストがあった時のルーティング?
 app.use('/pdf', express.static(__dirname + '/pdf'));
-
-console.log(__dirname);
+//nodeアプリケーションのリクエストルーティング
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
+//main view
 app.use('/views', express.static(__dirname + '/views'));
 app.use('/css', express.static(__dirname + '/views/css'));
+
+// webconfig path
 app.use('/config',express.static(__dirname + '/config'))
 
 app.set('view engine', 'ejs');
 
+//login view
 app.get('/', function (req, res, next) {
     // console.log(os.networkInterfaces().en0[1].address);
     res.render('./login');
 });
 
-app.get('/config', function (req, res) {
-    console.log(req);
-})
-
+//login setting
 app.post('/', function (req, res, next) {
     // console.log(req.body);
     let userName = req.body.userName;
@@ -69,36 +76,31 @@ app.post('/', function (req, res, next) {
     } else {
         res.redirect('/index');
     }
-    // if (userName === 'student') {
-    //     // req.session.user = { name: req.body.userName };
-    //     res.redirect('/index');
-    // } else if (userName === 'teacher') {
-    //     // req.session.user = { name: req.body.userName };
-    //     res.redirect('/teacher');
-    // }else {
-    //     var err = '入力が正しくありません.'
-    //     res.render('/login', { error: err });
-    // }
 });
 
+//index render
 app.get('/index', function (req, res, next) {
-    // var ip = os.networkInterfaces().en0[1].address;
     res.render('./index');
 });
+//pdf request
 app.get('/pdf', function (req, res, next) {
-    console.log(__dirname);
-    console.log('pdf local load');
     res.sendFile(req.url);
 });
+
+//teacher render
 app.get('/teacher', function (req, res, next) {
     res.render('./teacher');
-})
+});
 
+//login userList 
 var userList = new Map();
+
+//socket connect
 io = socketIO.listen(server);
+
 io.sockets.on('connection', function (socket) {
     // console.log('connection');
-    var handshake = socket.handshake;
+    var handshake = socket.handshake
     socket.on('massage', function (data) {
         console.log('massage');
         io.sockets.emit('massage', { value: data.value });
@@ -108,24 +110,20 @@ io.sockets.on('connection', function (socket) {
         userList.set(handshake.address, name);
         // console.log(socket.username);
     })
+    //object resive
     socket.on('object', function (data,oCoords,pageNum,time) {
         if (data.type === 'path') {
-            // console.log(time);
-            // console.log(data);
             var path = data.path;
-            // console.log(oCoords);
-            // console.log(pageNum);
-            // console.log(socket.username);
             analys.dataset(handshake.address, data,oCoords);
             fileWrite('analysdata.txt',handshake, data,time);
             if (userList.get(handshake.address) != 'teacher') {
-                // console.log('send teacher');
                 io.sockets.emit('teacher', data,pageNum);
             }
         } else {
             console.log(data);
         }
     })
+
     socket.on('disconnect', function (data) {
         // console.log('disconnect');
     });

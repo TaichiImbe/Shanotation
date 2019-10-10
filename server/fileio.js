@@ -1,6 +1,15 @@
 var fs = require('fs');
 // var filename = 'analysdatatest.txt';
 
+/**
+ *  ファイル出力処理
+ *  datasの型がpathのときfabricのpathを1ポイントずつ分割して出力
+ *  それ以外の時はfinenameに指定されたファイルにそのまま書き出す
+ * @param {*} filename
+ * @param {*} handshake
+ * @param {*} datas
+ * @param {*} time
+ */
 function fileWrite(filename, handshake, datas,time) {
     // console.log(datas.type);
     if (datas.type == 'path') {

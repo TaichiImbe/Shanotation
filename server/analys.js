@@ -1,6 +1,13 @@
 var annotasions = ['underline', 'enclosure'];
 var Datas = new Map();
 
+/**
+ *送信されてきた分析データをセット
+ *
+ * @param {*} ip 
+ * @param {*} data
+ * @param {*} oCoords
+ */
 function dataset(ip,data,oCoords) {
     var array = new Array();
     if (Datas.has(ip)) {

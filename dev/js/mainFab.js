@@ -49,6 +49,12 @@ Canvas.on('object:added',function(e){
     send('object',e.target,e.target.oCoords,pageNum,realTime);
 });
 
+/**
+ * 線を作る(仮)
+ *
+ * @param {*} data
+ * @param {*} pageNum
+ */
 function makeLine(data,pageNum) {
     var m, l;
     data.path.forEach(element => {

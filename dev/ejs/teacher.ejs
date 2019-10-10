@@ -7,9 +7,19 @@
   <!-- とりあえずコネクション周りは残しておく -->
   <script src='/socket.io/socket.io.js'></script>
   <script>
+    var webconfig = './config/webconfig.json';
+    var request = new XMLHttpRequest();
+    request.open('GET',webconfig);
+    request.responseType = 'json';
+    request.send();
+    var socket;
+    request.onload = function(){
+        var config = request.response;
+        socket = io.connect(config.address+':'+config.port);
+    }
     // var socket = io.connect('http://192.168.178.107:4000');
     // var socket = io.connect('http://192.168.2.110:4000');
-    var socket = io.connect('ec2-13-59-114-31.us-east-2.compute.amazonaws.com:4000');
+    // var socket = io.connect('ec2-13-59-114-31.us-east-2.compute.amazonaws.com:4000');
     // var socket = io.connect('192.168.11.64:4000');
 
     socket.on('connect', function (msg) {
