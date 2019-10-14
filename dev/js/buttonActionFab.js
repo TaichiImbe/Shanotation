@@ -1,5 +1,6 @@
 var PageAnno = new Map();
 var $ = require('jquery');
+var eraserMode = false;
 
 window.addEventListener('load', () => {
     var $f = function (id) {
@@ -59,22 +60,19 @@ window.addEventListener('load', () => {
 
     //消しゴムボタン
     eraserButton.onclick = function () {
+        global.eraserMode = true;
         Canvas.isDrawingMode = true;
         var context = Canvas.contextTop;
+        // context = Canvas.getContext();
         // canvas.contextTop.globalCompositeOperation = 'destination-out';
         // canvas.contextTop.globalCompositeOperation = 'xor';
-        context.globalCompositeOperation = 'source-out';
+        // context.globalCompositeOperation = 'source-out';
         context.globalCompositeOperation = 'destination-out';
-        // fabric.Objct.drawClipPathOnCache();
-        // canvas.drawClipPathOnCache();
-        // context.lineCap = 'round' //丸みを帯びた線にする
-        // context.lineJoin = 'round' //丸みを帯びた線にする
-        // context.lineWidth = 5; //線の太さ
-        // context.strokeStyle = "rgb(255,255,255)";
     };
 
     //ペンボタン
     drawButton.onclick = function () {
+        global.eraserMode = false;
         Canvas.isDrawingMode = true;
         Canvas.contextTop.globalCompositeOperation = 'source-over';
         // 線の状態を定義する
@@ -171,3 +169,4 @@ function AnnotationSet(pageNum) {
     }
 }
 global.setPage = setPage;
+global.eraserMode = eraserMode;
