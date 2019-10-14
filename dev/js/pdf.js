@@ -54,7 +54,7 @@ function pageRender(pageNum) {
             textContent.items.forEach(text => {
                 var tx = pdfjsLib.Util.transform(viewport.transform, text.transform);
                 // console.log(text);
-                // console.log(tx);   
+                console.log(tx);   
             });
             // pdfjsLib.renderTextLayer({
                 // textContent: textContent,

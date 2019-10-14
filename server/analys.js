@@ -1,4 +1,4 @@
-var annotasions = ['underline', 'enclosure'];
+var annotasions = ['enclosure','line'];
 var Datas = new Map();
 
 /**
