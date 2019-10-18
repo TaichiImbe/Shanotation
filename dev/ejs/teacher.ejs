@@ -9,31 +9,32 @@
   <script>
     var webconfig = './config/webconfig.json';
     var request = new XMLHttpRequest();
-    request.open('GET',webconfig);
+    request.open('GET', webconfig);
     request.responseType = 'json';
     request.send();
     var socket;
-    request.onload = function(){
-        var config = request.response;
-        socket = io.connect(config.address+':'+config.port);
+    request.onload = function () {
+      var config = request.response;
+      socket = io.connect(config.address + ':' + config.port);
+      socket.on('connect', function (msg) {
+        console.log('connect');
+      });
+
+      socket.on('teacher', function (data, oCoords,pageNum,identifier) {
+        // console.log(identifier);
+        // console.log(data);
+        make(data, oCoords,pageNum, identifier);
+        // Canvas.add(data);
+      });
     }
+      function send(obj) {
+        // socket.emit('object',obj);
+      }
     // var socket = io.connect('http://192.168.178.107:4000');
     // var socket = io.connect('http://192.168.2.110:4000');
     // var socket = io.connect('ec2-13-59-114-31.us-east-2.compute.amazonaws.com:4000');
     // var socket = io.connect('192.168.11.64:4000');
 
-    socket.on('connect', function (msg) {
-      console.log('connect');
-    });
-    function send(obj) {
-      // socket.emit('object',obj);
-    }
-
-    socket.on('teacher', function (data, pageNum) {
-      console.log(data);
-      makeLine(data, pageNum);
-      // Canvas.add(data);
-    });
   </script>
 
 </head>
@@ -58,7 +59,7 @@
       penSize.style.display = 'none';
       select.style.display = 'none';
       draw.style.display = 'none';
-      clearButton.style.display = 'none';
+      // clearButton.style.display = 'none';
       eraser.style.display = 'none';
 
     })

@@ -111,13 +111,13 @@ io.sockets.on('connection', function (socket) {
         // console.log(socket.username);
     })
     //object resive
-    socket.on('object', function (data, oCoords, pageNum, time) {
+    socket.on('object', function (data, oCoords, pageNum, ident,time) {
         if (data.type === 'path') {
             var path = data.path;
             analys.dataset(handshake.address, data, oCoords);
             fileWrite('analysdata.txt', handshake,userList.get(handshake.address), data, time);
             if (userList.get(handshake.address) != 'teacher') {
-                io.sockets.emit('teacher', data, pageNum);
+                io.sockets.emit('teacher', data, oCoords,pageNum,ident);
             }
         } else {
             console.log(data);

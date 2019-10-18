@@ -25,7 +25,7 @@ window.addEventListener('load', () => {
             return;
         }
         PageAnno.set(pageNum, Canvas.getObjects());
-        Canvas.clear()
+        // Canvas.clear()
         // logPrint(PageAnno);
         pageNum--;
         AnnotationSet(pageNum);
@@ -38,7 +38,7 @@ window.addEventListener('load', () => {
             return;
         }
         PageAnno.set(pageNum, Canvas.getObjects());
-        Canvas.clear()
+        // Canvas.clear()
         // logPrint(PageAnno);
         pageNum++;
         AnnotationSet(pageNum);
@@ -85,6 +85,8 @@ window.addEventListener('load', () => {
 
     //カラーパレット
     jQuery(function ($) {
+        if ($f('picker').style.display != 'none') {
+
         $("#picker").spectrum({
             allowEmpty: true,
             color: "#000",
@@ -132,6 +134,7 @@ window.addEventListener('load', () => {
             ]
 
         });
+        }
     });
 
     //ペンの変更を表示・非表示
@@ -161,6 +164,7 @@ function setPage(data, page) {
     AnnotationSet(pageNum);
 }
 function AnnotationSet(pageNum) {
+    Canvas.clear();
     const Anno = PageAnno.get(pageNum);
     if (Anno != null) {
         Anno.forEach(element => {

@@ -66,10 +66,10 @@ Canvas.on('object:added', function (e) {
             });
         });
     } else {
-        console.log(identification(object));
+        ident = identification(object);
 
         AnnoCollection.set(realTime, e.target);
-        send('object', e.target, e.target.oCoords, pageNum, realTime);
+        send('object', e.target, e.target.oCoords, pageNum, ident,realTime);
     }
 });
 
@@ -125,12 +125,30 @@ function coverd(path, data) {
 }
 
 /**
- * 線を作る(仮)
+ * 教師側の表示用データを作る
  *
  * @param {*} data
  * @param {*} pageNum
+ * @param {*} ident
  */
-function makeLine(data, pageNum) {
+function make(data, oCoords,pageNum, ident) {
+    var line
+    if (ident == identifier[0]) {
+        line = makeEnclosure(oCoords);
+    } else if (ident == identifier[1]) {
+        line = makeLine(data); 
+    }
+    if (line !== null) {
+        setPage(line, pageNum);
+    }
+}
+
+/**
+ * 線を作る(仮)
+ *
+ * @param {*} data
+ */
+function makeLine(data) {
     var m, l;
     data.path.forEach(element => {
         if (element[0] == 'M') {
@@ -150,10 +168,30 @@ function makeLine(data, pageNum) {
         evented: false,
     });
     // Canvas.add(line);
-    setPage(line, pageNum);
+    return line;
+}
+
+/**
+ * 円を作る
+ *
+ * @param {*} data
+ */
+function makeEnclosure(oCoords) {
+    var height = oCoords.bl.y - oCoords.tl.y;
+    var width = oCoords.tr.x - oCoords.tl.x;
+    var Enclosure = new fabric.Rect({
+        top: oCoords.tl.y,
+        left : oCoords.tl.x,
+        width : width,
+        height : height,
+        opacity: 0.5
+    });
+    console.log(Enclosure);
+
+    return Enclosure ;
 }
 
 global.Canvas = Canvas;
 global.setCanvasSize = setCanvasSize;
 global.Pen = Pen;
-global.makeLine = makeLine;
+global.make = make;
