@@ -53,8 +53,8 @@ function pageRender(pageNum) {
             // console.log(textContent);
             textContent.items.forEach(text => {
                 var tx = pdfjsLib.Util.transform(viewport.transform, text.transform);
-                console.log(text);
-                console.log(tx);   
+                // console.log(text);
+                // console.log(tx);   
             });
             // pdfjsLib.renderTextLayer({
                 // textContent: textContent,
@@ -69,6 +69,24 @@ function getPdfPage() {
     return pdf.numPages;
 }
 
+function getPdfText(pageNum) {
+    return pdf.getPage(pageNum).then(function (page) {
+        scale = 1;
+        var viewport = page.getViewport({ scale: scale });
+        return page.getTextContent().then(function (textContent) {
+            // console.log(textContent);
+            textContent.items.forEach(text => {
+                text.transform = pdfjsLib.Util.transform(viewport.transform, text.transform);
+                // console.log(text);
+                // console.log(text);
+            });
+            // console.log(textContent);
+            return textContent;
+        });
+    });
+}
+
 global.pageRender = pageRender;
 global.pageNum = pageNum;
 global.getPdfPage = getPdfPage;
+global.getPdfText = getPdfText;

@@ -11,7 +11,7 @@ var fs = require('fs');
  * @param {*} datas
  * @param {*} time
  */
-function fileWrite(filename, handshake, userName,datas,time) {
+function fileWrite(filename, handshake, userName,datas,pageNum,time) {
     // console.log(datas.type);
     if (datas.type == 'path') {
         var data = datas.path;
@@ -20,7 +20,7 @@ function fileWrite(filename, handshake, userName,datas,time) {
         var ip = handshake.address.split(":");
         for (i = 0; i < data.length; i++) {
             // array.push(userName + ' ' + data[i] + ' '+ time +'\n');
-            str += ip[3] + ' ' + data[i] + ' ' + time + '\n';
+            str += ip[3] + ' ' + data[i] + ' ' + pageNum +' '+time + '\n';
         }
         fs.open(filename, 'a', function (err, fd) {
 

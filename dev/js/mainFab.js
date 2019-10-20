@@ -13,6 +13,10 @@ function setCanvasSize(viewport) {
     Canvas.setWidth(viewport.width);
     Canvas.setHeight(viewport.height);
 }
+
+//水色,青,緑,黄色,橙色,赤
+//カラー参考サイト http://www.netyasun.com/home/color.html
+var colorVariation = ['#8EF1FF', '#5D99FF', '#9BF9CC', '#FFFF66', '#FF6928', '#FF3333']
 window.addEventListener('load', () => {
     // function init(viewport) {
     // const pd = Canvas.getElementById('pdfCan');
@@ -51,12 +55,14 @@ Canvas.on('object:added', function (e) {
     let realTime = y + "/" + m + "/" + d + " " + hh + ":" + mm + ":" + ss
     // logPrint(y+"/"+m+"/"+d+" "+hh+":"+mm+":"+ss);
     // logPrint(e);
+    //消しゴムモードが起動している時
+    //todo データを消した後のサーバー処理(delet命令)
     if (eraserMode) {
         Canvas.remove(object);
         Canvas.getObjects().forEach(element => {
             element.path.forEach(path => {
                 if (coverd(path, object)) {
-                        Canvas.remove(element);
+                    Canvas.remove(element);
                 }
                 // object.path.forEach(data => {
                 //     // console.log(corverd(path, data));
@@ -69,7 +75,13 @@ Canvas.on('object:added', function (e) {
         ident = identification(object);
 
         AnnoCollection.set(realTime, e.target);
-        send('object', e.target, e.target.oCoords, pageNum, ident,realTime);
+        getPdfText(pageNum).then(function (text) {
+            text = text;
+            if (!pageTrans) {
+                // console.log("Ad");
+                send('object', e.target, e.target.oCoords, pageNum, ident, text, realTime);
+            }
+        });
     }
 });
 
@@ -79,18 +91,18 @@ function identification(canvas) {
     bl = oCoords.bl;
     tr = oCoords.tr;
     var double = function (l1, l2) {
-            return Math.pow(l1.x - l2.x, 2) + Math.pow(l1.y-l2.y,2);
+        return Math.pow(l1.x - l2.x, 2) + Math.pow(l1.y - l2.y, 2);
     }
     var d = function (x1, x2) {
         return Math.sqrt(double(x1, x2));
     }
-    if (d(tl,bl) < 49){
+    if (d(tl, bl) < 49) {
         return identifier[1];
-    } else if(d(tl,tr) < 49){
+    } else if (d(tl, tr) < 49) {
         return identifier[1];
     } else {
         return identifier[0];
-    } 
+    }
 }
 
 
@@ -101,9 +113,9 @@ function coverd(path, data) {
     let bl = data.oCoords.bl,
         br = data.oCoords.br,
         tl = data.oCoords.tl;
-    for (i = 1; i < path.length; i += 2){
+    for (i = 1; i < path.length; i += 2) {
         // console.log(path[i]);
-        if (bl.x < path[i] && br.x > path[i]){
+        if (bl.x < path[i] && br.x > path[i]) {
             // console.log(path);
             if (bl.y > r(path[i + 1]) && tl.y < r(path[i + 1])) {
                 return true;
@@ -124,6 +136,10 @@ function coverd(path, data) {
 
 }
 
+function textCheck(canvas, text) {
+
+}
+
 /**
  * 教師側の表示用データを作る
  *
@@ -131,14 +147,15 @@ function coverd(path, data) {
  * @param {*} pageNum
  * @param {*} ident
  */
-function make(data, oCoords,pageNum, ident) {
+function make(data, oCoords, pageNum, ident) {
     var line
     if (ident == identifier[0]) {
         line = makeEnclosure(oCoords);
     } else if (ident == identifier[1]) {
-        line = makeLine(data); 
+        line = makeLine(data);
     }
     if (line !== null) {
+        console.log(pageNum);
         setPage(line, pageNum);
     }
 }
@@ -148,7 +165,7 @@ function make(data, oCoords,pageNum, ident) {
  *
  * @param {*} data
  */
-function makeLine(data) {
+function makeLine(data, color) {
     var m, l;
     data.path.forEach(element => {
         if (element[0] == 'M') {
@@ -161,11 +178,13 @@ function makeLine(data) {
     });
     var path = [m[1], m[2], l[1], l[2]];
     var line = new fabric.Line(path, {
-        fill: 'red',
-        stroke: 'red',
+        // fill: 'red',
+        fill: colorVariation[color],
+        // stroke: 'red',
         strokeWidth: 5,
         selectable: false,
         evented: false,
+        opacity: 0.5
     });
     // Canvas.add(line);
     return line;
@@ -176,19 +195,20 @@ function makeLine(data) {
  *
  * @param {*} data
  */
-function makeEnclosure(oCoords) {
+function makeEnclosure(oCoords, color) {
     var height = oCoords.bl.y - oCoords.tl.y;
     var width = oCoords.tr.x - oCoords.tl.x;
     var Enclosure = new fabric.Rect({
+        fill: colorVariation[color],
         top: oCoords.tl.y,
-        left : oCoords.tl.x,
-        width : width,
-        height : height,
+        left: oCoords.tl.x,
+        width: width,
+        height: height,
         opacity: 0.5
     });
     console.log(Enclosure);
 
-    return Enclosure ;
+    return Enclosure;
 }
 
 global.Canvas = Canvas;
