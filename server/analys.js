@@ -1,4 +1,7 @@
 // var annotasions = ['enclosure','line'];
+//水色,青,緑,黄色,橙色,赤
+//カラー参考サイト http://www.netyasun.com/home/color.html
+var colorVariation = ['#8EF1FF', '#5D99FF', '#9BF9CC', '#FFFF66', '#FF6928', '#FF3333']
 var identifier = ['enclosure', 'line'];
 
 /**
@@ -22,7 +25,7 @@ function dataset(ip,path,oCoords,pageNum,ident,text) {
     if (page.has(ip)) {
         array = page.get(ip);
     }
-    array.push(new datalist(path,oCoords,ident,text));
+    array.push(new datalist(ip,path,oCoords,ident,text));
     page.set(ip, array);
     Pages.set(pageNum, page);
     // console.log(Pages);
@@ -30,6 +33,12 @@ function dataset(ip,path,oCoords,pageNum,ident,text) {
     // console.log(Datas);
 }
 
+/**
+ *
+ *
+ * @param {*} page
+ * @returns pathと色情報の集合
+ */
 function analys(page) {
     //todo 同じ座標に書いた人を求める
     var map = new Map();
@@ -40,16 +49,32 @@ function analys(page) {
         var iplist = data.keys();
         data.forEach(element => {
             element.forEach(value => {
-                console.log(value.text.str);
-                i = 0;
-                if (map.has(value.text.str)) {
-                    i = map.get(value.text.str);
+                if (value.text != null) {
+
+                    if (map.has(value.text.str)) {
+                        array = map.get(value.text.str);
+                    }
+                    array.push(value);
+                    map.set(value.text.str, array);
                 }
-                map.set(value.text.str, i + 1);
-                // console.log(map.get(value.text.str));
             });
-            // console.log(element);
         });
+        // console.log(map);
+        //todo ipごとに合計
+        // map.forEach(element => {
+        var count = new Map();
+        map.forEach(function (value, key) {
+            console.log(key + ' ' + value);
+            i = 0;
+            if (count.has(key)) {
+                i = count.get(key);
+            } 
+            count.set(key, i + 1);
+        });
+        console.log(count);
+        // }) 
+
+        //合計から色を決定
         // while (true) {
 
         //     iteratorResult = iplist.next();
@@ -72,7 +97,8 @@ function analys(page) {
  * @class datalist
  */
 class datalist{
-    constructor(path,oCoords,ident,text){
+    constructor(ip,path,oCoords,ident,text){
+        this.ip = ip;
         this.path = path;
         this.oCoords = oCoords;
         this.text = text;

@@ -85,16 +85,22 @@ Canvas.on('object:added', function (e) {
                     }
                 }
             })(object,text);
-            console.log(font);
-            console.log(object.oCoords);
+            // console.log(font);
+            // console.log(object.oCoords);
             if (!pageTrans) {
-                // console.log("Ad");
-                send('object', e.target, e.target.oCoords, pageNum, ident, font, realTime);
+                console.log("Ad");
+                send('object', e.target, e.target.oCoords, pageNum, ident, font,realTime);
             }
         });
     }
 });
 
+/**
+ *  識別
+ *
+ * @param {*} canvas
+ * @returns
+ */
 function identification(canvas) {
     oCoords = canvas.oCoords;
     tl = oCoords.tl;
@@ -116,6 +122,13 @@ function identification(canvas) {
 }
 
 
+/**
+ * 消しゴム用
+ * バウンディングボックスが線をまたいでいるか
+ * @param {*} path
+ * @param {*} data
+ * @returns
+ */
 function coverd(path, data) {
     r = Math.round;
     // console.log(data.oCoords);
@@ -133,12 +146,11 @@ function coverd(path, data) {
         }
     }
     return false;
-
 }
 
 /**
  * 書き込み情報に付随するテキスト情報を取得
- *
+ * 無名関数にしたため現在は使用停止
  * @param {*} canvas
  * @param {*} text
  */
@@ -196,7 +208,7 @@ function makeLine(data, color) {
     var path = [m[1], m[2], l[1], l[2]];
     var line = new fabric.Line(path, {
         // fill: 'red',
-        fill: colorVariation[color],
+        fill: colorVariation[0],
         // stroke: 'red',
         strokeWidth: 5,
         selectable: false,
@@ -208,7 +220,7 @@ function makeLine(data, color) {
 }
 
 /**
- * 円を作る
+ * 囲みを作る
  *
  * @param {*} data
  */
@@ -216,14 +228,15 @@ function makeEnclosure(oCoords, color) {
     var height = oCoords.bl.y - oCoords.tl.y;
     var width = oCoords.tr.x - oCoords.tl.x;
     var Enclosure = new fabric.Rect({
-        fill: colorVariation[color],
+        fill: colorVariation[0],
+        // fill: 'red',
         top: oCoords.tl.y,
         left: oCoords.tl.x,
         width: width,
         height: height,
         opacity: 0.5
     });
-    console.log(Enclosure);
+    // console.log(Enclosure);
 
     return Enclosure;
 }
