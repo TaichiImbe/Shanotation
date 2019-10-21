@@ -166,7 +166,9 @@ function setPage(data, page) {
     // Canvas.add(data);
     PageAnno.set(page, collection);
     // console.log(PageAnno);
-    AnnotationSet(pageNum);
+    AnnotationSet(pageNum).then(function () {
+
+    });
 }
 function AnnotationSet(pageNum) {
         global.pageTrans = true;
@@ -174,7 +176,7 @@ function AnnotationSet(pageNum) {
 
         Canvas.clear();
         const Anno = PageAnno.get(pageNum);
-        // console.log(Anno);
+        console.log(Anno);
         if (Anno != null) {
             Anno.forEach(element => {
                 Canvas.add(element);
