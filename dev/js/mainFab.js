@@ -39,7 +39,7 @@ Canvas.on('object:selected', function (e) {
 })
 
 Canvas.on('object:added', function (e) {
-    // console.log(e.target);
+    console.log(e.target);
     let object = e.target;
     // Canvas.getObjects().forEach(element => {
     // console.log(element);
@@ -184,7 +184,7 @@ function make(data, oCoords, pageNum, ident) {
         line = makeLine(data);
     }
     if (line !== null) {
-        console.log(pageNum);
+        // console.log(line);
         setPage(line, pageNum);
     }
 }
