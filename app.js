@@ -118,7 +118,7 @@ io.sockets.on('connection', function (socket) {
             analys.analys(pageNum);
             fileWrite('analysdata.txt', handshake,userList.get(handshake.address), data, pageNum,time);
             if (userList.get(handshake.address) != 'teacher') {
-                io.sockets.emit('teacher', data, pageNum);
+                io.sockets.emit('teacher', data, oCoords,pageNum,ident);
             }
         } else {
             console.log(data);

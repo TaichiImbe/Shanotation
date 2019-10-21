@@ -16,9 +16,9 @@
         // console.log('connect');
     // });
 
-    function send(dist,obj,oCoords,pageNum,time){
+    function send(dist,obj,oCoords,pageNum,ident,text,time){
         if(dist == 'object'){
-            socket.emit(dist,obj,oCoords,pageNum,time);
+            socket.emit(dist,obj,oCoords,pageNum,ident,text,time);
         }else{
             socket.emit(dist,obj);
         }

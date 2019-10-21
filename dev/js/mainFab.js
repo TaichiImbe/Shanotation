@@ -39,7 +39,7 @@ Canvas.on('object:selected', function (e) {
 })
 
 Canvas.on('object:added', function (e) {
-    console.log(e.target);
+    // console.log(e.target);
     let object = e.target;
     // Canvas.getObjects().forEach(element => {
     // console.log(element);
@@ -184,7 +184,7 @@ function make(data, oCoords, pageNum, ident) {
         line = makeLine(data);
     }
     if (line !== null) {
-        // console.log(line);
+        console.log(pageNum);
         setPage(line, pageNum);
     }
 }
@@ -193,7 +193,6 @@ function make(data, oCoords, pageNum, ident) {
  * 線を作る(仮)
  *
  * @param {*} data
- * @param {*} pageNum
  */
 function makeLine(data, color) {
     var m, l;
@@ -245,4 +244,4 @@ function makeEnclosure(oCoords, color) {
 global.Canvas = Canvas;
 global.setCanvasSize = setCanvasSize;
 global.Pen = Pen;
-global.makeLine = makeLine;
+global.make = make;
