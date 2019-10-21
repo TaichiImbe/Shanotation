@@ -26,7 +26,7 @@ window.addEventListener('load', () => {
             return;
         }
         PageAnno.set(pageNum, Canvas.getObjects());
-        // Canvas.clear()
+        Canvas.clear()
         // logPrint(PageAnno);
         pageNum--;
         AnnotationSet(pageNum).then(function () {
@@ -40,7 +40,7 @@ window.addEventListener('load', () => {
             return;
         }
         PageAnno.set(pageNum, Canvas.getObjects());
-        // Canvas.clear()
+        Canvas.clear()
         // logPrint(PageAnno);
         pageNum++;
         AnnotationSet(pageNum).then(function () {
@@ -169,19 +169,12 @@ function setPage(data, page) {
     AnnotationSet(pageNum);
 }
 function AnnotationSet(pageNum) {
-        global.pageTrans = true;
-    return new Promise(function () {
-
-        Canvas.clear();
-        const Anno = PageAnno.get(pageNum);
-        // console.log(Anno);
-        if (Anno != null) {
-            Anno.forEach(element => {
-                Canvas.add(element);
-            });
-        }
-        global.pageTrans = false;
-    })
+    const Anno = PageAnno.get(pageNum);
+    if (Anno != null) {
+        Anno.forEach(element => {
+            Canvas.add(element);
+        });
+    }
 }
 global.setPage = setPage;
 global.eraserMode = eraserMode;

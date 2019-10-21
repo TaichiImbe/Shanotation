@@ -72,7 +72,7 @@ Canvas.on('object:added', function (e) {
             });
         });
     } else {
-        ident = identification(object);
+        console.log(identification(object));
 
         AnnoCollection.set(realTime, e.target);
         getPdfText(pageNum).then(function (text) {
@@ -193,6 +193,7 @@ function make(data, oCoords, pageNum, ident) {
  * 線を作る(仮)
  *
  * @param {*} data
+ * @param {*} pageNum
  */
 function makeLine(data, color) {
     var m, l;
@@ -244,4 +245,4 @@ function makeEnclosure(oCoords, color) {
 global.Canvas = Canvas;
 global.setCanvasSize = setCanvasSize;
 global.Pen = Pen;
-global.make = make;
+global.makeLine = makeLine;
