@@ -26,7 +26,7 @@ window.addEventListener('load', () => {
             return;
         }
         PageAnno.set(pageNum, Canvas.getObjects());
-        // Canvas.clear()
+        Canvas.clear()
         // logPrint(PageAnno);
         pageNum--;
         AnnotationSet(pageNum).then(function () {
@@ -40,7 +40,7 @@ window.addEventListener('load', () => {
             return;
         }
         PageAnno.set(pageNum, Canvas.getObjects());
-        // Canvas.clear()
+        Canvas.clear()
         // logPrint(PageAnno);
         pageNum++;
         AnnotationSet(pageNum).then(function () {
@@ -171,6 +171,7 @@ function setPage(data, page) {
     });
 }
 function AnnotationSet(pageNum) {
+<<<<<<< HEAD
         global.pageTrans = true;
     return new Promise(function () {
 
@@ -184,6 +185,14 @@ function AnnotationSet(pageNum) {
         }
         global.pageTrans = false;
     })
+=======
+    const Anno = PageAnno.get(pageNum);
+    if (Anno != null) {
+        Anno.forEach(element => {
+            Canvas.add(element);
+        });
+    }
+>>>>>>> ”破棄予定"
 }
 global.setPage = setPage;
 global.eraserMode = eraserMode;
