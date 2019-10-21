@@ -72,7 +72,7 @@ Canvas.on('object:added', function (e) {
             });
         });
     } else {
-        console.log(identification(object));
+        ident = identification(object);
 
         AnnoCollection.set(realTime, e.target);
         getPdfText(pageNum).then(function (text) {
