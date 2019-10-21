@@ -88,7 +88,7 @@ Canvas.on('object:added', function (e) {
             // console.log(font);
             // console.log(object.oCoords);
             if (!pageTrans) {
-                console.log("Ad");
+                // console.log("Ad");
                 send('object', e.target, e.target.oCoords, pageNum, ident, font,realTime);
             }
         });
