@@ -210,7 +210,7 @@ function makeLine(data, color) {
     var line = new fabric.Line(path, {
         // fill: 'red',
         fill: colorVariation[0],
-        // stroke: 'red',
+        stroke: 'red',
         strokeWidth: 5,
         selectable: false,
         evented: false,
