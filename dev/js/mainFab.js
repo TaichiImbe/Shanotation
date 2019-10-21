@@ -76,10 +76,20 @@ Canvas.on('object:added', function (e) {
 
         AnnoCollection.set(realTime, e.target);
         getPdfText(pageNum).then(function (text) {
-            text = text;
+            // var font = textCheck(object,text);
+            var font = (function (object,text) {
+                oCoords = object.oCoords;
+                for (i = text.items.length-1; i >= 0 ; i--) {
+                    if (text.items[i].transform[5] < oCoords.br.y) {
+                        return text.items[i];
+                    }
+                }
+            })(object,text);
+            console.log(font);
+            console.log(object.oCoords);
             if (!pageTrans) {
                 // console.log("Ad");
-                send('object', e.target, e.target.oCoords, pageNum, ident, text, realTime);
+                send('object', e.target, e.target.oCoords, pageNum, ident, font, realTime);
             }
         });
     }
@@ -123,21 +133,28 @@ function coverd(path, data) {
         }
     }
     return false;
-    // for (i = 1; i < path.length; i += 2) {
-    //     for (j = 1; j < path.length; j += 2) {
-
-    //         if (r(path[i]) == r(data[j]) && r(path[i + 1]) == r(data[j + 1])) {
-    //             return true;
-    //         }
-    //     }
-
-    // }
-    // return false;
 
 }
 
+/**
+ * 書き込み情報に付随するテキスト情報を取得
+ *
+ * @param {*} canvas
+ * @param {*} text
+ */
 function textCheck(canvas, text) {
-
+    var oCoords = canvas.oCoords;
+    // for (item in text.item) {
+    //     console.log(item);
+    //     if(item.transform[5] < oCoords.br.y) {
+    //         // return item;
+    //     }
+    // }
+    for (i = 0; i < text.items.length; i++){
+        if (text.items[i].transform[5] < oCoords.br.y) {
+            return text.items[i];
+        }
+    }
 }
 
 /**

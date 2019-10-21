@@ -1,15 +1,6 @@
-// var PDFJS = require('pdfjs-dist');
-// require('pdfjs-dist');
 var pdfjsLib = require('pdfjs-dist');
-// var Canvas = require('./mainFab').Canvas;
-// console.log(__dirname);
-// console.log(__filename);
-// PDFJS.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.js';
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.js';
-// PDFJS.cMapUrl = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/1.10.100/cmaps/';
-// PDFJS.cMapUrl = '/node_modules/pdfjs-dist/cmap'
 CMAP_URL = '/node_modules/pdfjs-dist/cmaps/'
-// PDFJS.cMapPacked = true;
 CMAP_PACKED = true;
 
 var url = '/pdf/middle2019.pdf';
@@ -56,11 +47,6 @@ function pageRender(pageNum) {
                 // console.log(text);
                 // console.log(tx);   
             });
-            // pdfjsLib.renderTextLayer({
-                // textContent: textContent,
-                // viewport: viewport,
-                // textDivs:[]
-            // })
         })
     });
 }
