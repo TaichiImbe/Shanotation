@@ -26,7 +26,7 @@ window.addEventListener('load', () => {
             return;
         }
         PageAnno.set(pageNum, Canvas.getObjects());
-        // Canvas.clear()
+        Canvas.clear()
         // logPrint(PageAnno);
         pageNum--;
         AnnotationSet(pageNum).then(function () {
@@ -40,7 +40,7 @@ window.addEventListener('load', () => {
             return;
         }
         PageAnno.set(pageNum, Canvas.getObjects());
-        // Canvas.clear()
+        Canvas.clear()
         // logPrint(PageAnno);
         pageNum++;
         AnnotationSet(pageNum).then(function () {
