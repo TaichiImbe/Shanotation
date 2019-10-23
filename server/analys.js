@@ -64,14 +64,14 @@ function analys(page) {
         // map.forEach(element => {
         var count = new Map();
         map.forEach(function (value, key) {
-            console.log(key + ' ' + value);
+            // console.log(key + ' ' + value);
             i = 0;
             if (count.has(key)) {
                 i = count.get(key);
             } 
             count.set(key, i + 1);
         });
-        console.log(count);
+        // console.log(count);
         // }) 
 
         //合計から色を決定

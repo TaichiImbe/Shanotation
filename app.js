@@ -6,6 +6,7 @@ var app = express();
 var router = express.Router();
 var url = require('url');
 var config = require('config');
+var multer = require('multer');
 
 var port = config.port;
 var user = config.user;
@@ -30,6 +31,17 @@ var analys = require('./server/analys');
 server = app.listen(port, function () {
     console.log('Node js is listening to PORT:' + server.address().port);
 });
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null,'')
+    },
+
+    filename: function (req, file, cb) {
+        cb(null,file.originalname)
+    }
+})
+var upload = multer({dest: './pdf/'}).single('thumbnail');
 
 //express session initialization
 var sessionMiddleware = session({
@@ -92,6 +104,20 @@ app.get('/teacher', function (req, res, next) {
     res.render('./teacher');
 });
 
+app.get('/upload', function (req, res, next) {
+    res.render('./upload');
+});
+
+app.post('/upload', function (req, res) {
+    upload(req, res, function (err) {
+        if (err) {
+            res.send("Failed to write " + req.file.destination + " with " + err);
+        } else {
+            req.send('uploaded' + req.file.originalname + ' as ' + req.file.filename + " Size: ")
+        }
+    });
+});
+
 //login userList 
 var userList = new Map();
 
@@ -115,10 +141,10 @@ io.sockets.on('connection', function (socket) {
         if (data.type === 'path') {
             var path = data.path;
             analys.dataset(handshake.address, data, oCoords,pageNum,ident,text);
-            analys.analys(pageNum);
+            ptext = analys.analys(pageNum);
             fileWrite('analysdata.txt', handshake,userList.get(handshake.address), data, pageNum,time);
             if (userList.get(handshake.address) != 'teacher') {
-                io.sockets.emit('teacher', data, oCoords,pageNum,ident);
+                io.sockets.emit('teacher', data, oCoords,pageNum,ident,text);
             }
         } else {
             console.log(data);

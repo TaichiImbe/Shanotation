@@ -20,10 +20,10 @@
         console.log('connect');
       });
 
-      socket.on('teacher', function (data, oCoords,pageNum,identifier) {
+      socket.on('teacher', function (data, oCoords,pageNum,identifier,text) {
         // console.log(identifier);
         // console.log(data);
-        make(data, oCoords,pageNum, identifier);
+        make(data, oCoords,pageNum, identifier,text);
         // Canvas.add(data);
       });
     }
@@ -60,7 +60,7 @@
       penSize.style.display = 'none';
       select.style.display = 'none';
       draw.style.display = 'none';
-      clearButton.style.display = 'none';
+      // clearButton.style.display = 'none';
       eraser.style.display = 'none';
 
     })

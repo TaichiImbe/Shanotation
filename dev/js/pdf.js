@@ -66,7 +66,6 @@ function getPdfText(pageNum) {
                 // console.log(text);
                 // console.log(text);
             });
-            // console.log(textContent);
             return textContent;
         });
     });

@@ -77,13 +77,37 @@ Canvas.on('object:added', function (e) {
         AnnoCollection.set(realTime, e.target);
         getPdfText(pageNum).then(function (text) {
             // var font = textCheck(object,text);
+            console.log(text);
             var font = (function (object,text) {
                 oCoords = object.oCoords;
+                var str;
                 for (i = text.items.length-1; i >= 0 ; i--) {
-                    if (text.items[i].transform[5] < oCoords.br.y) {
-                        return text.items[i];
+                    if (text.items[i].transform[5] < oCoords.br.y && text.items[i].transform[4] < oCoords.br.x) {
+                        str =  text.items[i];
+                        break;
                     }
                 }
+                console.log(str);
+                var charSize = str.width / str.str.length;
+                var width = 0; 
+                var transform = str.transform;
+                var t4 = str.transform[4];
+                var substring = '';
+                for (i = 0; i < str.str.length; i++){
+                    if (t4 <= oCoords.bl.x && t4 + str.height >= oCoords.bl.x) {
+                        substring += str.str[i];
+                        transform[4] = t4;
+                    }
+                    if (t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
+                        substring += str.str[i];
+                        width += str.height;
+                    }
+                    if (t4 > oCoords.br.x) {
+                        break;
+                    } 
+                    t4 += str.height;
+                }
+                return new newString(substring, str.height, width, transform); 
             })(object,text);
             // console.log(font);
             // console.log(object.oCoords);
@@ -176,13 +200,14 @@ function textCheck(canvas, text) {
  * @param {*} pageNum
  * @param {*} ident
  */
-function make(data, oCoords, pageNum, ident) {
+function make(data, oCoords, pageNum, ident,text) {
     var line
-    if (ident == identifier[0]) {
-        line = makeEnclosure(oCoords);
-    } else if (ident == identifier[1]) {
-        line = makeLine(data);
-    }
+    // if (ident == identifier[0]) {
+    //     line = makeEnclosure(oCoords);
+    // } else if (ident == identifier[1]) {
+    //     line = makeLine(data);
+    // }
+    line = makeTextHiglight(text, 0);
     if (line !== null) {
         console.log(pageNum);
         setPage(line, pageNum);
@@ -240,6 +265,38 @@ function makeEnclosure(oCoords, color) {
 
     return Enclosure;
 }
+
+/**
+ *
+ *
+ * @param {*} text is pdfjs text infomation
+ * @param {*} color is int
+ */
+function makeTextHiglight(text, color) {
+    console.log(text);
+    height = text.height;
+    width = text.width;
+    var Highlight = new fabric.Rect({
+        fill: colorVariation[0], //color
+        top: text.transform[5] - height,
+        left: text.transform[4],
+        width: width,
+        height : height,
+        opacity: 0.5
+    })
+
+    return Highlight;
+}
+
+class newString{
+    constructor(str,height,width,transform) {
+        this.str = str;
+        this.height = height;
+        this.width = width;
+        this.transform = transform;
+    }    
+}
+
 
 global.Canvas = Canvas;
 global.setCanvasSize = setCanvasSize;
