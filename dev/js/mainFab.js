@@ -81,12 +81,18 @@ Canvas.on('object:added', function (e) {
             var font = (function (object,text) {
                 oCoords = object.oCoords;
                 var str;
-                for (i = text.items.length-1; i >= 0 ; i--) {
-                    if (text.items[i].transform[5] < oCoords.br.y && text.items[i].transform[4] < oCoords.br.x) {
-                        str =  text.items[i];
-                        break;
+                // for (i = text.items.length-1; i >= 0 ; i--) {
+                var min = Math.sqrt(Math.pow(text.items[0].transform[4] - oCoords.bl.x,2) + Math.pow(text.items[0].transform[5] - oCoords.bl.y,2));
+                var miny = Math.abs(text.items[0].transform[5] - oCoords.bl.y);
+                var minx = Math.abs(text.items[0].transform[4] - oCoords.bl.x);
+                str = text.items[0];
+                for (i = 1; i < text.items.length ; i++) {
+                    if(min > Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x,2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y,2))){
+                        min = Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x,2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y,2));
+                        str = text.items[i];
                     }
                 }
+                console.log(oCoords);
                 console.log(str);
                 var charSize = str.width / str.str.length;
                 var width = 0; 
