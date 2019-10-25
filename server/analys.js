@@ -16,7 +16,7 @@ var Pages = new Map();
  * @param {*} data
  * @param {*} oCoords
  */
-function dataset(ip,path,oCoords,pageNum,ident,text) {
+function dataset(ip, path, oCoords, pageNum, ident, text) {
     var array = new Array();
     var page = new Map();
     if (Pages.has(pageNum)) {
@@ -25,7 +25,7 @@ function dataset(ip,path,oCoords,pageNum,ident,text) {
     if (page.has(ip)) {
         array = page.get(ip);
     }
-    array.push(new datalist(ip,path,oCoords,ident,text));
+    array.push(new datalist(ip, path, oCoords, ident, text));
     page.set(ip, array);
     Pages.set(pageNum, page);
     // console.log(Pages);
@@ -42,13 +42,13 @@ function dataset(ip,path,oCoords,pageNum,ident,text) {
 function analys(page) {
     //todo 同じ座標に書いた人を求める
     var map = new Map();
-    var array = []
     if (Pages.has(page)) {
 
         var data = Pages.get(page);
         var iplist = data.keys();
         data.forEach(element => {
             element.forEach(value => {
+                var array = []
                 if (value.text != null) {
 
                     if (map.has(value.text.str)) {
@@ -65,11 +65,31 @@ function analys(page) {
         var count = new Map();
         map.forEach(function (value, key) {
             // console.log(key + ' ' + value);
-            i = 0;
-            if (count.has(key)) {
-                i = count.get(key);
-            } 
-            count.set(key, i + 1);
+            var i = 0;
+            //文字列ごとの配列が取れる
+            //element は datalist型 
+            let iplist = new Array();
+            let ipcheck = function (element) {
+                for (let i = 0; i < iplist.length; i++){
+                    if (iplist[i] === element.ip) {
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+            map.get(key).forEach(element => {
+                if (ipcheck(element)) {
+                    return;
+                } else {
+                    iplist.push(element.ip);
+                }
+                console.log(iplist);
+                if (count.has(key)) {
+                    i = count.get(key);
+                }
+                count.set(key, i + 1);
+            });
         });
         // console.log(count);
         // }) 
@@ -83,7 +103,6 @@ function analys(page) {
         //     var dataset = iplist.get(iteratorResult.value);
         //     console.log(dataset);
         // }
-        
 
     }
 
@@ -96,8 +115,8 @@ function analys(page) {
  *  パスのまとまり、バウンディングボックス,識別子,一緒に存在するテキスト
  * @class datalist
  */
-class datalist{
-    constructor(ip,path,oCoords,ident,text){
+class datalist {
+    constructor(ip, path, oCoords, ident, text) {
         this.ip = ip;
         this.path = path;
         this.oCoords = oCoords;

@@ -108,6 +108,7 @@ app.get('/upload', function (req, res, next) {
     res.render('./upload');
 });
 
+//todo upload処理でpdfがエラーする問題を解決する.
 app.post('/upload', function (req, res) {
     upload(req, res, function (err) {
         if (err) {
@@ -142,6 +143,9 @@ io.sockets.on('connection', function (socket) {
             var path = data.path;
             analys.dataset(handshake.address, data, oCoords,pageNum,ident,text);
             ptext = analys.analys(pageNum);
+            if (ptext == null) {
+                console.log('err');
+            }
             fileWrite('analysdata.txt', handshake,userList.get(handshake.address), data, pageNum,time);
             if (userList.get(handshake.address) != 'teacher') {
                 io.sockets.emit('teacher', data, oCoords,pageNum,ident,text);
