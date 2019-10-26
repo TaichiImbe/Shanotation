@@ -8,6 +8,7 @@ var identifier = ['enclosure', 'line'];
  * Pages は ページごとにipとpathのmapを管理する
  */
 var Pages = new Map();
+var textList = new Set();
 
 /**
  *送信されてきた分析データをセット
@@ -28,9 +29,8 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
     array.push(new datalist(ip, path, oCoords, ident, text));
     page.set(ip, array);
     Pages.set(pageNum, page);
-    // console.log(Pages);
-    //todo とりあえず割合の正規化
     // console.log(Datas);
+    textList.add(text);
 }
 
 /**
@@ -94,15 +94,8 @@ function analys(page) {
         // console.log(count);
         // }) 
 
-        //合計から色を決定
-        // while (true) {
-
-        //     iteratorResult = iplist.next();
-        //     if (iteratorResult.done) break;
-        //     // console.log(iteratorResult);
-        //     var dataset = iplist.get(iteratorResult.value);
-        //     console.log(dataset);
-        // }
+        //todo 合計から色を決定
+        //todo とりあえず割合の正規化
 
     }
 
