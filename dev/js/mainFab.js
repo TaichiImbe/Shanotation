@@ -213,7 +213,7 @@ function make(data, oCoords, pageNum, ident,text) {
     // } else if (ident == identifier[1]) {
     //     line = makeLine(data);
     // }
-    line = makeTextHiglight(text, 0);
+    line = makeTextHiglight(text.text, text.color);
     if (line !== null) {
         console.log(pageNum);
         setPage(line, pageNum);
@@ -276,14 +276,14 @@ function makeEnclosure(oCoords, color) {
  *
  *
  * @param {*} text is pdfjs text infomation
- * @param {*} color is int
+ * @param {*} color is color code
  */
 function makeTextHiglight(text, color) {
     console.log(text);
     height = text.height;
     width = text.width;
     var Highlight = new fabric.Rect({
-        fill: colorVariation[0], //color
+        fill: color,
         top: text.transform[5] - height,
         left: text.transform[4],
         width: width,

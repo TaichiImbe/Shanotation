@@ -30,7 +30,31 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
     page.set(ip, array);
     Pages.set(pageNum, page);
     // console.log(Datas);
-    textList.add(text);
+    let inCheck = function (text) {
+        // console.log(textList);
+        let it = textList.values();
+        while (true) {
+            let textconsider = it.next();
+            // console.log(textconsider.value);
+            if (!textconsider.done) {
+                let value = textconsider.value;
+                if (value.str === text.str) {
+                    if (value.transform[4] === text.transform[4] && value.transform[5] === text.transform[5]) {
+                        return false;
+                    }
+                }
+            } else {
+                break;
+            }
+
+        }
+        return true;
+    }
+    // console.log(inCheck(text));
+    if (inCheck(text)) {
+        textList.add(text);
+    }
+    // console.log(textList);
 }
 
 /**
@@ -39,7 +63,7 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
  * @param {*} page
  * @returns pathと色情報の集合
  */
-function analys(page) {
+function analys(page,userListSize) {
     //todo 同じ座標に書いた人を求める
     var map = new Map();
     if (Pages.has(page)) {
@@ -70,7 +94,7 @@ function analys(page) {
             //element は datalist型 
             let iplist = new Array();
             let ipcheck = function (element) {
-                for (let i = 0; i < iplist.length; i++){
+                for (let i = 0; i < iplist.length; i++) {
                     if (iplist[i] === element.ip) {
 
                         return true;
@@ -84,7 +108,7 @@ function analys(page) {
                 } else {
                     iplist.push(element.ip);
                 }
-                console.log(iplist);
+                // console.log(iplist);
                 if (count.has(key)) {
                     i = count.get(key);
                 }
@@ -95,12 +119,87 @@ function analys(page) {
         // }) 
 
         //todo 合計から色を決定
-        //todo とりあえず割合の正規化
+        //todo とりあえず割合の正規 ?
+        count.forEach(function(value,keys) {
+            let val = count.get(keys);
+            //書き込みごとに比率を求める
+            let parth = val / userListSize;
+            // 比率から色を決める(とりあえず決め打ち)
+            let color = parth *(colorVariation.length - 1- 0) + 0;
+            // console.log(color);
+            let it = textList.values();
+            while (true) {
+                let textconsider = it.next();
+                // console.log(textconsider.value);
+                if (!textconsider.done) {
+                    let value = textconsider.value;
+                    if (value.str === keys) {
+                        textconsider.value.color = color;
+                    }
+                } else {
+                    break;
+                }
+            }
+            // console.log(textList);
+        })
+        return textList;
 
     }
-
     return null;
+}
 
+function analysOne(page,text,userListSize){
+
+    // var map = new Map();
+    let array = [];
+    if (Pages.has(page)) {
+        let str ='';
+        var data = Pages.get(page);
+        var iplist = data.keys();
+        data.forEach(element => {
+            element.forEach(value => {
+                // var array = []
+                if (value.text.str == text.str) {
+
+                    // if (map.has(value.text.str)) {
+                    //     array = map.get(value.text.str);
+                    // }
+                    array.push(value);
+                    str = value;
+                    // map.set(value.text.str, array);
+                }
+            });
+        });
+        var iplist = [];
+            var p = 0;
+        array.forEach(element => {
+            
+            // console.log(element);
+            // console.log(iplist);
+            let check = function(element){
+                for (i = 0; i < iplist.length; i++){
+                    if(iplist[i] === element.ip){
+                        return false;
+                    }
+                }
+                return true;
+            }
+            if(check(element)){
+                iplist.push(element.ip);
+                p++;
+            }
+        });
+        console.log(p);
+            //書き込みごとに比率を求める
+            let parth = p / userListSize;
+            // 比率から色を決める(とりあえず決め打ち)
+            let color = parth *(colorVariation.length - 1- 0) + 0;
+            console.log(color);
+            str.color = colorVariation[Math.round(color)];
+            console.log(str);
+            return str;
+    }
+    
 }
 
 /**
@@ -121,3 +220,4 @@ class datalist {
 
 exports.dataset = dataset;
 exports.analys = analys;
+exports.analysOne = analysOne;

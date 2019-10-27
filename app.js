@@ -128,6 +128,7 @@ io = socketIO.listen(server);
 io.sockets.on('connection', function (socket) {
     // console.log('connection');
     var handshake = socket.handshake
+    userList.set(handshake.address);
     socket.on('massage', function (data) {
         console.log('massage');
         io.sockets.emit('massage', { value: data.value });
@@ -142,13 +143,17 @@ io.sockets.on('connection', function (socket) {
         if (data.type === 'path') {
             var path = data.path;
             analys.dataset(handshake.address, data, oCoords,pageNum,ident,text);
-            ptext = analys.analys(pageNum);
+            // console.log(userList);
+            // console.log(userList.size);
+            // let ptext = analys.analys(pageNum,userList.size);
+            let ptext = analys.analysOne(pageNum,text,userList.size);
             if (ptext == null) {
                 console.log('err');
             }
+            // console.log(ptext);
             fileWrite('analysdata.txt', handshake,userList.get(handshake.address), data, pageNum,time);
             if (userList.get(handshake.address) != 'teacher') {
-                io.sockets.emit('teacher', data, oCoords,pageNum,ident,text);
+                io.sockets.emit('teacher', data, oCoords,pageNum,ident,ptext);
             }
         } else {
             console.log(data);
