@@ -213,10 +213,20 @@ function make(data, oCoords, pageNum, ident,text) {
     // } else if (ident == identifier[1]) {
     //     line = makeLine(data);
     // }
-    line = makeTextHiglight(text.text, text.color);
-    if (line !== null) {
-        console.log(pageNum);
-        setPage(line, pageNum);
+    if(Array.isArray(text)){
+        let highLightList = [];
+        text.forEach(textinfo => {
+            console.log(textinfo);
+            highLightList.push(makeTextHiglight(textinfo,textinfo.color));
+        });
+        setPage(highLightList,pageNum);
+
+    }else{
+        line = makeTextHiglight(text.text, text.color);
+        if (line !== null) {
+            console.log(pageNum);
+            setPage(line, pageNum);
+        }
     }
 }
 
@@ -239,8 +249,8 @@ function makeLine(data, color) {
     var path = [m[1], m[2], l[1], l[2]];
     var line = new fabric.Line(path, {
         // fill: 'red',
-        fill: colorVariation[0],
-        stroke: 'red',
+        fill: color,
+        stroke: color,
         strokeWidth: 5,
         selectable: false,
         evented: false,
@@ -259,7 +269,7 @@ function makeEnclosure(oCoords, color) {
     var height = oCoords.bl.y - oCoords.tl.y;
     var width = oCoords.tr.x - oCoords.tl.x;
     var Enclosure = new fabric.Rect({
-        fill: colorVariation[0],
+        fill: color,
         // fill: 'red',
         top: oCoords.tl.y,
         left: oCoords.tl.x,

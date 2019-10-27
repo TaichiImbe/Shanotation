@@ -145,8 +145,8 @@ io.sockets.on('connection', function (socket) {
             analys.dataset(handshake.address, data, oCoords,pageNum,ident,text);
             // console.log(userList);
             // console.log(userList.size);
-            // let ptext = analys.analys(pageNum,userList.size);
-            let ptext = analys.analysOne(pageNum,text,userList.size);
+            let ptext = analys.analys(pageNum,userList.size);
+            // let ptext = analys.analysOne(pageNum,text,userList.size);
             if (ptext == null) {
                 console.log('err');
             }

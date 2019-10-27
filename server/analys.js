@@ -120,6 +120,7 @@ function analys(page,userListSize) {
 
         //todo 合計から色を決定
         //todo とりあえず割合の正規 ?
+        let list = [];
         count.forEach(function(value,keys) {
             let val = count.get(keys);
             //書き込みごとに比率を求める
@@ -134,7 +135,8 @@ function analys(page,userListSize) {
                 if (!textconsider.done) {
                     let value = textconsider.value;
                     if (value.str === keys) {
-                        textconsider.value.color = color;
+                        textconsider.value.color = colorVariation[Math.round(color)];
+                        list.push(textconsider.value);  
                     }
                 } else {
                     break;
@@ -142,7 +144,7 @@ function analys(page,userListSize) {
             }
             // console.log(textList);
         })
-        return textList;
+        return list;
 
     }
     return null;
@@ -189,14 +191,14 @@ function analysOne(page,text,userListSize){
                 p++;
             }
         });
-        console.log(p);
+        // console.log(p);
             //書き込みごとに比率を求める
             let parth = p / userListSize;
             // 比率から色を決める(とりあえず決め打ち)
             let color = parth *(colorVariation.length - 1- 0) + 0;
-            console.log(color);
+            // console.log(color);
             str.color = colorVariation[Math.round(color)];
-            console.log(str);
+            // console.log(str);
             return str;
     }
     

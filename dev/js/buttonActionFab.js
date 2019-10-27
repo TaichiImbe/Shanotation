@@ -154,14 +154,23 @@ window.addEventListener('load', () => {
     }
 })
 
+//todo 毎回PageAnooに追加するArrayをリセット
+//      or 配列の中身をみる
 function setPage(data, page) {
     console.log(data);
     var collection = new Array();
-    if (PageAnno.has(page)) {
-        collection = PageAnno.get(page);
-        collection.push(data);
+    if (Array.isArray(data)) {
+        data.forEach(text => {
+            collection.push(text);
+        });
     } else {
-        collection.push(data);
+
+        if (PageAnno.has(page)) {
+            collection = PageAnno.get(page);
+            collection.push(data);
+        } else {
+            collection.push(data);
+        }
     }
     // Canvas.add(data);
     PageAnno.set(page, collection);
@@ -170,8 +179,9 @@ function setPage(data, page) {
 
     });
 }
+
 function AnnotationSet(pageNum) {
-        global.pageTrans = true;
+    global.pageTrans = true;
     return new Promise(function () {
 
         Canvas.clear();
