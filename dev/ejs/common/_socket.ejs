@@ -19,6 +19,9 @@
     function send(dist,obj,oCoords,pageNum,ident,text,time){
         if(dist == 'object'){
             socket.emit(dist,obj,oCoords,pageNum,ident,text,time);
+        }else if(dist == 'userName'){
+            console.log(oCoords);
+            socket.emit(dist,obj,oCoords);
         }else{
             socket.emit(dist,obj);
         }

@@ -128,14 +128,15 @@ io = socketIO.listen(server);
 io.sockets.on('connection', function (socket) {
     // console.log('connection');
     var handshake = socket.handshake
-    userList.set(handshake.address);
+    // userList.set(handshake.address);
     socket.on('massage', function (data) {
         console.log('massage');
         io.sockets.emit('massage', { value: data.value });
     });
-    socket.on('userName', function (name) {
+    socket.on('userName', function (name,ip) {
         socket.username = name;
-        userList.set(handshake.address, name);
+        userList.set(handshake.address+ip, name);
+        console.log(userList);
         // console.log(socket.username);
     })
     //object resive

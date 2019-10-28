@@ -89,26 +89,13 @@ Canvas.on('object:added', function (e) {
                 const thresh = sum / text.items.length;
                 let subtextlist = []
                 var minr = Math.sqrt(Math.pow((text.items[0].transform[4] + text.items[0].width) - oCoords.br.x, 2) + Math.pow(text.items[0].transform[5] - oCoords.br.y, 2));
-                // var miny = Math.sqrt(Math.pow(text.items[0].transform[5] - oCoords.bl.y, 2));
-                // var minx = Math.abs(text.items[0].transform[4] - oCoords.bl.x);
-                // console.log(oCoords.bl.y - thresh);
-                // console.log(oCoords.bl.y + thresh);
                 for (i = 0; i < text.items.length; i++) {
-                    // console.log(text.items[i].transform[5]);
-                    // console.log(oCoords.bl.y - thresh <= text.items[i].transform[5]);
-                    // console.log(text.items[i].transform[5] <= oCoords.bl.y + (thresh));
                     if (oCoords.bl.y - thresh <= text.items[i].transform[5] && text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)) {
-
-                        // if (minl > Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2))) {
                         subtextlist.push(text.items[i]);
-                        // console.log(text.items[i]);
-                        // }
-
                     }
                 }
                 let minl = Math.sqrt(Math.pow(subtextlist[0].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[0].transform[5] - oCoords.bl.y, 2));
                 str = subtextlist[0];
-                console.log(subtextlist);
 
                 for (i = 1; i < subtextlist.length; i++) {
 
@@ -117,25 +104,9 @@ Canvas.on('object:added', function (e) {
                         str = subtextlist[i];
                     
                 }
-                // for (i = 1; text.items[i].transform[5] <= oCoords.bl.y ; i++) {
-                // if (miny > Math.sqrt(Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2))) {
-                //     miny = Math.sqrt(Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2));
-                //     console.log(text.items[i]); 
-                //     str = text.items[i];
-                // }                    
-
-                // if(minl > Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x,2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y,2)) /*&& minr > Math.sqrt(Math.pow((text.items[i].transform[4] + text.items[i].width) - oCoords.br.x,2) + Math.pow(text.items[i].transform[5] - oCoords.br.y,2))*/){
-                // minl = Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x,2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y,2));
-                // minr = Math.sqrt(Math.pow((text.items[i].transform[4] + text.items[i].width) - oCoords.br.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.br.y, 2));
-                // str = text.items[i];
-                // console.log(str);
-                // }
-                // if (text.items[i].transform[5] <= oCoords.bl.y) {
-                //     break;
-                // }
             }
-                console.log(oCoords);
-            console.log(str);
+            // console.log(oCoords);
+            // console.log(str);
             var charSize = str.width / str.str.length;
             var width = 0;
             var transform = str.transform;
@@ -331,7 +302,6 @@ function makeEnclosure(oCoords, color) {
  * @param {*} color is color code
  */
 function makeTextHiglight(text, color) {
-    console.log(text);
     height = text.height;
     width = text.width;
     var Highlight = new fabric.Rect({
