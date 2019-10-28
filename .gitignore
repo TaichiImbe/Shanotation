@@ -1,2 +1,5 @@
 node_modules/
 views/
+*.code-workspace
+*.txt
+config/webconfig.json

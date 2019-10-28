@@ -78,50 +78,92 @@ Canvas.on('object:added', function (e) {
         getPdfText(pageNum).then(function (text) {
             // var font = textCheck(object,text);
             console.log(text);
-            var font = (function (object,text) {
+            var font = (function (object, text) {
                 oCoords = object.oCoords;
                 var str;
                 // for (i = text.items.length-1; i >= 0 ; i--) {
-                var min = Math.sqrt(Math.pow(text.items[0].transform[4] - oCoords.bl.x,2) + Math.pow(text.items[0].transform[5] - oCoords.bl.y,2));
-                var miny = Math.abs(text.items[0].transform[5] - oCoords.bl.y);
-                var minx = Math.abs(text.items[0].transform[4] - oCoords.bl.x);
-                str = text.items[0];
-                for (i = 1; i < text.items.length ; i++) {
-                    if(min > Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x,2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y,2))){
-                        min = Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x,2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y,2));
-                        str = text.items[i];
+                let sum = 0;
+                for (let i = 0; i < text.items.length; i++) {
+                    sum += text.items[i].height;
+                }
+                const thresh = sum / text.items.length;
+                let subtextlist = []
+                var minr = Math.sqrt(Math.pow((text.items[0].transform[4] + text.items[0].width) - oCoords.br.x, 2) + Math.pow(text.items[0].transform[5] - oCoords.br.y, 2));
+                // var miny = Math.sqrt(Math.pow(text.items[0].transform[5] - oCoords.bl.y, 2));
+                // var minx = Math.abs(text.items[0].transform[4] - oCoords.bl.x);
+                // console.log(oCoords.bl.y - thresh);
+                // console.log(oCoords.bl.y + thresh);
+                for (i = 0; i < text.items.length; i++) {
+                    // console.log(text.items[i].transform[5]);
+                    // console.log(oCoords.bl.y - thresh <= text.items[i].transform[5]);
+                    // console.log(text.items[i].transform[5] <= oCoords.bl.y + (thresh));
+                    if (oCoords.bl.y - thresh <= text.items[i].transform[5] && text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)) {
+
+                        // if (minl > Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2))) {
+                        subtextlist.push(text.items[i]);
+                        // console.log(text.items[i]);
+                        // }
+
                     }
                 }
-                console.log(oCoords);
-                console.log(str);
-                var charSize = str.width / str.str.length;
-                var width = 0; 
-                var transform = str.transform;
-                var t4 = str.transform[4];
-                var substring = '';
-                for (i = 0; i < str.str.length; i++){
-                    if (t4 <= oCoords.bl.x && t4 + str.height >= oCoords.bl.x) {
-                        substring += str.str[i];
-                        transform[4] = t4;
-                    }
-                    if (t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
-                        substring += str.str[i];
-                        width += str.height;
-                    }
-                    if (t4 > oCoords.br.x) {
-                        break;
-                    } 
-                    t4 += str.height;
+                let minl = Math.sqrt(Math.pow(subtextlist[0].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[0].transform[5] - oCoords.bl.y, 2));
+                str = subtextlist[0];
+                console.log(subtextlist);
+
+                for (i = 1; i < subtextlist.length; i++) {
+
+                    if (minl > Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2))) {
+                        minil = Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2));
+                        str = subtextlist[i];
+                    
                 }
-                return new newString(substring, str.height, width, transform); 
-            })(object,text);
-            // console.log(font);
-            // console.log(object.oCoords);
-            if (!pageTrans) {
-                // console.log("Ad");
-                send('object', e.target, e.target.oCoords, pageNum, ident, font,realTime);
+                // for (i = 1; text.items[i].transform[5] <= oCoords.bl.y ; i++) {
+                // if (miny > Math.sqrt(Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2))) {
+                //     miny = Math.sqrt(Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2));
+                //     console.log(text.items[i]); 
+                //     str = text.items[i];
+                // }                    
+
+                // if(minl > Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x,2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y,2)) /*&& minr > Math.sqrt(Math.pow((text.items[i].transform[4] + text.items[i].width) - oCoords.br.x,2) + Math.pow(text.items[i].transform[5] - oCoords.br.y,2))*/){
+                // minl = Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x,2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y,2));
+                // minr = Math.sqrt(Math.pow((text.items[i].transform[4] + text.items[i].width) - oCoords.br.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.br.y, 2));
+                // str = text.items[i];
+                // console.log(str);
+                // }
+                // if (text.items[i].transform[5] <= oCoords.bl.y) {
+                //     break;
+                // }
             }
-        });
+                console.log(oCoords);
+            console.log(str);
+            var charSize = str.width / str.str.length;
+            var width = 0;
+            var transform = str.transform;
+            var t4 = str.transform[4];
+            var substring = '';
+            for (i = 0; i < str.str.length; i++) {
+                if (t4 <= oCoords.bl.x && t4 + str.height >= oCoords.bl.x) {
+                    substring += str.str[i];
+                    transform[4] = t4;
+                }
+                if (t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
+                    substring += str.str[i];
+                    width += str.height;
+                }
+                if (t4 > oCoords.br.x) {
+                    break;
+                }
+                t4 += str.height;
+            }
+            return new newString(substring, str.height, width, transform);
+        })(object, text);
+        // console.log(font);
+        // console.log(object.oCoords);
+        if (!pageTrans) {
+            // console.log("Ad");
+            send('object', e.target, e.target.oCoords, pageNum, ident, font, realTime);
+        }
+    });
     }
 });
 
@@ -192,7 +234,7 @@ function textCheck(canvas, text) {
     //         // return item;
     //     }
     // }
-    for (i = 0; i < text.items.length; i++){
+    for (i = 0; i < text.items.length; i++) {
         if (text.items[i].transform[5] < oCoords.br.y) {
             return text.items[i];
         }
@@ -206,22 +248,22 @@ function textCheck(canvas, text) {
  * @param {*} pageNum
  * @param {*} ident
  */
-function make(data, oCoords, pageNum, ident,text) {
+function make(data, oCoords, pageNum, ident, text) {
     var line
     // if (ident == identifier[0]) {
     //     line = makeEnclosure(oCoords);
     // } else if (ident == identifier[1]) {
     //     line = makeLine(data);
     // }
-    if(Array.isArray(text)){
+    if (Array.isArray(text)) {
         let highLightList = [];
         text.forEach(textinfo => {
             console.log(textinfo);
-            highLightList.push(makeTextHiglight(textinfo,textinfo.color));
+            highLightList.push(makeTextHiglight(textinfo, textinfo.color));
         });
-        setPage(highLightList,pageNum);
+        setPage(highLightList, pageNum);
 
-    }else{
+    } else {
         line = makeTextHiglight(text.text, text.color);
         if (line !== null) {
             console.log(pageNum);
@@ -297,20 +339,20 @@ function makeTextHiglight(text, color) {
         top: text.transform[5] - height,
         left: text.transform[4],
         width: width,
-        height : height,
+        height: height,
         opacity: 0.5
     })
 
     return Highlight;
 }
 
-class newString{
-    constructor(str,height,width,transform) {
+class newString {
+    constructor(str, height, width, transform) {
         this.str = str;
         this.height = height;
         this.width = width;
         this.transform = transform;
-    }    
+    }
 }
 
 
