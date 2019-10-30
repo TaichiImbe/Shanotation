@@ -84,9 +84,10 @@ app.post('/', function (req, res, next) {
     // console.log(req.body);
     let userName = req.body.userName;
     if (userName === 'teacher') {
-        res.redirect('/teacher');
+        // res.redirect('/teacher');
+        res.render('./teacher');
     } else {
-        res.redirect('/index');
+        res.render('./index',{userName: userName});
     }
 });
 
@@ -127,6 +128,7 @@ io = socketIO.listen(server);
 
 io.sockets.on('connection', function (socket) {
     // console.log('connection');
+    //接続時にPrivateIPを設定する.
     var handshake = socket.handshake
     // userList.set(handshake.address);
     socket.on('massage', function (data) {
@@ -135,12 +137,12 @@ io.sockets.on('connection', function (socket) {
     });
     socket.on('userName', function (name,ip) {
         socket.username = name;
-        userList.set(handshake.address+ip, name);
+        userList.set(name, name);
         console.log(userList);
         // console.log(socket.username);
     })
     //object resive
-    socket.on('object', function (data, oCoords, pageNum, ident,text,time) {
+    socket.on('object', function (name,data, oCoords, pageNum, ident,text,time) {
         if (data.type === 'path') {
             var path = data.path;
             analys.dataset(handshake.address, data, oCoords,pageNum,ident,text);
@@ -152,7 +154,7 @@ io.sockets.on('connection', function (socket) {
                 console.log('err');
             }
             // console.log(ptext);
-            fileWrite('analysdata.txt', handshake,userList.get(handshake.address), data, pageNum,time);
+            fileWrite('analysdata.txt', handshake,userList.get(name), data, pageNum,time);
             if (userList.get(handshake.address) != 'teacher') {
                 io.sockets.emit('teacher', data, oCoords,pageNum,ident,ptext);
             }

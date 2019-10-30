@@ -1,0 +1,8 @@
+<meta name='username' content=<%= userName %>>
+<script>
+    let meta = document.head.querySelector('[name=username]');
+    console.log(meta.content);
+    function getUserName(){
+        return document.head.querySelector('[name=username]').content;
+    }
+</script>
