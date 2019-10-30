@@ -145,7 +145,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('object', function (name,data, oCoords, pageNum, ident,text,time) {
         if (data.type === 'path') {
             var path = data.path;
-            analys.dataset(handshake.address, data, oCoords,pageNum,ident,text);
+            analys.dataset(name, data, oCoords,pageNum,ident,text);
             // console.log(userList);
             // console.log(userList.size);
             let ptext = analys.analys(pageNum,userList.size);
