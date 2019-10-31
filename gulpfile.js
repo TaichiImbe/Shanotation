@@ -112,7 +112,7 @@ gulp.task('serve', function (err) {
 gulp.task('watch', function (err) {
     gulp.watch('dev/sass/*.scss', gulp.task(['sass']));
     gulp.watch('dev/ejs/**/*.ejs', gulp.task(['ejs']));
-	// gulp.watch('dev/js/**/*.js', gulp.task(['js']));
+	gulp.watch('dev/js/**/*.js', gulp.task(['js']));
 	// gulp.watch(['server/**/*.js','app.js'], gulp.task(['serve']));
     err();
 });
@@ -121,6 +121,7 @@ gulp.task('default', gulp.series(gulp.parallel(defaultlist)) ,function (err) {
 // gulp.task('default', gulp.series(gulp.parallel('serve')) ,function (err) {
     err();
 });
+
 gulp.task('build', gulp.series(gulp.parallel(buildList)), function (err) {
 	err();
 });

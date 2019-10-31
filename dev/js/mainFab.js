@@ -87,54 +87,74 @@ Canvas.on('object:added', function (e) {
                     sum += text.items[i].height;
                 }
                 const thresh = sum / text.items.length;
-                let subtextlist = []
+                let subtextlist = [];
+                let subsubtextlist = [];
                 var minr = Math.sqrt(Math.pow((text.items[0].transform[4] + text.items[0].width) - oCoords.br.x, 2) + Math.pow(text.items[0].transform[5] - oCoords.br.y, 2));
                 for (i = 0; i < text.items.length; i++) {
                     if (oCoords.bl.y - thresh <= text.items[i].transform[5] && text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)) {
+                        if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
+                            // console.log(text.items[i]);
+                            subsubtextlist.push(text.items[i]);
+                        }
                         subtextlist.push(text.items[i]);
                     }
                 }
-                let minl = Math.sqrt(Math.pow(subtextlist[0].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[0].transform[5] - oCoords.bl.y, 2));
-                str = subtextlist[0];
+                if (subsubtextlist.length != 0) {
 
-                for (i = 1; i < subtextlist.length; i++) {
+                    let subtext = '';
+                    let subwidth = 0;
+                    for (i = 0; i < subsubtextlist.length; i++) {
+                        subtext += subsubtextlist[i].str;
+                        subwidth += subsubtextlist[i].width;
 
-                    if (minl > Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2))) {
-                        minil = Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2));
-                        str = subtextlist[i];
-                    
+                    }
+                    str = subsubtextlist[0];
+                    str.str = subtext;
+                    str.width = subwidth;
+                } else {
+
+                    let minl = Math.sqrt(Math.pow(subtextlist[0].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[0].transform[5] - oCoords.bl.y, 2));
+                    str = subtextlist[0];
+
+                    for (i = 1; i < subtextlist.length; i++) {
+
+                        if (minl > Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2))) {
+                            minil = Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2));
+                            str = subtextlist[i];
+                        }
+                    }
                 }
+
+                // console.log(oCoords);
+                console.log(str);
+                var charSize = str.width / str.str.length;
+                var width = 0;
+                var transform = str.transform;
+                var t4 = str.transform[4];
+                var substring = '';
+                for (i = 0; i < str.str.length; i++) {
+                    if (t4 <= oCoords.bl.x && t4 + str.height >= oCoords.bl.x) {
+                        substring += str.str[i];
+                        transform[4] = t4;
+                    }
+                    if (t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
+                        substring += str.str[i];
+                        width += str.height;
+                    }
+                    if (t4 > oCoords.br.x) {
+                        break;
+                    }
+                    t4 += str.height;
+                }
+                return new newString(substring, str.height, width, transform);
+            })(object, text);
+            // console.log(font);
+            // console.log(object.oCoords);
+            if (!pageTrans) {
+                // console.log("Ad");
+                send('object', e.target, e.target.oCoords, pageNum, ident, font, realTime);
             }
-            // console.log(oCoords);
-            // console.log(str);
-            var charSize = str.width / str.str.length;
-            var width = 0;
-            var transform = str.transform;
-            var t4 = str.transform[4];
-            var substring = '';
-            for (i = 0; i < str.str.length; i++) {
-                if (t4 <= oCoords.bl.x && t4 + str.height >= oCoords.bl.x) {
-                    substring += str.str[i];
-                    transform[4] = t4;
-                }
-                if (t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
-                    substring += str.str[i];
-                    width += str.height;
-                }
-                if (t4 > oCoords.br.x) {
-                    break;
-                }
-                t4 += str.height;
-            }
-            return new newString(substring, str.height, width, transform);
-        })(object, text);
-        // console.log(font);
-        // console.log(object.oCoords);
-        if (!pageTrans) {
-            // console.log("Ad");
-            send('object', e.target, e.target.oCoords, pageNum, ident, font, realTime);
-        }
-    });
+        });
     }
 });
 
