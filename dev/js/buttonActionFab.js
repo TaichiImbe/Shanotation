@@ -18,13 +18,6 @@ let selectButton = $f('select'),
     nextButton = $f('next'),
     pageMoveArea = $f('pageMove');
 
-$(function () {
-    $('.cancelEnter').on('keydown', function (e) {
-        if (e.key == 'Enter') {
-            return false;
-            }
-        })
-    })
 
     prevButton.onclick = function () {
         if (pageNum <= 1) {
