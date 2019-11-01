@@ -140,14 +140,6 @@ window.addEventListener('load', () => {
         }
     });
 
-    //ペンの変更を表示・非表示
-    $(function () {
-        $('#Penwidth').toggle();
-        $('#penSize').click(function () {
-            $('#Penwidth').toggle();
-        });
-    });
-
     drawingLine.onchange = function () {
         Canvas.freeDrawingBrush.width = parseInt(this.value, 10) || 1;
         // Pen.brushWidth = Canvas.freeDrawingBrush.width;

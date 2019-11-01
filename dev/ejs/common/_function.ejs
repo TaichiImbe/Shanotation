@@ -1,14 +1,76 @@
-<div id="header" class='header'>
-    <input type="text" id="picker">
-    <button id="penSize">ペンのサイズ</button>
-    <input for="penSize" type="range" id="Penwidth" value="5" min="0" max="30">
-    <button id="prev">Prev</button>
-    <button id="next">Next</button>
-    <button id="select">選択</button>
-    <button id="draw">ペン</button>
-    <button id="clear-button">Clear</button>
-    <button id="eraser">消しゴム</button>
-    <!-- <textarea id="text"></textarea> -->
-</div>
+<main id="header" class='header p-3'>
+    <ul class='nav nav-tabs'>
+        <li class="nav-item">
+            <a href='#pentab' class='btn btn-primary nav-link active' data-toggle='tab' >ペン</a>
+        </li>
+        <li class="nav-item">
+            <a href='#selecttab' class='btn btn-primary nav-link' data-toggle='tab'>選択</a>
+        </li>
+        <li class="nav-item">
+            <a href='#erasertab' class='btn btn-primary nav-link' data-toggle='tab'>消しゴム</a>
+        </li>
+        <li class="nav-item">
+            <a href='#pagetab' class='btn btn-primary nav-link' data-toggle='tab'>ページ</a>
+        </li>
+    </ul>
+
+    <div class='tab-content'>
+
+        <div class='tab-pane active' id='pentab'>
+            <input type="text" id="picker">
+            <button id="penSize">ペンのサイズ</button>
+            <input for="penSize" type="range" id="Penwidth" value="5" min="0" max="30">
+        </div>
+        <div class='tab-pane' id='selecttab'>
+            <button id="select">選択</button>
+            <button id="draw">draw</button>
+        </div>
+        <div class='tab-pane' id='erasertab'>
+            <button id="clear-button">Clear</button>
+            <button id="eraser">消しゴム</button>
+        </div>
+        <div class='tab-pane' id='pagetab'>
+                <button id="prev">Prev</button>
+                <textarea id="pageMove"></textarea>
+                <button id="next">Next</button>
+                </dvi>
+        </div>
+        <!-- <textarea id="text"></textarea> -->
+    </div>
+</header>
+
+<script>
+
+    $(function () {
+        $('tab').click(function () {
+            $('tabContent').removeClass('active');
+            $($(this).attr('href')).addClass('active');
+            $('tab').removeClass('active');
+            $(this).addClass('active');
+        });
+    });
+
+    //ペンの変更を表示・非表示
+    $(function () {
+        $('#Penwidth').toggle();
+        $('#penSize').click(function () {
+            $('#Penwidth').toggle();
+        });
+    });
+
+    // $(function () {
+        // $('#prev').toggle();
+        // $('#pageMove').toggle();
+        // $('#next').toggle();
+            // $('#prev').toggle({direction:'down'});
+            // $('pageMove').toggle({direction:'down'});
+            // $('#next').toggle({direction:'down'});
+            // $('#prev').toggle({ direction: 'down' });
+            // $('pageMove').toggle({ direction: 'down' });
+            // $('#next').toggle({ direction: 'down' });
+    // });
+
+
+</script>
 
 <script src='/js/buttonActionFab.js'></script>
