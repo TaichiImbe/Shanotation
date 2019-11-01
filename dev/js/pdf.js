@@ -17,7 +17,7 @@ window.addEventListener('load', function () {
     loadingTask.promise.then(function (pdf_) {
         pdf = pdf_;
         pageRender(pageNum);
-        $f('pageMove').value = '1';
+        $f('pageMove').textContent = '1';
         $f('pageDef').textContent = '/'+pdf.numPages;
     });
 
