@@ -1,43 +1,60 @@
 <main id="header" class='header p-3'>
     <ul class='nav nav-tabs'>
-        <li class="nav-item">
-            <a href='#pentab' class='btn btn-primary nav-link active' data-toggle='tab' >ペン</a>
+        <li id='pentab' class="nav-item">
+            <a id='draw' href='#pentab' class='btn btn-primary nav-link active' data-toggle='tab' >ペン</a>
         </li>
-        <li class="nav-item">
+        <li id='selecttab' class="nav-item">
+        <!-- <div class='tab-pane' id='selecttab'> -->
+            <a id="select"  href='#selecttab' class='btn btn-primary nav-link' data-toggle='tab'>選択</a>
+         </li>   <!-- <button id="select" class='btn btn-primary'>選択</button> -->
+            <!-- <button id="draw" class='btn btn-primary'>draw</button> -->
+        <!-- </div> -->
+        <!-- <li class="nav-item">
             <a href='#selecttab' class='btn btn-primary nav-link' data-toggle='tab'>選択</a>
+        </li> -->
+        <li id='erastab' class="nav-item">
+            <a id="eraser" href='#erasertab' class='btn btn-primary nav-link' data-toggle='tab'>消しゴム</a>
         </li>
-        <li class="nav-item">
-            <a href='#erasertab' class='btn btn-primary nav-link' data-toggle='tab'>消しゴム</a>
-        </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a href='#pagetab' class='btn btn-primary nav-link' data-toggle='tab'>ページ</a>
+        </li> -->
+        <!-- <div class='tab-pane' id='pagetab'> -->
+                <a id='prev' class='btn btn-primary nav-link'>Prev</a>
+                <!-- <button id="prev" class='btn btn-primary'>Prev</button> -->
+                <!-- <a id='prev' class='btn btn-primary nav-link'>Prev</a> -->
+                <textarea id='pageMove'class='text-nowrap bd-highlight' ></textarea>
+                <textarea id='pageDef' class='bd-highlight' disabled='disabled'></textarea>
+                <a id='next' class='btn btn-primary nav-link'>Next</a>
+                <!-- <button id="next" class='btn btn-primary'>Next</button> -->
         </li>
+                <!-- </dvi> -->
+        <!-- </div> -->
     </ul>
 
     <div class='tab-content'>
 
         <div class='tab-pane active' id='pentab'>
             <input type="text" id="picker">
-            <button id="penSize">ペンのサイズ</button>
+            <button id="penSize" class='btn btn-primary'>ペンのサイズ</button>
             <input for="penSize" type="range" id="Penwidth" value="5" min="0" max="30">
         </div>
-        <div class='tab-pane' id='selecttab'>
+        <!-- <div class='tab-pane' id='selecttab'>
             <button id="select">選択</button>
             <button id="draw">draw</button>
-        </div>
+        </div> -->
         <div class='tab-pane' id='erasertab'>
             <button id="clear-button">Clear</button>
-            <button id="eraser">消しゴム</button>
+            <!-- <button id="eraser">消しゴム</button> -->
         </div>
-        <div class='tab-pane' id='pagetab'>
+        <!-- <div class='tab-pane' id='pagetab'>
                 <button id="prev">Prev</button>
-                <textarea id="pageMove"></textarea>
-                <button id="next">Next</button>
-                </dvi>
-        </div>
+                <textarea id='pageMove'class='text-nowrap bd-highlight' ></textarea>
+                <textarea id='pageDef' class='bd-highlight' disabled='disabled'></textarea>
+                <button id="next">Next</button> -->
+        <!-- </div> -->
         <!-- <textarea id="text"></textarea> -->
     </div>
-</header>
+</main>
 
 <script>
 

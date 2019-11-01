@@ -3,23 +3,28 @@ var $ = require('jquery');
 var eraserMode = false;
 var pageTrans = false;
 
-window.addEventListener('load', () => {
-    var $f = function (id) {
-        return document.getElementById(id);
-    }
+let $f = function (id) {
+    return document.getElementById(id);
+}
 
-    // const canvas = new fabric.Canvas('draw-area');
+let selectButton = $f('select'),
+    clearEI = $f('clear-button'),
+    eraserButton = $f('eraser'),
+    drawButton = $f('draw'),
+    // drawingColorEl = $('drawing-color');
+    colorButton = $f('colorButton'),
+    drawingLine = $f('Penwidth'),
+    prevButton = $f('prev'),
+    nextButton = $f('next'),
+    pageMoveArea = $f('pageMove');
 
-    var selectButton = $f('select'),
-        clearEI = $f('clear-button'),
-        eraserButton = $f('eraser'),
-        drawButton = $f('draw'),
-        // drawingColorEl = $('drawing-color');
-        colorButton = $f('colorButton'),
-        drawingLine = $f('Penwidth'),
-        prevButton = $f('prev'),
-        nextButton = $f('next'),
-        textArea = $f('text');
+$(function () {
+    $('.cancelEnter').on('keydown', function (e) {
+        if (e.key == 'Enter') {
+            return false;
+            }
+        })
+    })
 
     prevButton.onclick = function () {
         if (pageNum <= 1) {
@@ -32,7 +37,7 @@ window.addEventListener('load', () => {
         AnnotationSet(pageNum).then(function () {
         });
         pageRender(pageNum);
-        // textArea.textContent = pageNum + "/" + pdf.numPages;
+        pageMoveArea.textContent = pageNum;
     }
 
     nextButton.onclick = function () {
@@ -46,10 +51,8 @@ window.addEventListener('load', () => {
         AnnotationSet(pageNum).then(function () {
         });
         pageRender(pageNum);
-        // textArea.textContent = pageNum + "/" + pdf.numPages;
+        pageMoveArea.textContent = pageNum;
     }
-
-
 
     //canvas上の絵を全部消す
     clearEI.onclick = function () {
@@ -144,7 +147,6 @@ window.addEventListener('load', () => {
         Canvas.freeDrawingBrush.width = parseInt(this.value, 10) || 1;
         // Pen.brushWidth = Canvas.freeDrawingBrush.width;
     }
-})
 
 //todo 毎回PageAnooに追加するArrayをリセット
 //      or 配列の中身をみる
@@ -188,4 +190,5 @@ function AnnotationSet(pageNum) {
 }
 global.setPage = setPage;
 global.eraserMode = eraserMode;
-global.pageTrans = pageTrans
+global.pageTrans = pageTrans;
+global.$f = $f;

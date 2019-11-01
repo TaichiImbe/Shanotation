@@ -1,5 +1,10 @@
 .header{
     // position: fixed;
+    & textarea{
+        width: 2rem; 
+        height: 2rem;
+        font-size:1em;
+    }
 
     & button{
         background-color: white;
