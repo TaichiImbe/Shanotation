@@ -170,6 +170,14 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', function (data) {
         // console.log('disconnect');
     });
+
+    socket.on('remove',function(){
+        analys.dataRemove();
+        let ptext = analys.analys(pageNum,userList.size);
+        if (userList.get(handshake.address) != 'teacher') {
+            io.sockets.emit('teacher', data, oCoords,pageNum,ident,ptext);
+        }
+    });
 });
 
 io.use(function (socket, next) {

@@ -64,11 +64,6 @@ Canvas.on('object:added', function (e) {
                 if (coverd(path, object)) {
                     Canvas.remove(element);
                 }
-                // object.path.forEach(data => {
-                //     // console.log(corverd(path, data));
-                //     if (coverd(path, data)) {
-                //     }
-                // });
             });
         });
     } else {
@@ -156,6 +151,11 @@ Canvas.on('object:added', function (e) {
             }
         });
     }
+});
+
+Canvas.on('object:remove',function(e){
+    console.log(e);
+   remvoeObject(e,pageNum); 
 });
 
 /**

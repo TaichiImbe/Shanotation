@@ -27,6 +27,10 @@
         }
     }
 
+    function removeObject(obj,oCoords,text,pageNum){
+        socket.emit('remvoe',getUserName(),obj,oCoords,text,pageNum);
+    }
+
     // function send(dist,obj){
         // socket.emit(dist,obj);
     // }

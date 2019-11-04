@@ -6,6 +6,7 @@ var identifier = ['enclosure', 'line'];
 
 /**
  * Pages は ページごとにipとpathのmapを管理する
+ * 2019/11/04 変更 ページごとにユーザ名とpathのmapを管理
  */
 var Pages = new Map();
 var textList = new Set();
@@ -204,6 +205,23 @@ function analysOne(page,text,userListSize){
     
 }
 
+function dataRemove(userName, path, oCoords, pageNum, ident, text){
+    if(Pages.has(pageNum)){
+        let userMap = new Map();
+        userMap = Pages.get(pageNum);
+        let texts = userMap.get(userName);
+        let newArray = [];
+        texts.forEach(element => {
+            if(element.text !== text){
+                newArray.push(element);
+            }
+        })
+        userMap.set(userName,texts);
+        Pages.set(pageNum,userMap);
+    }
+
+}
+
 /**
  *  分析データクラス
  *  パスのまとまり、バウンディングボックス,識別子,一緒に存在するテキスト
@@ -223,3 +241,4 @@ class datalist {
 exports.dataset = dataset;
 exports.analys = analys;
 exports.analysOne = analysOne;
+exports.dataRemove = dataRemove;
