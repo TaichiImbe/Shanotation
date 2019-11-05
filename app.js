@@ -171,11 +171,12 @@ io.sockets.on('connection', function (socket) {
         // console.log('disconnect');
     });
 
-    socket.on('remove',function(){
-        analys.dataRemove();
+    socket.on('remove',function(name,obj,oCoords,pageNum,text,ident){
+        console.log('remove');
+        analys.dataRemove(userList.get(name),obj,oCoords,pageNum,text);
         let ptext = analys.analys(pageNum,userList.size);
         if (userList.get(handshake.address) != 'teacher') {
-            io.sockets.emit('teacher', data, oCoords,pageNum,ident,ptext);
+            io.sockets.emit('teacher', obj, oCoords,pageNum,ident,ptext);
         }
     });
 });

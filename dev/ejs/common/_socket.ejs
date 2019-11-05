@@ -27,8 +27,9 @@
         }
     }
 
-    function removeObject(obj,oCoords,text,pageNum){
-        socket.emit('remvoe',getUserName(),obj,oCoords,text,pageNum);
+    function removeObject(obj,oCoords,pageNum,text,ident){
+        console.log(text);
+        socket.emit('remove',getUserName(),obj,oCoords,pageNum,text,ident);
     }
 
     // function send(dist,obj){

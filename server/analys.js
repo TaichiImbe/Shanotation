@@ -27,6 +27,7 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
     if (page.has(ip)) {
         array = page.get(ip);
     }
+    console.log(text);
     array.push(new datalist(ip, path, oCoords, ident, text));
     page.set(ip, array);
     Pages.set(pageNum, page);
@@ -205,17 +206,22 @@ function analysOne(page,text,userListSize){
     
 }
 
-function dataRemove(userName, path, oCoords, pageNum, ident, text){
+function dataRemove(userName, path, oCoords, pageNum, text){
     if(Pages.has(pageNum)){
         let userMap = new Map();
         userMap = Pages.get(pageNum);
-        let texts = userMap.get(userName);
+        let texts = [];
+        texts = userMap.get(userName);
         let newArray = [];
         texts.forEach(element => {
-            if(element.text !== text){
+            if (element.text.str !== text.str) {
                 newArray.push(element);
+            } else {
+                if (element.path.length !== path.length) {
+                    newArray.push(element);
+                } 
             }
-        })
+        });
         userMap.set(userName,texts);
         Pages.set(pageNum,userMap);
     }
