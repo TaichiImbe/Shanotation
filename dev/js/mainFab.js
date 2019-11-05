@@ -91,8 +91,8 @@ Canvas.on('object:added', function (e) {
 });
 
 Canvas.on('object:removed',function(e){
-    ident = identification(object);
     let object = e.target;
+    ident = identification(object);
     if (rmflag) {
         console.log(e);
         getPdfText(pageNum).then(function (text) {
