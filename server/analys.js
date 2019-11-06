@@ -207,7 +207,6 @@ function analysOne(page,text,userListSize){
 
 function dataRemove(userName, path, oCoords, pageNum, text){
     if(Pages.has(pageNum)){
-        console.log(Pages.get(pageNum));
         let userMap = new Map();
         userMap = Pages.get(pageNum);
         let texts = [];
@@ -222,13 +221,25 @@ function dataRemove(userName, path, oCoords, pageNum, text){
                 } 
             }
         });
-        console.log(newArray);
         userMap.set(userName,newArray);
         Pages.set(pageNum,userMap);
-        console.log(Pages);
     }
 
 }
+
+function dataClear(name, pageNum) {
+    console.log(Pages);
+    if (Pages.has(pageNum)) {
+        let userMap = Pages.get(pageNum);
+        if (userMap.has(name)) {
+            let newArray = [];
+            userMap.set(name, newArray);
+        }
+        Pages.set(pageNum, userMap);
+    }
+
+}
+
 
 /**
  *  分析データクラス
@@ -250,3 +261,4 @@ exports.dataset = dataset;
 exports.analys = analys;
 exports.analysOne = analysOne;
 exports.dataRemove = dataRemove;
+exports.dataClear = dataClear;

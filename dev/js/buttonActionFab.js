@@ -36,8 +36,12 @@ prevButton.onclick = function () {
     pageNum--;
     AnnotationSet(pageNum).then(function () {
     });
-    pageRender(pageNum);
+    pageRender(pageNum).then(function () {
+    });
     // pageMoveArea.value = pageNum;
+        if (global.eraserMode) {
+            eraserButton.onclick();
+        }
     pageMoveArea.textContent = pageNum;
 }
 
@@ -51,8 +55,13 @@ nextButton.onclick = function () {
     pageNum++;
     AnnotationSet(pageNum).then(function () {
     });
-    pageRender(pageNum);
+    pageRender(pageNum).then(function () {
+    });
+        if (global.eraserMode) {
+            eraserButton.onclick();
+        }
     pageMoveArea.textContent = pageNum;
+    // eraserButton.onclick();
 }
 
 //canvas上の絵を全部消す
@@ -66,6 +75,7 @@ selectButton.onclick = function () {
 };
 
 //消しゴムボタン
+// todo ページ遷移後に線が消えない問題を調査
 eraserButton.onclick = function () {
     global.eraserMode = true;
     Canvas.isDrawingMode = true;

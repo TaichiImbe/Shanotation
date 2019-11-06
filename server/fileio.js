@@ -20,7 +20,7 @@ function fileWrite(filename, handshake, userName,datas,pageNum,time) {
         var ip = handshake.address.split(":");
         for (i = 0; i < data.length; i++) {
             // array.push(userName + ' ' + data[i] + ' '+ time +'\n');
-            str += ip[3] + ' ' + data[i] + ' ' + pageNum +' '+time + '\n';
+            str += userName + ' ' + data[i] + ' ' + pageNum +' '+time + '\n';
         }
         fs.open(filename, 'a', function (err, fd) {
 

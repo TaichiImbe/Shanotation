@@ -58,8 +58,11 @@ Canvas.on('object:added', function (e) {
     // logPrint(y+"/"+m+"/"+d+" "+hh+":"+mm+":"+ss);
     // logPrint(e);
     //消しゴムモードが起動している時
-    //todo データを消した後のサーバー処理(delet命令)
+    //todo 消しゴムモードでページ繊維するときの問題を検討
+    // 遷移時の送信はおそらく改善
     if (eraserMode) {
+        if (!pageTrans) {
+
         Canvas.remove(object);
         Canvas.getObjects().forEach(element => {
             rmflag = true;
@@ -70,6 +73,7 @@ Canvas.on('object:added', function (e) {
             });
         });
         rmflag = false;
+        }
     } else {
         ident = identification(object);
 

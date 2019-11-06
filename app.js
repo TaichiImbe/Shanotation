@@ -154,7 +154,7 @@ io.sockets.on('connection', function (socket) {
                 console.log('err');
             }
             // console.log(ptext);
-            fileWrite('analysdata.txt', handshake,userList.get(name), data, pageNum,time);
+            fileWrite('analysdata.txt', handshake,name, data, pageNum,time);
             if (userList.get(handshake.address) != 'teacher') {
                 io.sockets.emit('teacher', data, oCoords,pageNum,ident,ptext);
             }
@@ -179,6 +179,11 @@ io.sockets.on('connection', function (socket) {
             io.sockets.emit('teacher', obj, oCoords,pageNum,ident,ptext);
         }
     });
+
+    socket.on('clear', function (name, pageNum) {
+        console.log('clear');
+        analys.dataClear(name, pageNum);
+    })
 });
 
 io.use(function (socket, next) {

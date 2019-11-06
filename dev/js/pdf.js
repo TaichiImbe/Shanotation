@@ -26,6 +26,8 @@ window.addEventListener('load', function () {
 
 function pageRender(pageNum) {
     // console.log(PDFJS.cMapUrl);
+    return new Promise(function () {
+
     pdf.getPage(pageNum).then(function (page) {
         var scale = 1;
         var viewport = page.getViewport({ scale: scale });
@@ -51,6 +53,7 @@ function pageRender(pageNum) {
             });
         });
     });
+    })
 }
 // console.log(loadingTask);
 function getPdfPage() {

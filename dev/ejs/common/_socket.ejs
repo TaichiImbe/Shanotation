@@ -32,6 +32,10 @@
         socket.emit('remove',getUserName(),obj,oCoords,pageNum,text,ident);
     }
 
+    window.addEventListener('beforeunload',function(e){
+        socket.emit('clear',getUserName(),pageNum);
+    })
+
     // function send(dist,obj){
         // socket.emit(dist,obj);
     // }
