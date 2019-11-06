@@ -7,6 +7,7 @@ var router = express.Router();
 var url = require('url');
 var config = require('config');
 var multer = require('multer');
+const fileupload = require('express-fileupload');
 
 var port = config.port;
 var user = config.user;
@@ -34,14 +35,17 @@ server = app.listen(port, function () {
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null,'')
+        cb(null,'./pdf')
     },
 
     filename: function (req, file, cb) {
         cb(null,file.originalname)
     }
 })
-var upload = multer({dest: './pdf/'}).single('thumbnail');
+// var upload = multer({storage:storage}).single('userFile');
+var upload = multer({storage:storage});
+// const upload = multer({dest: './pdf/'});
+// const upload = multer();
 
 //express session initialization
 var sessionMiddleware = session({
@@ -70,6 +74,12 @@ app.use('/css', express.static(__dirname + '/views/css'));
 
 // webconfig path
 app.use('/config',express.static(__dirname + '/config'))
+
+// ファイルアップロード処理用
+app.use(fileupload({
+    tempFileDir:'./pdf'
+    }
+));
 
 app.set('view engine', 'ejs');
 
@@ -109,16 +119,46 @@ app.get('/upload', function (req, res, next) {
     res.render('./upload');
 });
 
+// app.post('/upload', function (req, res) {
+//     if (!req.files || Object.keys(req.files).length === 0) {
+//         return res.status(400).send('No files were uploaded.')
+//     }
+
+//     let sampleFile = req.files.userFile;
+//     console.log(sampleFile);
+// });
+
+
 //todo upload処理でpdfがエラーする問題を解決する.
-app.post('/upload', function (req, res) {
-    upload(req, res, function (err) {
-        if (err) {
-            res.send("Failed to write " + req.file.destination + " with " + err);
-        } else {
-            req.send('uploaded' + req.file.originalname + ' as ' + req.file.filename + " Size: ")
-        }
-    });
+// app.post('/upload', function (req, res, next) {
+//     upload(req, res, function (err) {
+//         if (err) {
+
+//         } else {
+//             // res.send('finish');
+//             req.send('uploaded' + req.file.filename + " Size: ")
+//         }
+//     });
+// })
+app.post('/upload', upload.single('userFile'), (req, res) => {
+    console.log(req);
+        res.send('uploaded' + req.files.userFile.name + " Size: ")
+    
+        // if (err) {
+        //     res.send("Failed to write " + req.file.destination + " with " + err);
+        // } else {
+            // req.send('uploaded' + req.file.originalname + ' as ' + req.file.filename + " Size: ")
+        // }
 });
+// app.post('/upload', function (req, res,next) {
+//     upload(req, res, function (err) {
+//         if (err) {
+//             res.send("Failed to write " + req.file.destination + " with " + err);
+//         } else {
+//             req.send('uploaded' + req.file.originalname + ' as ' + req.file.filename + " Size: ")
+//         }
+//     });
+// });
 
 //login userList 
 var userList = new Map();
