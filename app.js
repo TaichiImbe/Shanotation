@@ -7,7 +7,6 @@ var router = express.Router();
 var url = require('url');
 var config = require('config');
 var multer = require('multer');
-const fileupload = require('express-fileupload');
 
 var port = config.port;
 var user = config.user;
@@ -33,6 +32,7 @@ server = app.listen(port, function () {
     console.log('Node js is listening to PORT:' + server.address().port);
 });
 
+//ファイルパスの設定のファイル名の設定
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null,'pdf')
@@ -42,10 +42,8 @@ var storage = multer.diskStorage({
         cb(null,file.originalname)
     }
 })
-// var upload = multer({storage:storage}).single('userFile');
+//アップロードした後の諸々の処理はmulterに任せる
 var upload = multer({storage:storage});
-// let upload = multer({dest: 'pdf/'});
-// const upload = multer();
 
 //express session initialization
 var sessionMiddleware = session({
@@ -116,27 +114,7 @@ app.get('/upload', function (req, res, next) {
     res.render('./upload');
 });
 
-// app.post('/upload', function (req, res) {
-//     if (!req.files || Object.keys(req.files).length === 0) {
-//         return res.status(400).send('No files were uploaded.')
-//     }
-
-//     let sampleFile = req.files.userFile;
-//     console.log(sampleFile);
-// });
-
-
-//todo upload処理でpdfがエラーする問題を解決する.
-// app.post('/upload', function (req, res, next) {
-//     upload(req, res, function (err) {
-//         if (err) {
-
-//         } else {
-//             // res.send('finish');
-//             req.send('uploaded' + req.file.filename + " Size: ")
-//         }
-//     });
-// })
+//todo upload後の表示処理を考える
 app.post('/upload', upload.single('myFile'), (req, res,next) => {
     var img = fs.readFileSync(req.file.path);
         res.send('uploaded' + req.file.originalname + " Size: ")
@@ -147,15 +125,6 @@ app.post('/upload', upload.single('myFile'), (req, res,next) => {
             // req.send('uploaded' + req.file.originalname + ' as ' + req.file.filename + " Size: ")
         // }
 });
-// app.post('/upload', function (req, res,next) {
-//     upload(req, res, function (err) {
-//         if (err) {
-//             res.send("Failed to write " + req.file.destination + " with " + err);
-//         } else {
-//             req.send('uploaded' + req.file.originalname + ' as ' + req.file.filename + " Size: ")
-//         }
-//     });
-// });
 
 //login userList 
 var userList = new Map();
