@@ -35,7 +35,7 @@ server = app.listen(port, function () {
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null,'./pdf')
+        cb(null,'pdf')
     },
 
     filename: function (req, file, cb) {
@@ -44,7 +44,7 @@ var storage = multer.diskStorage({
 })
 // var upload = multer({storage:storage}).single('userFile');
 var upload = multer({storage:storage});
-// const upload = multer({dest: './pdf/'});
+// let upload = multer({dest: 'pdf/'});
 // const upload = multer();
 
 //express session initialization
@@ -76,10 +76,7 @@ app.use('/css', express.static(__dirname + '/views/css'));
 app.use('/config',express.static(__dirname + '/config'))
 
 // ファイルアップロード処理用
-app.use(fileupload({
-    tempFileDir:'./pdf'
-    }
-));
+// app.use(fileupload());
 
 app.set('view engine', 'ejs');
 
@@ -140,9 +137,9 @@ app.get('/upload', function (req, res, next) {
 //         }
 //     });
 // })
-app.post('/upload', upload.single('userFile'), (req, res) => {
-    console.log(req);
-        res.send('uploaded' + req.files.userFile.name + " Size: ")
+app.post('/upload', upload.single('myFile'), (req, res,next) => {
+    var img = fs.readFileSync(req.file.path);
+        res.send('uploaded' + req.file.originalname + " Size: ")
     
         // if (err) {
         //     res.send("Failed to write " + req.file.destination + " with " + err);
