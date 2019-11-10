@@ -138,7 +138,14 @@ app.get('/main', function (req, res, next) {
 
 app.post('/main', function (req, res, next) {
     console.log(req.body);
-    res.render('./index', { pdfname: req.body.pdfname , userName:req.body.userName});
+        let userName = req.body.userName;
+    // res.render('./index', { pdfname: req.body.pdfname , userName:req.body.userName});
+    if (userName === 'teacher') {
+        // res.redirect('/teacher');
+        res.render('./teacher',{pdfname:req.body.pdfname,userName:userName});
+    } else {
+        res.render('./index',{pdfname:req.body.pdfname,userName: userName});
+    }
     // console.log(req.body);
 })
 
