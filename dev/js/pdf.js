@@ -3,7 +3,8 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.wor
 CMAP_URL = '/node_modules/pdfjs-dist/cmaps/'
 CMAP_PACKED = true;
 
-var url = '/pdf/imageprossesing6.pdf';
+// var url = '/pdf/imageprossesing6.pdf';
+var url = '/pdf/'+getPdfName();
 
 var pageNum = 1;
 var pdf = null;

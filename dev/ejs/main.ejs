@@ -1,0 +1,16 @@
+<!DOCTYPE html> 
+<html lang="ja">
+<head>
+    <% include common/_head %>
+</head>
+<body>
+    <% var array %>
+    <form method="post" action='/main'>
+            <input type='hidden' name='userName' value=<%= userName %>>
+        <% array.forEach(function(value,key){ %>
+            <input type="submit" name='pdfname' value=<%= value %> >
+        <% }) ;%>
+    </form>
+
+</body>
+</html>

@@ -87,13 +87,21 @@ app.get('/', function (req, res, next) {
 //login setting
 app.post('/', function (req, res, next) {
     // console.log(req.body);
-    let userName = req.body.userName;
-    if (userName === 'teacher') {
-        // res.redirect('/teacher');
-        res.render('./teacher');
-    } else {
-        res.render('./index',{userName: userName});
-    }
+    fs.readdir('pdf/', function (err, files) {
+        if (err) throw err;
+        let userName = req.body.userName;
+        let fileList = files.filter(file => {
+            return /.*\.(pdf$|PDF$)/.test(file);
+        })
+        // res.render('./main', {array: fileList});
+        res.render('./main', { array:fileList, userName: userName });
+    })
+    // if (userName === 'teacher') {
+    //     // res.redirect('/teacher');
+    //     res.render('./teacher',{userName:userName});
+    // } else {
+    //     res.render('./index',{userName: userName});
+    // }
 });
 
 //index render
@@ -113,6 +121,26 @@ app.get('/teacher', function (req, res, next) {
 app.get('/upload', function (req, res, next) {
     res.render('./upload');
 });
+
+app.get('/main', function (req, res, next) {
+    fs.readdir('pdf/', function (err, files) {
+        if (err) throw err;
+        let fileList = files.filter(file => {
+            return /.*\.(pdf$|PDF$)/.test(file);
+        })
+        res.render('./main', {array: fileList});
+    })
+});
+
+// app.get('/pdflink', function (req, res, next) {
+//     console.log(req.body);
+// })
+
+app.post('/main', function (req, res, next) {
+    console.log(req.body);
+    res.render('./index', { pdfname: req.body.pdfname , userName:req.body.userName});
+    // console.log(req.body);
+})
 
 //todo upload後の表示処理を考える
 app.post('/upload', upload.single('myFile'), (req, res,next) => {
