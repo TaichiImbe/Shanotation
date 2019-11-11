@@ -5,7 +5,7 @@
 </head>
 <body>
     <form method="post" enctype="multipart/form-data" action='/upload'>
-
+        <input type='hidden' name='userName' value=<%= userName %>>
         <input type="file" name="myFile" />
         <input type="submit" value="Upload file" name="submit">
     </form>

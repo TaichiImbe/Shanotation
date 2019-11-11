@@ -96,12 +96,6 @@ app.post('/', function (req, res, next) {
         // res.render('./main', {array: fileList});
         res.render('./main', { array:fileList, userName: userName });
     })
-    // if (userName === 'teacher') {
-    //     // res.redirect('/teacher');
-    //     res.render('./teacher',{userName:userName});
-    // } else {
-    //     res.render('./index',{userName: userName});
-    // }
 });
 
 //index render
@@ -119,6 +113,7 @@ app.get('/teacher', function (req, res, next) {
 });
 
 app.get('/upload', function (req, res, next) {
+    console.log(req.body);
     res.render('./upload');
 });
 
@@ -135,9 +130,11 @@ app.get('/main', function (req, res, next) {
 // app.get('/pdflink', function (req, res, next) {
 //     console.log(req.body);
 // })
+app.post('/pageTrans', function (req, res, next) {
+    res.render('./upload',{userName:req.body.userName});
+});
 
 app.post('/main', function (req, res, next) {
-    console.log(req.body);
         let userName = req.body.userName;
     // res.render('./index', { pdfname: req.body.pdfname , userName:req.body.userName});
     if (userName === 'teacher') {
@@ -152,13 +149,14 @@ app.post('/main', function (req, res, next) {
 //todo upload後の表示処理を考える
 app.post('/upload', upload.single('myFile'), (req, res,next) => {
     var img = fs.readFileSync(req.file.path);
-        res.send('uploaded' + req.file.originalname + " Size: ")
-    
-        // if (err) {
-        //     res.send("Failed to write " + req.file.destination + " with " + err);
-        // } else {
-            // req.send('uploaded' + req.file.originalname + ' as ' + req.file.filename + " Size: ")
-        // }
+    fs.readdir('pdf/', function (err, files) {
+        if (err) throw err;
+        let fileList = files.filter(file => {
+            return /.*\.(pdf$|PDF$)/.test(file);
+        })
+        res.render('./main', { array:fileList, userName: req.body.userName });
+    })
+    // res.redirect('./main');
 });
 
 //login userList 
@@ -213,7 +211,6 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('remove',function(name,obj,oCoords,pageNum,text,ident){
-        console.log('remove');
         analys.dataRemove(userList.get(name),obj,oCoords,pageNum,text);
         let ptext = analys.analys(pageNum,userList.size);
         if (userList.get(handshake.address) != 'teacher') {
@@ -222,7 +219,6 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('clear', function (name, pageNum) {
-        console.log('clear');
         analys.dataClear(name, pageNum);
     })
 });

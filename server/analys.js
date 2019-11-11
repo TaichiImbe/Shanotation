@@ -228,7 +228,6 @@ function dataRemove(userName, path, oCoords, pageNum, text){
 }
 
 function dataClear(name, pageNum) {
-    console.log(Pages);
     if (Pages.has(pageNum)) {
         let userMap = Pages.get(pageNum);
         if (userMap.has(name)) {
