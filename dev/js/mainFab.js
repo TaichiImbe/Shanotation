@@ -63,16 +63,16 @@ Canvas.on('object:added', function (e) {
     if (eraserMode) {
         if (!pageTrans) {
 
-        Canvas.remove(object);
-        Canvas.getObjects().forEach(element => {
-            rmflag = true;
-            element.path.forEach(path => {
-                if (coverd(path, object)) {
-                    Canvas.remove(element);
-                }
+            Canvas.remove(object);
+            Canvas.getObjects().forEach(element => {
+                rmflag = true;
+                element.path.forEach(path => {
+                    if (coverd(path, object)) {
+                        Canvas.remove(element);
+                    }
+                });
             });
-        });
-        rmflag = false;
+            rmflag = false;
         }
     } else {
         ident = identification(object);
@@ -80,6 +80,8 @@ Canvas.on('object:added', function (e) {
         AnnoCollection.set(realTime, e.target);
         getPdfText(pageNum).then(function (text) {
             // var font = textCheck(object,text);
+            // console.log(object.oCoords);
+            // console.log(text);
             var font = getSubText(object, text);
             // console.log(font);
             //     (function (object, text) {
@@ -94,88 +96,102 @@ Canvas.on('object:added', function (e) {
     }
 });
 
-Canvas.on('object:removed',function(e){
+Canvas.on('object:removed', function (e) {
     let object = e.target;
     ident = identification(object);
     if (rmflag) {
         console.log(e);
         getPdfText(pageNum).then(function (text) {
             let font = getSubText(object, text);
-            removeObject(object,object.oCoords,pageNum,font,ident);
+            removeObject(object, object.oCoords, pageNum, font, ident);
         });
     }
-//    remvoeObject(e,pageNum); 
+    //    remvoeObject(e,pageNum); 
 });
 
 function getSubText(object, text) {
-                oCoords = object.oCoords;
-                var str;
-                // for (i = text.items.length-1; i >= 0 ; i--) {
-                let sum = 0;
-                for (let i = 0; i < text.items.length; i++) {
-                    sum += text.items[i].height;
-                }
-                const thresh = sum / text.items.length;
-                let subtextlist = [];
-                let subsubtextlist = [];
-                var minr = Math.sqrt(Math.pow((text.items[0].transform[4] + text.items[0].width) - oCoords.br.x, 2) + Math.pow(text.items[0].transform[5] - oCoords.br.y, 2));
-                for (i = 0; i < text.items.length; i++) {
-                    if (oCoords.bl.y - thresh <= text.items[i].transform[5] && text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)) {
-                        if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
-                            // console.log(text.items[i]);
-                            subsubtextlist.push(text.items[i]);
-                        }
-                        subtextlist.push(text.items[i]);
-                    }
-                }
-                if (subsubtextlist.length != 0) {
+    oCoords = object.oCoords;
+    var str;
+    // for (i = text.items.length-1; i >= 0 ; i--) {
+    let sum = 0;
+    for (let i = 0; i < text.items.length; i++) {
+        sum += text.items[i].height;
+    }
+    const thresh = sum / text.items.length;
+    let subtextlist = [];
+    let subsubtextlist = [];
+    var minr = Math.sqrt(Math.pow((text.items[0].transform[4] + text.items[0].width) - oCoords.br.x, 2) + Math.pow(text.items[0].transform[5] - oCoords.br.y, 2));
+        console.log(thresh);
+    console.log(text.items[6]);
+    for (i = 0; i < text.items.length; i++) {
+        if (oCoords.bl.y - thresh * 1.5 <= text.items[i].transform[5] && text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)) {
+            if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
+                // console.log(text.items[i]);
+                subsubtextlist.push(text.items[i]);
+            }
+            subtextlist.push(text.items[i]);
+        }
+    }
+    console.log(subsubtextlist);
+    console.log(subtextlist);
+    if (subsubtextlist.length != 0) {
 
-                    let subtext = '';
-                    let subwidth = 0;
-                    for (i = 0; i < subsubtextlist.length; i++) {
-                        subtext += subsubtextlist[i].str;
-                        subwidth += subsubtextlist[i].width;
+        let subtext = '';
+        let subwidth = 0;
+        for (i = 0; i < subsubtextlist.length; i++) {
+            subtext += subsubtextlist[i].str;
+            subwidth += subsubtextlist[i].width;
 
-                    }
-                    str = subsubtextlist[0];
-                    str.str = subtext;
-                    str.width = subwidth;
-                } else {
+        }
+        str = subsubtextlist[0];
+        str.str = subtext;
+        str.width = subwidth;
+    } else if(subtextlist.length != 0){
 
-                    let minl = Math.sqrt(Math.pow(subtextlist[0].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[0].transform[5] - oCoords.bl.y, 2));
-                    str = subtextlist[0];
+        let minl = Math.sqrt(Math.pow(subtextlist[0].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[0].transform[5] - oCoords.bl.y, 2));
+        str = subtextlist[0];
 
-                    for (i = 1; i < subtextlist.length; i++) {
+        for (i = 1; i < subtextlist.length; i++) {
 
-                        if (minl > Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2))) {
-                            minil = Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2));
-                            str = subtextlist[i];
-                        }
-                    }
-                }
+            if (minl > Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2))) {
+                minil = Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2));
+                str = subtextlist[i];
+            }
+        }
+    } else {
 
-                // console.log(oCoords);
-                console.log(str);
-                var charSize = str.width / str.str.length;
-                var width = 0;
-                var transform = str.transform;
-                var t4 = str.transform[4];
-                var substring = '';
-                for (i = 0; i < str.str.length; i++) {
-                    if (t4 <= oCoords.bl.x && t4 + str.height >= oCoords.bl.x) {
-                        substring += str.str[i];
-                        transform[4] = t4;
-                    }
-                    if (t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
-                        substring += str.str[i];
-                        width += str.height;
-                    }
-                    if (t4 > oCoords.br.x) {
-                        break;
-                    }
-                    t4 += str.height;
-                }
-                return new newString(substring, str.height, width, transform);
+        let minl = Math.sqrt(Math.pow(text.items[0].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[0].transform[5] - oCoords.bl.y, 2));
+        for (i = 1; i < text.items.length; i++) {
+
+            if (minl > Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2)) && text.items[i].transform[5] <= oCoords.bl.y) {
+                minil = Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2));
+                str = text.items[i];
+            }
+        }
+    }
+
+    // console.log(oCoords);
+    console.log(str);
+    var charSize = str.width / str.str.length;
+    var width = 0;
+    var transform = str.transform;
+    var t4 = str.transform[4];
+    var substring = '';
+    for (i = 0; i < str.str.length; i++) {
+        if (t4 <= oCoords.bl.x && t4 + str.height >= oCoords.bl.x) {
+            substring += str.str[i];
+            transform[4] = t4;
+        }
+        if (t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
+            substring += str.str[i];
+            width += str.height;
+        }
+        if (t4 > oCoords.br.x) {
+            break;
+        }
+        t4 += str.height;
+    }
+    return new newString(substring, str.height, width, transform);
 }
 
 /**

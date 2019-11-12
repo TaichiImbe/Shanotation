@@ -31,6 +31,13 @@ function pageRender(pageNum) {
 
     pdf.getPage(pageNum).then(function (page) {
         var scale = 1;
+        //todo scaleは大きさを変更すると座標がバグるので注意
+        // テキストの方がおかしいのかな...?
+        // viewport いじってる... あれ?
+        // 変換時 viewportが設定しているよね
+        if (page._pageInfo.view[2] * scale < 720) {
+            scale = 2;
+        } 
         var viewport = page.getViewport({ scale: scale });
         var pdfCan = document.getElementById('pdfCan');
         var context = pdfCan.getContext('2d');
@@ -63,10 +70,13 @@ function getPdfPage() {
 
 function getPdfText(pageNum) {
     return pdf.getPage(pageNum).then(function (page) {
-        scale = 1;
-        var viewport = page.getViewport({ scale: scale });
+        let scale = 1;
+        if (page._pageInfo.view[2] * scale < 720) {
+            scale = 2;
+        } 
         return page.getTextContent().then(function (textContent) {
             // console.log(textContent);
+            let viewport = page.getViewport({ scale: scale });
             textContent.items.forEach(text => {
                 text.transform = pdfjsLib.Util.transform(viewport.transform, text.transform);
                 // console.log(text);
