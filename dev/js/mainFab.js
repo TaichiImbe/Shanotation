@@ -109,6 +109,8 @@ Canvas.on('object:removed', function (e) {
     //    remvoeObject(e,pageNum); 
 });
 
+//todo
+// テキスト算出の計算方法見直し
 function getSubText(object, text) {
     oCoords = object.oCoords;
     var str;
