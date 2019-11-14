@@ -27,7 +27,35 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
     if (page.has(ip)) {
         array = page.get(ip);
     }
-    array.push(new datalist(ip, path, oCoords, ident, text));
+    let list = [];
+    let width = text.height;
+    let t4 = text.transform[4];
+    // class CharSet{
+    //     constructor(char,height,width,transform) {
+    //         this.str = char;
+    //         this.height = height
+    //         this.width = width;
+    //         this.transform = transform
+    //     }
+    // }
+    //　配列を作ると値が変わらない
+    let trans0 = text.transform[0];
+    let trans1 = text.transform[1];
+    let trans2 = text.transform[2];
+    let trans3 = text.transform[3];
+    let trans4 = text.transform[4];
+    let trans5 = text.transform[5];
+    for (i = 0; i < text.str.length; i++){
+        let s = text.str[i];
+        trans4 = t4;
+        let trans = [trans0, trans1, trans2, trans3, trans4, trans5];
+        list.push({str:s,height:text.height,width:width,transform:trans});
+        t4 += text.height;
+    }
+    list.forEach(element => {
+        array.push(new datalist(ip, path, oCoords, ident, element));
+        // array.push(new datalist(ip, path, oCoords, ident, text));
+    })
     page.set(ip, array);
     Pages.set(pageNum, page);
     // console.log(Datas);
@@ -52,9 +80,14 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
         return true;
     }
     // console.log(inCheck(text));
-    if (inCheck(text)) {
-        textList.add(text);
-    }
+    list.forEach(element => {
+        if (inCheck(element)) {
+            textList.add(element);
+        }
+    });
+    // if (inCheck(text)) {
+    //     textList.add(text);
+    // }
     // console.log(textList);
 }
 
@@ -65,10 +98,9 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
  * @returns pathと色情報の集合
  */
 function analys(page,userListSize) {
-    //todo 同じ座標に書いた人を求める
     var map = new Map();
     if (Pages.has(page)) {
-
+        //テキストの一文字ごとに色を決めたい
         var data = Pages.get(page);
         var iplist = data.keys();
         data.forEach(element => {
@@ -85,7 +117,7 @@ function analys(page,userListSize) {
             });
         });
         // console.log(map);
-        //todo ipごとに合計
+        //ip(ユーザ名)ごとに合計
         // map.forEach(element => {
         var count = new Map();
         map.forEach(function (value, key) {
@@ -103,6 +135,8 @@ function analys(page,userListSize) {
                 }
                 return false;
             }
+            //mapは文字列とユーザ名のmap?
+            //countは文字列とそれを書いた人数のmap
             map.get(key).forEach(element => {
                 if (ipcheck(element)) {
                     return;
@@ -197,7 +231,7 @@ function analysOne(page,text,userListSize){
             let parth = p / userListSize;
             // 比率から色を決める(とりあえず決め打ち)
             let color = parth *(colorVariation.length - 1- 0) + 0;
-            // console.log(color);
+            console.log(color);
             str.color = colorVariation[Math.round(color)];
             // console.log(str);
             return str;
