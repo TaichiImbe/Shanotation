@@ -9,7 +9,8 @@ var identifier = ['enclosure', 'line'];
  * 2019/11/04 変更 ページごとにユーザ名とpathのmapを管理
  */
 var Pages = new Map();
-var textList = new Set();
+// var textList = new Set();
+var textList = [];
 
 /**
  *送信されてきた分析データをセット
@@ -61,28 +62,38 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
     // console.log(Datas);
     let inCheck = function (text) {
         // console.log(textList);
-        let it = textList.values();
-        while (true) {
-            let textconsider = it.next();
-            // console.log(textconsider.value);
-            if (!textconsider.done) {
-                let value = textconsider.value;
-                if (value.str === text.str) {
-                    if (value.transform[4] === text.transform[4] && value.transform[5] === text.transform[5]) {
-                        return false;
-                    }
-                }
-            } else {
-                break;
-            }
+        // let it = textList.values();
+        // while (true) {
+        //     let textconsider = it.next();
+        //     // console.log(textconsider.value);
+        //     if (!textconsider.done) {
+        //         let value = textconsider.value;
+        //         if (value.str === text.str) {
+        //             if (value.transform[4] === text.transform[4] && value.transform[5] === text.transform[5]) {
+        //                 return false;
+        //             }
+        //         }
+        //     } else {
+        //         break;
+        //     }
 
+        // }
+        for (i = 0; i < textList.length; i++) {
+            if (textList[i].str === text.str) {
+                if (textList[i].transform[4] === textList[i].transform[4] && textList[i].transform[5] === text.transform[5]) {
+                    return false;
+
+                }
+            }
         }
         return true;
     }
     // console.log(inCheck(text));
     list.forEach(element => {
         if (inCheck(element)) {
-            textList.add(element);
+            element.count = 0;
+            // textList.add(element);
+            textList.push(element);
         }
     });
     // if (inCheck(text)) {
@@ -92,12 +103,90 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
 }
 
 /**
+ *  文字ごとに色を決める
  *
+ * @param {*} page
+ * @param {*} userListSize
+ */
+function copy(main) {
+    let Obj = new Set();
+    main.forEach(element =>{
+        Obj.add(element);
+    })
+    return Obj;
+}
+function analys(page, userListSize) {
+    // console.log(textList);
+    // let pList = Object.assign(textList);
+    let pList = textList.slice();
+    
+    // console.log(pList);
+    if (Pages.has(page)) {
+        let data = Pages.get(page); 
+        let values = data.values();
+        while (true) {
+            let textconsider = values.next();
+            if (!textconsider.done) {
+                let val = textconsider.value;
+                val.forEach(value => {
+
+                for (i = 0; i < pList.length; i++){
+                    if (value.text.str === pList[i].str && 
+                        value.text.transform[4] == pList[i].transform[4] &&
+                        value.text.transform[5] == pList[i].transform[5]) {
+
+                        pList[i].count++;
+                    }
+                }
+                })
+            } else {
+                break
+            }
+        }
+        //todo ipごとに分ける処理?
+        // data.forEach((value,key) => {
+        //     let values = data.get(key);
+        //     values.forEach(val => {
+        //         for (i = 0; i < pList.length; i++){
+        //             if (val.text.str === pList[i].str && 
+        //                 val.text.transform[4] == pList[i].transform[4] &&
+        //                 val.text.transform[5] == pList[i].transform[5]) {
+
+        //                 pList[i].count++;
+        //             }
+        //         }
+        //     })
+        // });
+        console.log(pList);
+        // console.log(textList);
+        //todo 合計から色を決定
+        //todo とりあえず割合の正規 ?
+        let list = [];
+        // console.log(pList);
+        // pList.forEach(function(text) {
+        for (i = 0; i < pList.length; i++){
+            //書き込みごとに比率を求める
+            let parth = pList[i].count / userListSize;
+            // 比率から色を決める(とりあえず決め打ち)
+            let color = parth *(colorVariation.length - 1- 0) + 0;
+            // console.log(color);
+                        pList[i].color = colorVariation[Math.round(color)];
+                        list.push(pList[i]);  
+            console.log(textList);
+        }
+    // console.log(list);
+        return list;
+    }
+
+}
+
+/**
+ * 文字列ごとに色を決める
  *
  * @param {*} page
  * @returns pathと色情報の集合
  */
-function analys(page,userListSize) {
+function analysString(page,userListSize) {
     var map = new Map();
     if (Pages.has(page)) {
         //テキストの一文字ごとに色を決めたい
@@ -116,7 +205,7 @@ function analys(page,userListSize) {
                 }
             });
         });
-        // console.log(map);
+        console.log(map);
         //ip(ユーザ名)ごとに合計
         // map.forEach(element => {
         var count = new Map();
@@ -136,6 +225,8 @@ function analys(page,userListSize) {
                 return false;
             }
             //mapは文字列とユーザ名のmap?
+            //todo ここのデータの持ち方を変更する必要あり
+            //文字に対するipの書き込みを加算すると,違う位置の同じ文字も加算される
             //countは文字列とそれを書いた人数のmap
             map.get(key).forEach(element => {
                 if (ipcheck(element)) {
