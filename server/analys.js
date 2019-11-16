@@ -10,7 +10,7 @@ var identifier = ['enclosure', 'line'];
  */
 var Pages = new Map();
 // var textList = new Set();
-var textList = [];
+let textList = [];
 
 /**
  *送信されてきた分析データをセット
@@ -118,12 +118,15 @@ function copy(main) {
 function analys(page, userListSize) {
     // console.log(textList);
     // let pList = Object.assign(textList);
-    let pList = textList.slice();
+    let pList = Object.create(textList);
     
     // console.log(pList);
     if (Pages.has(page)) {
         let data = Pages.get(page); 
         let values = data.values();
+        for(i = 0; i < pList.length; i++){
+            pList[i].count = 0;
+        }
         while (true) {
             let textconsider = values.next();
             if (!textconsider.done) {
@@ -157,7 +160,7 @@ function analys(page, userListSize) {
         //         }
         //     })
         // });
-        console.log(pList);
+        // console.log(pList);
         // console.log(textList);
         //todo 合計から色を決定
         //todo とりあえず割合の正規 ?
@@ -172,7 +175,7 @@ function analys(page, userListSize) {
             // console.log(color);
                         pList[i].color = colorVariation[Math.round(color)];
                         list.push(pList[i]);  
-            console.log(textList);
+            // console.log(textList);
         }
     // console.log(list);
         return list;
