@@ -28,9 +28,9 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
     if (page.has(ip)) {
         array = page.get(ip);
     }
-    let list = [];
-    let width = text.height;
-    let t4 = text.transform[4];
+    // let list = [];
+    // let width = text.height;
+    // let t4 = text.transform[4];
     // class CharSet{
     //     constructor(char,height,width,transform) {
     //         this.str = char;
@@ -40,20 +40,20 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
     //     }
     // }
     //　配列を作ると値が変わらない
-    let trans0 = text.transform[0];
-    let trans1 = text.transform[1];
-    let trans2 = text.transform[2];
-    let trans3 = text.transform[3];
-    let trans4 = text.transform[4];
-    let trans5 = text.transform[5];
-    for (i = 0; i < text.str.length; i++){
-        let s = text.str[i];
-        trans4 = t4;
-        let trans = [trans0, trans1, trans2, trans3, trans4, trans5];
-        list.push({str:s,height:text.height,width:width,transform:trans});
-        t4 += text.height;
-    }
-    list.forEach(element => {
+    // let trans0 = text.transform[0];
+    // let trans1 = text.transform[1];
+    // let trans2 = text.transform[2];
+    // let trans3 = text.transform[3];
+    // let trans4 = text.transform[4];
+    // let trans5 = text.transform[5];
+    // for (i = 0; i < text.str.length; i++){
+    //     let s = text.str[i];
+    //     trans4 = t4;
+    //     let trans = [trans0, trans1, trans2, trans3, trans4, trans5];
+    //     list.push({str:s,height:text.height,width:width,transform:trans});
+    //     t4 += text.height;
+    // }
+    text.forEach(element => {
         array.push(new datalist(ip, path, oCoords, ident, element));
         // array.push(new datalist(ip, path, oCoords, ident, text));
     })
@@ -89,7 +89,7 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
         return true;
     }
     // console.log(inCheck(text));
-    list.forEach(element => {
+    text.forEach(element => {
         if (inCheck(element)) {
             element.count = 0;
             // textList.add(element);
@@ -119,6 +119,7 @@ function analys(page, userListSize) {
     // console.log(textList);
     // let pList = Object.assign(textList);
     let pList = Object.create(textList);
+    console.log(Pages);
     
     // console.log(pList);
     if (Pages.has(page)) {
