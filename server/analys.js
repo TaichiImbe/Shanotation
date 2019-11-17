@@ -20,7 +20,7 @@ let textList = [];
  * @param {*} oCoords
  */
 function dataset(ip, path, oCoords, pageNum, ident, text) {
-    var array = new Array();
+    var array = [];
     var page = new Map();
     if (Pages.has(pageNum)) {
         page = Pages.get(pageNum);
@@ -296,6 +296,32 @@ function analysOne(page, text, userListSize) {
 
 }
 
+function dataRemove(userName, path, oCoords, pageNum, textList) {
+    if (Pages.has(pageNum)) {
+        let userMap = Pages.get(pageNum);
+        let texts = userMap.get(userName);
+        let newArray = [];
+        let removeArray = [];
+
+        texts.forEach(rmtext => {
+            textList.forEach(text => {
+                if (rmtext.text.str !== text.str) {
+                    if (rmtext.text.transform[4] !== text.transform[4] &&
+                        rmtext.text.transform[5] !== text.transform[5]) {
+                        newArray.push(rmtext);
+
+                    } else {
+                        removeArray.push(rmtext);
+                    }
+                }
+                
+            });
+        });
+        userMap.set(userName, newArray);
+        Pages.set(pageNum, userMap);
+    }
+
+}
 /**
  *ユーザが消した文字列をanalysデータからも削除
  * 現在は使用停止
@@ -305,7 +331,7 @@ function analysOne(page, text, userListSize) {
  * @param {*} pageNum
  * @param {*} text
  */
-function dataRemove(userName, path, oCoords, pageNum, text) {
+function dataRemoveString(userName, path, oCoords, pageNum, text) {
     if (Pages.has(pageNum)) {
         let userMap = new Map();
         userMap = Pages.get(pageNum);
@@ -330,7 +356,7 @@ function dataRemove(userName, path, oCoords, pageNum, text) {
 
 /**
  * ユーザがクリアボタンを押した時の処理
- * 現在は使用停止
+ * 
  * @param {*} name
  * @param {*} pageNum
  */

@@ -179,8 +179,8 @@ function getSubText(object, text) {
             let t4 = text.transform[4];
             for (i = 0; i < text.str.length; i++) {
                 if (
-                    // t4 <= oCoords.bl.x && t4 + text.height >= oCoords.bl.x
-                     t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
+                    t4 <= oCoords.bl.x && t4 + text.height >= oCoords.bl.x
+                     || t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
                     charList.push({
                         dir: text.dir,
                         fontName: text.fontName,
