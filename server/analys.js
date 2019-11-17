@@ -80,7 +80,8 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
         // }
         for (i = 0; i < textList.length; i++) {
             if (textList[i].str === text.str) {
-                if (textList[i].transform[4] === textList[i].transform[4] && textList[i].transform[5] === text.transform[5]) {
+                
+                if (textList[i].transform[4] == textList[i].transform[4] && textList[i].transform[5] == text.transform[5]) {
                     return false;
 
                 }
@@ -115,11 +116,11 @@ function copy(main) {
     })
     return Obj;
 }
+
 function analys(page, userListSize) {
     // console.log(textList);
     // let pList = Object.assign(textList);
     let pList = Object.create(textList);
-    console.log(Pages);
     
     // console.log(pList);
     if (Pages.has(page)) {
@@ -128,18 +129,45 @@ function analys(page, userListSize) {
         for(i = 0; i < pList.length; i++){
             pList[i].count = 0;
         }
+        let countList = [];
         while (true) {
             let textconsider = values.next();
+            let usersData = []
             if (!textconsider.done) {
                 let val = textconsider.value;
+                console.log(val);
+                const dataCheck = function (data) {
+                    // usersData.forEach(element => {
+                        for (i = 0; i < usersData.length; i++){
+                        if (usersData[i].text.str === data.text.str 
+                            && usersData[i].text.transform[4] == data.text.transform[4] 
+                            && usersData[i].text.transform[5] == data.text.transform[5] 
+                            && usersData[i].ip === data.ip
+                        ) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
                 val.forEach(value => {
-
+                    if (dataCheck(value)) {
+                        usersData.push(value);
+                    }
+                })
+                // console.log(usersData);
+                // console.log(usersData.length);
+                usersData.forEach(value => {
                 for (i = 0; i < pList.length; i++){
+
+                    //memo pList は OK
                     if (value.text.str === pList[i].str && 
                         value.text.transform[4] == pList[i].transform[4] &&
                         value.text.transform[5] == pList[i].transform[5]) {
+                        console.log(value.ip);
 
                         pList[i].count++;
+                        console.log(pList[i].count);
+                        countList.push(pList[i]);
                     }
                 }
                 })
@@ -168,14 +196,14 @@ function analys(page, userListSize) {
         let list = [];
         // console.log(pList);
         // pList.forEach(function(text) {
-        for (i = 0; i < pList.length; i++){
+        for (i = 0; i < countList.length; i++){
             //書き込みごとに比率を求める
-            let parth = pList[i].count / userListSize;
+            let parth = countList[i].count / userListSize;
             // 比率から色を決める(とりあえず決め打ち)
             let color = parth *(colorVariation.length - 1- 0) + 0;
             // console.log(color);
-                        pList[i].color = colorVariation[Math.round(color)];
-                        list.push(pList[i]);  
+            countList[i].color = colorVariation[Math.round(color)];
+            list.push(countList[i]);  
             // console.log(textList);
         }
     // console.log(list);
