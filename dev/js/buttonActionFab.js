@@ -67,6 +67,7 @@ nextButton.onclick = function () {
 //canvas上の絵を全部消す
 clearEI.onclick = function () {
     Canvas.clear()
+    clearObject(pageNum);
 };
 
 //選択モード
