@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/TaichiImbe/InteractNote#readme",
   "dependencies": {
+    "chroma": "0.0.1",
+    "colorsys": "^1.0.22",
     "ejs": "^2.7.1"
   },
   "devDependencies": {

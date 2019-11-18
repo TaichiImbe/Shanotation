@@ -1,3 +1,5 @@
+let chroma = require('chroma');
+let colorsys = require('colorsys');
 // var annotasions = ['enclosure','line'];
 //水色,青,緑,黄色,橙色,赤
 //カラー参考サイト http://www.netyasun.com/home/color.html
@@ -66,6 +68,7 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
 function analys(page, userListSize) {
     // console.log(textList);
     // let pList = Object.assign(textList);
+    // userListSize -= 1;
     let pList = Object.create(textList);
 
     // console.log(pList);
@@ -124,11 +127,12 @@ function analys(page, userListSize) {
         // pList.forEach(function(text) {
         for (i = 0; i < countList.length; i++) {
             //書き込みごとに比率を求める
-            let parth = countList[i].count / userListSize;
+            // let parth = countList[i].count / userListSize;
             // 比率から色を決める(とりあえず決め打ち)
-            let color = parth * (colorVariation.length - 1 - 0) + 0;
+            // let color = parth * (colorVariation.length - 1 - 0) + 0;
             // console.log(color);
-            countList[i].color = colorVariation[Math.round(color)];
+            // countList[i].color = colorVariation[Math.round(color)];
+            countList[i].color = getHeatMapColor(0, userListSize, countList[i].count);
             list.push(countList[i]);
             // console.log(textList);
         }
@@ -308,11 +312,28 @@ function dataRemove(userName, path, oCoords, pageNum, textList) {
                 if (rmtext.text.str !== text.str) {
                     if (rmtext.text.transform[4] !== text.transform[4] &&
                         rmtext.text.transform[5] !== text.transform[5]) {
-                        newArray.push(rmtext);
+                                newArray.push(rmtext);
 
                     } else {
+                        if (rmtext.oCoords.bl.x !== oCoords.bl.x &&
+                            rmtext.oCoords.bl.y !== oCoords.bl.y) {
+                                newArray.push(rmtext);
+                        }
                         removeArray.push(rmtext);
                     }
+                } else {
+                    if (rmtext.text.transform[4] !== text.transform[4] &&
+                        rmtext.text.transform[5] !== text.transform[5]) {
+                                newArray.push(rmtext);
+
+                    } else {
+                        if (rmtext.oCoords.bl.x !== oCoords.bl.x &&
+                            rmtext.oCoords.bl.y !== oCoords.bl.y) {
+                                newArray.push(rmtext);
+                        }
+                        removeArray.push(rmtext);
+                    }
+
                 }
                 
             });
@@ -372,6 +393,32 @@ function dataClear(name, pageNum) {
 
 }
 
+
+/**
+ * 参考サイト
+ * https://ja.wikipedia.org/wiki/HSV色空間#HSVの視覚化
+ * https://antlabo.hatenadiary.org/entry/20120705/1341502816
+ * https://www.petitmonte.com/javascript/color_wheel.html
+ * https://gka.github.io/chroma.js/#chroma-hsv
+ * https://blog.wadackel.me/2016/color-classifier-js/
+ * https://www.npmjs.com/package/colorsys
+ * 0 ~ 360 の範囲で入力値を変えてあげる?
+ * @param {*} min
+ * @param {*} max
+ * @param {*} value
+ * @returns
+ */
+function getHeatMapColor( min, max, value) {
+
+    // let pos = Math.sin(value/max);
+    console.log('min : ' + min + ' max : ' + max + ' value : ' + value);
+    let hue = ((value - min) / (max - min)) * (360 - 0) + 0;
+    console.log(hue);
+    const hsv = colorsys.parseCss('hsv('+hue+',100%,100%)');
+    console.log(hsv);
+    console.log(colorsys.hsv2Hex(hsv));
+    return colorsys.hsv2Hex(hsv);
+}
 
 /**
  *  分析データクラス
