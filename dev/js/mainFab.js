@@ -14,9 +14,6 @@ function setCanvasSize(viewport) {
     Canvas.setHeight(viewport.height);
 }
 
-//水色,青,緑,黄色,橙色,赤
-//カラー参考サイト http://www.netyasun.com/home/color.html
-var colorVariation = ['#8EF1FF', '#5D99FF', '#9BF9CC', '#FFFF66', '#FF6928', '#FF3333']
 window.addEventListener('load', () => {
     // function init(viewport) {
     // const pd = Canvas.getElementById('pdfCan');

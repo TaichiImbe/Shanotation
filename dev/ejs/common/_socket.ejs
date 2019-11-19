@@ -33,6 +33,7 @@
     }
 
     window.addEventListener('beforeunload',function(e){
+        socket.emit('reload',getUserName());
         socket.emit('clear',getUserName(),pageNum);
     })
 
