@@ -182,6 +182,9 @@ io.sockets.on('connection', function (socket) {
     })
     //object resive
     socket.on('object', function (name,data, oCoords, pageNum, ident,text,time) {
+        if (!userList.has(name)) {
+            userList.set(name,name);
+        }
         if (data.type === 'path') {
             var path = data.path;
             analys.dataset(name, data, oCoords,pageNum,ident,text);
@@ -221,6 +224,12 @@ io.sockets.on('connection', function (socket) {
     socket.on('clear', function (name, pageNum) {
         analys.dataClear(name, pageNum);
     })
+
+    socket.on('reload', function (name) {
+        if (!userList.has(name)) {
+            userList.set(name, name);
+        }
+    });
 });
 
 io.use(function (socket, next) {

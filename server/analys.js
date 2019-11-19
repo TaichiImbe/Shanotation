@@ -80,9 +80,9 @@ function analys(page, userListSize) {
         }
         let countList = [];
         //ipごとにデータを分類する処理
+            let usersData = []
         while (true) {
             let textconsider = values.next();
-            let usersData = []
             if (!textconsider.done) {
                 let val = textconsider.value;
                 //同一文字の同一座標の同一ユーザの書き込みは追加しない
@@ -103,22 +103,26 @@ function analys(page, userListSize) {
                         usersData.push(value);
                     }
                 })
-                //分類したデータに基づいて単語情報群を用いてユーザごとに書いた文字の位置をカウント
-                usersData.forEach(value => {
-                    for (i = 0; i < pList.length; i++) {
-
-                        //memo pList は OK
-                        if (value.text.str === pList[i].str &&
-                            value.text.transform[4] == pList[i].transform[4] &&
-                            value.text.transform[5] == pList[i].transform[5]) {
-
-                            pList[i].count++;
-                            countList.push(pList[i]);
-                        }
-                    }
-                })
             } else {
                 break
+            }
+        }
+            //分類したデータに基づいて単語情報群を用いてユーザごとに書いた文字の位置をカウント
+            usersData.forEach(value => {
+                for (i = 0; i < pList.length; i++) {
+
+                    //memo pList は OK
+                    if (value.text.str === pList[i].str &&
+                        value.text.transform[4] == pList[i].transform[4] &&
+                        value.text.transform[5] == pList[i].transform[5]) {
+                        pList[i].count++;
+                    }
+                }
+            })
+
+        for (i = 0; i < pList.length; i++){
+            if (pList[i].count > 0) {
+                countList.push(pList[i]);   
             }
         }
         //色を決める
@@ -397,11 +401,8 @@ function dataClear(name, pageNum) {
 /**
  * 参考サイト
  * https://ja.wikipedia.org/wiki/HSV色空間#HSVの視覚化
- * https://antlabo.hatenadiary.org/entry/20120705/1341502816
- * https://www.petitmonte.com/javascript/color_wheel.html
- * https://gka.github.io/chroma.js/#chroma-hsv
- * https://blog.wadackel.me/2016/color-classifier-js/
  * https://www.npmjs.com/package/colorsys
+ * https://mathwords.net/dataseikika
  * 0 ~ 360 の範囲で入力値を変えてあげる?
  * @param {*} min
  * @param {*} max
@@ -411,12 +412,12 @@ function dataClear(name, pageNum) {
 function getHeatMapColor( min, max, value) {
 
     // let pos = Math.sin(value/max);
-    console.log('min : ' + min + ' max : ' + max + ' value : ' + value);
-    let hue = ((value - min) / (max - min)) * (360 - 0) + 0;
-    console.log(hue);
+    // console.log('min : ' + min + ' max : ' + max + ' value : ' + value);
+    let hue = ((value - min) / (max - min)) * (0 - 270) + 270;
+    // console.log(hue);
     const hsv = colorsys.parseCss('hsv('+hue+',100%,100%)');
-    console.log(hsv);
-    console.log(colorsys.hsv2Hex(hsv));
+    // console.log(hsv);
+    // console.log(colorsys.hsv2Hex(hsv));
     return colorsys.hsv2Hex(hsv);
 }
 
