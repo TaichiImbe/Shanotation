@@ -23,7 +23,6 @@ let mylimit;
  * @param {*} oCoords
  */
 function dataset(ip, path, oCoords, pageNum, ident, text) {
-    console.log(text);
     let array = [];
     let page = new Map();
     if (Pages.has(pageNum)) {
@@ -42,7 +41,6 @@ function dataset(ip, path, oCoords, pageNum, ident, text) {
     let inCheck = function (text) {
         for (i = 0; i < textList.length; i++) {
             if (textList[i].str === text.str) {
-                console.log(textList[i].str+":"+text.str);
 
                 if (textList[i].transform[4] == text.transform[4] && textList[i].transform[5] == text.transform[5]) {
                     return false;
@@ -125,7 +123,6 @@ function analys(page, userListSize) {
 
         for (i = 0; i < pList.length; i++){
             if (pList[i].count > 0) {
-                console.log(pList[i].str);
                 countList.push(pList[i]);   
             }
         }
