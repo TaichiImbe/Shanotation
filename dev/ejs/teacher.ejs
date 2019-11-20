@@ -29,8 +29,10 @@
         // Canvas.add(data);
       });
     }
-    function send(obj){
-
+    function send(dist,limitVal){
+      if(dist === 'limit'){
+        socket.emit('limit',limitVal);
+      }
     }
 
     window.addEventListener('beforeunload',function(e){
@@ -55,7 +57,7 @@
       return document.getElementById(id);
     }
     window.addEventListener('load', function () {
-      var text = $f('picker'),
+      let text = $f('picker'),
         penSize = $f('penSize');
       select = $f('select');
       draw = $f('draw');

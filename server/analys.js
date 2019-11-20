@@ -4,15 +4,16 @@ let colorsys = require('colorsys');
 //水色,青,緑,黄色,橙色,赤
 //カラー参考サイト http://www.netyasun.com/home/color.html
 var colorVariation = ['#8EF1FF', '#5D99FF', '#9BF9CC', '#FFFF66', '#FF6928', '#FF3333']
-var identifier = ['enclosure', 'line'];
+let identifier = ['enclosure', 'line'];
 
 /**
  * Pages は ページごとにipとpathのmapを管理する
  * 2019/11/04 変更 ページごとにユーザ名とpathのmapを管理
  */
-var Pages = new Map();
+let Pages = new Map();
 // var textList = new Set();
 let textList = [];
+let mylimit;
 
 /**
  *送信されてきた分析データをセット
@@ -22,8 +23,8 @@ let textList = [];
  * @param {*} oCoords
  */
 function dataset(ip, path, oCoords, pageNum, ident, text) {
-    var array = [];
-    var page = new Map();
+    let array = [];
+    let page = new Map();
     if (Pages.has(pageNum)) {
         page = Pages.get(pageNum);
     }
@@ -136,7 +137,11 @@ function analys(page, userListSize) {
             // let color = parth * (colorVariation.length - 1 - 0) + 0;
             // console.log(color);
             // countList[i].color = colorVariation[Math.round(color)];
-            countList[i].color = getHeatMapColor(0, userListSize, countList[i].count);
+            if (limit) {
+                countList[i].color = getHeatMapColor(0, limit, countList[i].count);
+            } else {
+                countList[i].color = getHeatMapColor(0, userListSize, countList[i].count);
+            }
             list.push(countList[i]);
             // console.log(textList);
         }
@@ -421,6 +426,12 @@ function getHeatMapColor( min, max, value) {
     return colorsys.hsv2Hex(hsv);
 }
 
+function setLimit(limit) {
+    if (limit) {
+        mylimit = limit; 
+    }
+}
+
 /**
  *  分析データクラス
  *  パスのまとまり、バウンディングボックス,識別子,一緒に存在するテキスト
@@ -442,3 +453,4 @@ exports.analys = analys;
 exports.analysOne = analysOne;
 exports.dataRemove = dataRemove;
 exports.dataClear = dataClear;
+exports.setLimit = setLimit;

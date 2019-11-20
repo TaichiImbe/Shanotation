@@ -14,6 +14,10 @@
                 <p type='text' id='pageMove'class='text-nowrap bd-highlight' ></p>
                 <p id='pageDef' class='bd-highlight' disabled='disabled'></p>
                 <a id='next' class='btn btn-primary nav-link' href='#'>Next</a>
+        <div class='tab-pane active' id='div_limit'>
+                <input type='text' value='' id='limit'>
+                <input type='button'  value='制限' name='submit' onclick="setList()">
+        </div>
     </ul>
 
     <div class='tab-content'>
@@ -27,9 +31,14 @@
             <button id="clear-button">Clear</button>
         </div>
     </div>
+    
 </main>
 
 <script>
+    let setList = function(e){
+        let limit = document.getElementById('limit');
+        send('limit',limit.value);
+    }
 
     $(function () {
         $('tab').click(function () {

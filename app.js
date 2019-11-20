@@ -230,6 +230,10 @@ io.sockets.on('connection', function (socket) {
             userList.set(name, name);
         }
     });
+
+    socket.on('limit', function (limit) {
+        analys.setLimit(limit);
+    })
 });
 
 io.use(function (socket, next) {
