@@ -198,6 +198,9 @@ io.sockets.on('connection', function (socket) {
         }
         if (data.type === 'path') {
             var path = data.path;
+            text.forEach(element => {
+                console.log(element.str); 
+            });
             analys.dataset(name, data, oCoords,pageNum,ident,text);
             // console.log(userList);
             // console.log(userList.size);
