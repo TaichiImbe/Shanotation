@@ -2,26 +2,26 @@
 // var pageRender = require('./_canvasUtil').pageRender;
 // var Penclie = require('./_profile').Penclie;
 // var Annotation = require('./_Annotation').Annotation;
-var pdfjsLib = require('pdfjs-dist');
-var fabric = require('fabric').fabric;
+let pdfjsLib = require('pdfjs-dist');
+let fabric = require('fabric').fabric;
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.js';
 CMAP_URL = '/node_modules/pdfjs-dist/cmaps/';
 CMAP_PACKED = true
 
 
-var url = '/pdf/middle2019.pdf';
-var pageNum = 1;
-var pdf = null;
+let url = '/pdf/middle2019.pdf';
+let pageNum = 1;
+let pdf = null;
 
 let Pen;
-var Canvas = new fabric.Canvas('draw-area', {
+let Canvas = new fabric.Canvas('draw-area', {
     isDrawingMode: true,
     selection: true,
     stateful: true
 });
 
-var AnnoCollection = new Map();
+let AnnoCollection = new Map();
 window.addEventListener('load', () => {
 
     // const pd = Canvas.getElementById('pdfCan');
@@ -63,7 +63,7 @@ Canvas.on('object:added', function (e) {
     });
 
 
-var loadingTask = pdfjsLib.getDocument({
+let loadingTask = pdfjsLib.getDocument({
     url: url,
     cMapUrl: CMAP_URL,
     cMapPacked: CMAP_PACKED

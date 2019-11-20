@@ -1,4 +1,4 @@
-var $f = function (id){
+let $f = function (id){
     return document.getElementById(id);
 }
 function prevButton(pdf, pageNum) {

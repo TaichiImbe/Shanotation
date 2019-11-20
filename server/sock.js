@@ -1,13 +1,13 @@
 
-var socketIO = require('socket.io');
-var fs = require('fs');
-var io;
-var filename;
-var ip;
+let socketIO = require('socket.io');
+let fs = require('fs');
+let io;
+let filename;
+let ip;
 
-var fileWrite = require('./fileio').fileWrite;
+let fileWrite = require('./fileio').fileWrite;
 
-var analys = require('./analys');
+let analys = require('./analys');
 
 // var sessionMiddleware = session({
 //     secret: 'secret',

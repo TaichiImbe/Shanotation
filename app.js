@@ -1,31 +1,31 @@
-var express = require('express');
-var fs = require('fs');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var app = express();
-var router = express.Router();
-var url = require('url');
-var config = require('config');
-var multer = require('multer');
+let express = require('express');
+let fs = require('fs');
+let bodyParser = require('body-parser');
+let session = require('express-session');
+let app = express();
+let router = express.Router();
+let url = require('url');
+let config = require('config');
+let multer = require('multer');
 
-var port = config.port;
-var user = config.user;
+let port = config.port;
+let user = config.user;
 
-var os = require('os');
-var hostname = os.hostname() || '127.0.0.1';
+let os = require('os');
+let hostname = os.hostname() || '127.0.0.1';
 
-var fabric = require('fabric').fabric;
+let fabric = require('fabric').fabric;
 // var sock = require('./server/sock');
-var socketIO = require('socket.io');
-var io;
-var server;
-var filename;
+let socketIO = require('socket.io');
+let io;
+let server;
+let filename;
 
 //ファイル書き出し処理
-var fileWrite = require('./server/fileio').fileWrite;
+let fileWrite = require('./server/fileio').fileWrite;
 
 //分析処理
-var analys = require('./server/analys');
+let analys = require('./server/analys');
 
 //express server
 server = app.listen(port, function () {
@@ -33,7 +33,7 @@ server = app.listen(port, function () {
 });
 
 //ファイルパスの設定のファイル名の設定
-var storage = multer.diskStorage({
+let storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null,'pdf')
     },
@@ -43,10 +43,10 @@ var storage = multer.diskStorage({
     }
 })
 //アップロードした後の諸々の処理はmulterに任せる
-var upload = multer({storage:storage});
+let upload = multer({storage:storage});
 
 //express session initialization
-var sessionMiddleware = session({
+let sessionMiddleware = session({
     secret: 'secret',
     resave: false,
     saveUninitialized: false,
@@ -117,15 +117,26 @@ app.get('/upload', function (req, res, next) {
     res.render('./upload');
 });
 
-app.get('/main', function (req, res, next) {
-    fs.readdir('pdf/', function (err, files) {
-        if (err) throw err;
-        let fileList = files.filter(file => {
-            return /.*\.(pdf$|PDF$)/.test(file);
+app.route('/main')
+    .get(function (req, res, next) {
+        fs.readdir('pdf/', function (err, files) {
+            if (err) throw err;
+            let fileList = files.filter(file => {
+                return /.*\.(pdf$|PDF$)/.test(file);
+            })
+            res.render('./main', { array: fileList });
         })
-        res.render('./main', {array: fileList});
-    })
-});
+    }).post(function (req, res, next) {
+
+        let userName = req.body.userName;
+        // res.render('./index', { pdfname: req.body.pdfname , userName:req.body.userName});
+        if (userName === 'teacher') {
+            // res.redirect('/teacher');
+            res.render('./teacher', { pdfname: req.body.pdfname, userName: userName });
+        } else {
+            res.render('./index', { pdfname: req.body.pdfname, userName: userName });
+        }
+    });
 
 // app.get('/pdflink', function (req, res, next) {
 //     console.log(req.body);
@@ -134,17 +145,17 @@ app.post('/pageTrans', function (req, res, next) {
     res.render('./upload',{userName:req.body.userName});
 });
 
-app.post('/main', function (req, res, next) {
-        let userName = req.body.userName;
-    // res.render('./index', { pdfname: req.body.pdfname , userName:req.body.userName});
-    if (userName === 'teacher') {
-        // res.redirect('/teacher');
-        res.render('./teacher',{pdfname:req.body.pdfname,userName:userName});
-    } else {
-        res.render('./index',{pdfname:req.body.pdfname,userName: userName});
-    }
-    // console.log(req.body);
-})
+// app.post('/main', function (req, res, next) {
+//         let userName = req.body.userName;
+//     // res.render('./index', { pdfname: req.body.pdfname , userName:req.body.userName});
+//     if (userName === 'teacher') {
+//         // res.redirect('/teacher');
+//         res.render('./teacher',{pdfname:req.body.pdfname,userName:userName});
+//     } else {
+//         res.render('./index',{pdfname:req.body.pdfname,userName: userName});
+//     }
+//     // console.log(req.body);
+// })
 
 //todo upload後の表示処理を考える
 app.post('/upload', upload.single('myFile'), (req, res,next) => {
@@ -160,7 +171,7 @@ app.post('/upload', upload.single('myFile'), (req, res,next) => {
 });
 
 //login userList 
-var userList = new Map();
+let userList = new Map();
 
 //socket connect
 io = socketIO.listen(server);

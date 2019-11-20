@@ -1,4 +1,4 @@
-var fabric = require('fabric').fabric;
+let fabric = require('fabric').fabric;
 global.Canvas = new fabric.Canvas('draw-area',{
     isDrawingMode: true,
     selection: true,

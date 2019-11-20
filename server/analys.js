@@ -3,7 +3,7 @@ let colorsys = require('colorsys');
 // var annotasions = ['enclosure','line'];
 //水色,青,緑,黄色,橙色,赤
 //カラー参考サイト http://www.netyasun.com/home/color.html
-var colorVariation = ['#8EF1FF', '#5D99FF', '#9BF9CC', '#FFFF66', '#FF6928', '#FF3333']
+let colorVariation = ['#8EF1FF', '#5D99FF', '#9BF9CC', '#FFFF66', '#FF6928', '#FF3333']
 let identifier = ['enclosure', 'line'];
 
 /**
@@ -137,8 +137,8 @@ function analys(page, userListSize) {
             // let color = parth * (colorVariation.length - 1 - 0) + 0;
             // console.log(color);
             // countList[i].color = colorVariation[Math.round(color)];
-            if (limit) {
-                countList[i].color = getHeatMapColor(0, limit, countList[i].count);
+            if (mylimit) {
+                countList[i].color = getHeatMapColor(0, mylimit, countList[i].count);
             } else {
                 countList[i].color = getHeatMapColor(0, userListSize, countList[i].count);
             }
@@ -158,14 +158,14 @@ function analys(page, userListSize) {
  * @returns pathと色情報の集合
  */
 function analysString(page, userListSize) {
-    var map = new Map();
+    let map = new Map();
     if (Pages.has(page)) {
         //テキストの一文字ごとに色を決めたい
-        var data = Pages.get(page);
-        var iplist = data.keys();
+        let data = Pages.get(page);
+        let iplist = data.keys();
         data.forEach(element => {
             element.forEach(value => {
-                var array = []
+                let array = []
                 if (value.text != null) {
 
                     if (map.has(value.text.str)) {
@@ -179,10 +179,10 @@ function analysString(page, userListSize) {
         console.log(map);
         //ip(ユーザ名)ごとに合計
         // map.forEach(element => {
-        var count = new Map();
+        let count = new Map();
         map.forEach(function (value, key) {
             // console.log(key + ' ' + value);
-            var i = 0;
+            let i = 0;
             //文字列ごとの配列が取れる
             //element は datalist型 
             let iplist = new Array();
@@ -261,8 +261,8 @@ function analysOne(page, text, userListSize) {
     let array = [];
     if (Pages.has(page)) {
         let str = '';
-        var data = Pages.get(page);
-        var iplist = data.keys();
+        let data = Pages.get(page);
+        let iplist = data.keys();
         data.forEach(element => {
             element.forEach(value => {
                 // var array = []
@@ -277,8 +277,8 @@ function analysOne(page, text, userListSize) {
                 }
             });
         });
-        var iplist = [];
-        var p = 0;
+        let plist = [];
+        let p = 0;
         array.forEach(element => {
 
             // console.log(element);

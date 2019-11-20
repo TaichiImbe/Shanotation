@@ -1,14 +1,14 @@
-var fabric = require('fabric').fabric;
-var profile = require('./profile');
-var Canvas = new fabric.Canvas('draw-area', {
+let fabric = require('fabric').fabric;
+let profile = require('./profile');
+let Canvas = new fabric.Canvas('draw-area', {
     isDrawingMode: true,
     selection: false,
     stateful: true
 });
 // console.log(Canvas);
-var Pen;
-var identifier = ['enclosure', 'line'];
-var AnnoCollection = new Map();
+let Pen;
+let identifier = ['enclosure', 'line'];
+let AnnoCollection = new Map();
 function setCanvasSize(viewport) {
     Canvas.setWidth(viewport.width);
     Canvas.setHeight(viewport.height);

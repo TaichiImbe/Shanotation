@@ -1,14 +1,14 @@
 // var pdfLoad = require('./_canvasUtil').pdfLoad;
-var util = require('./_canvasUtil');
+let util = require('./_canvasUtil');
 // var pageRender = require('./_canvasUtil').pageRender;
-var Penclie = require('./_profile').Penclie;
-var Annotation = require('./_Annotation').Annotation;
+let Penclie = require('./_profile').Penclie;
+let Annotation = require('./_Annotation').Annotation;
 
-var url = '/pdf/middle2019.pdf';
-var pageNum = 1;
-var pdf = null;
+let url = '/pdf/middle2019.pdf';
+let pageNum = 1;
+let pdf = null;
 
-var ano = new Annotation();
+let ano = new Annotation();
 
 // Annotation = new Annotation();
 

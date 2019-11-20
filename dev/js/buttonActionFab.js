@@ -1,7 +1,7 @@
-var PageAnno = new Map();
-var $ = require('jquery');
-var eraserMode = false;
-var pageTrans = false;
+let PageAnno = new Map();
+let $ = require('jquery');
+let eraserMode = false;
+let pageTrans = false;
 
 let $f = function (id) {
     return document.getElementById(id);
