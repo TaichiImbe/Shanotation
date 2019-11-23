@@ -242,8 +242,10 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
-    socket.on('limit', function (limit) {
+    socket.on('limit', function (limit,pageNum) {
         analys.setLimit(limit);
+        let ptext = analys.analys(pageNum,userList.size);
+        io.sockets.emit('limit_set_teacher',pageNum,ptext);
     })
 });
 

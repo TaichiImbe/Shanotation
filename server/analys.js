@@ -1,9 +1,7 @@
 let chroma = require('chroma');
 let colorsys = require('colorsys');
 // var annotasions = ['enclosure','line'];
-//水色,青,緑,黄色,橙色,赤
-//カラー参考サイト http://www.netyasun.com/home/color.html
-let colorVariation = ['#8EF1FF', '#5D99FF', '#9BF9CC', '#FFFF66', '#FF6928', '#FF3333']
+//識別
 let identifier = ['enclosure', 'line'];
 
 /**
@@ -185,7 +183,7 @@ function analysString(page, userListSize) {
             let i = 0;
             //文字列ごとの配列が取れる
             //element は datalist型 
-            let iplist = new Array();
+            let iplist = [];
             let ipcheck = function (element) {
                 for (let i = 0; i < iplist.length; i++) {
                     if (iplist[i] === element.ip) {
@@ -221,10 +219,6 @@ function analysString(page, userListSize) {
         count.forEach(function (value, keys) {
             let val = count.get(keys);
             //書き込みごとに比率を求める
-            let parth = val / userListSize;
-            // 比率から色を決める(とりあえず決め打ち)
-            let color = parth * (colorVariation.length - 1 - 0) + 0;
-            // console.log(color);
             let it = textList.values();
             while (true) {
                 let textconsider = it.next();
@@ -232,7 +226,11 @@ function analysString(page, userListSize) {
                 if (!textconsider.done) {
                     let value = textconsider.value;
                     if (value.str === keys) {
-                        textconsider.value.color = colorVariation[Math.round(color)];
+                        if (mylimit) {
+                            textconsider.value.color = getHeatMapColor(0, mylimit, count.get(keys));
+                        } else {
+                            textconsider.value.color = getHeatMapColor(0, userListSize, count.get(keys));
+                        }
                         list.push(textconsider.value);
                     }
                 } else {
@@ -297,12 +295,11 @@ function analysOne(page, text, userListSize) {
             }
         });
         // console.log(p);
-        //書き込みごとに比率を求める
-        let parth = p / userListSize;
-        // 比率から色を決める(とりあえず決め打ち)
-        let color = parth * (colorVariation.length - 1 - 0) + 0;
-        console.log(color);
-        str.color = colorVariation[Math.round(color)];
+        if (mylimit) {
+            str.color = getHeatMapColor(0, mylimit, p);
+        } else {
+            str.color = getHeatMapColor(0,userListSize,p);
+        }
         // console.log(str);
         return str;
     }
@@ -427,9 +424,9 @@ function getHeatMapColor( min, max, value) {
 }
 
 function setLimit(limit) {
-    if (limit) {
+    // if (limit) {
         mylimit = limit; 
-    }
+    // }
 }
 
 /**

@@ -324,15 +324,15 @@ function textCheck(canvas, text) {
  * @param {*} pageNum
  * @param {*} ident
  */
-function make(data, oCoords, pageNum, ident, text) {
+// function make(data, oCoords, pageNum, ident, text) {
+function make(pageNum, text) {
     var line
     // if (ident == identifier[0]) {
     //     line = makeEnclosure(oCoords);
     // } else if (ident == identifier[1]) {
     //     line = makeLine(data);
     // }
-    if (Array.isArray(text)) {
-        let highLightList = [];
+    if (Array.isArray(text)) { let highLightList = [];
         text.forEach(textinfo => {
             console.log(textinfo);
             highLightList.push(makeTextHiglight(textinfo, textinfo.color));
