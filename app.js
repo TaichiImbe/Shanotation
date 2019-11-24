@@ -1,12 +1,12 @@
-let express = require('express');
-let fs = require('fs');
-let bodyParser = require('body-parser');
-let session = require('express-session');
-let app = express();
-let router = express.Router();
-let url = require('url');
-let config = require('config');
-let multer = require('multer');
+const express = require('express');
+const fs = require('fs');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const app = express();
+const router = express.Router();
+const url = require('url');
+const config = require('config');
+const multer = require('multer');
 
 let port = config.port;
 let user = config.user;
@@ -14,12 +14,15 @@ let user = config.user;
 let os = require('os');
 let hostname = os.hostname() || '127.0.0.1';
 
-let fabric = require('fabric').fabric;
+const fabric = require('fabric').fabric;
 // var sock = require('./server/sock');
-let socketIO = require('socket.io');
+const socketIO = require('socket.io');
 let io;
 let server;
 let filename;
+
+// const passport = require('passport');
+// let local = require('passport-local');
 
 //ファイル書き出し処理
 let fileWrite = require('./server/fileio').fileWrite;
@@ -58,6 +61,8 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+// const socket_io_session = require('./server/socket.io_passport-session')(sessionMiddleware, passport);
+
 app.session = sessionMiddleware;
 app.use(sessionMiddleware);
 //__dirnameはapp.jsがあるところのまでのpathが通る
@@ -73,6 +78,32 @@ app.use('/css', express.static(__dirname + '/views/css'));
 // webconfig path
 app.use('/config',express.static(__dirname + '/config'))
 
+// app.use(passport.initialize());
+// app.use(passport.session());
+// let LocalStrategy = require('passport-local').Strategy;
+// passport.use(
+//     new LocalStrategy(
+//     {
+//         usernameField: 'userName',
+//         passwordField: 'passWord'
+//     },
+//     (username, password, done) => {
+//     if (username === "test" && password === "test") {
+//         return done(null, username)
+//     } else {
+//       console.log("login error")
+//         return done(null, false, { message: 'パスワードが正しくありません。' })
+//     }
+// }));
+
+// passport.serializeUser(function(user, done) {
+//     done(null, user);
+// });
+  
+// passport.deserializeUser(function (user, done) {
+//     done(err, user);
+// });
+
 // ファイルアップロード処理用
 // app.use(fileupload());
 
@@ -81,10 +112,27 @@ app.set('view engine', 'ejs');
 //login view
 app.get('/', function (req, res, next) {
     // console.log(os.networkInterfaces().en0[1].address);
+//     res.redirect('./login');
+// });
+
+//login setting
+// app.post('/', function (req, res, next) {
+//     // console.log(req.body);
+//     fs.readdir('pdf/', function (err, files) {
+//         if (err) throw err;
+//         let userName = req.body.userName;
+//         let fileList = files.filter(file => {
+//             return /.*\.(pdf$|PDF$)/.test(file);
+//         })
+//         // res.render('./main', {array: fileList});
+//         res.render('./main', { array:fileList, userName: userName });
+//     })
+// });
+
+// app.get('/login', function (req, res, next) {
     res.render('./login');
 });
 
-//login setting
 app.post('/', function (req, res, next) {
     // console.log(req.body);
     fs.readdir('pdf/', function (err, files) {
@@ -97,6 +145,23 @@ app.post('/', function (req, res, next) {
         res.render('./main', { array:fileList, userName: userName });
     })
 });
+// app.post('/login', (req, res, next) => {
+//     passport.authenticate('local', (err, user, info) => {
+//         if (err) { return next(err); }
+//         if (!user) { return res.redirect('/login'); }
+//         req.logIn(user, (err) => {
+//             if (err) { return next(err); }
+//             console.log(user);
+//             return res.redirect('/main');
+//         });
+//     })(req, res, next);
+// });
+// app.post('/login', passport.authenticate('local', {
+//         successRedirect:'/main',
+//         failureRedirect:'/login',
+//         session:true
+//     }
+// ));
 
 //index render
 app.get('/index', function (req, res, next) {
@@ -119,6 +184,7 @@ app.get('/upload', function (req, res, next) {
 
 app.route('/main')
     .get(function (req, res, next) {
+        // console.log(req.session.passport.user);
         fs.readdir('pdf/', function (err, files) {
             if (err) throw err;
             let fileList = files.filter(file => {
@@ -127,7 +193,6 @@ app.route('/main')
             res.render('./main', { array: fileList });
         })
     }).post(function (req, res, next) {
-
         let userName = req.body.userName;
         // res.render('./index', { pdfname: req.body.pdfname , userName:req.body.userName});
         if (userName === 'teacher') {
@@ -138,24 +203,9 @@ app.route('/main')
         }
     });
 
-// app.get('/pdflink', function (req, res, next) {
-//     console.log(req.body);
-// })
 app.post('/pageTrans', function (req, res, next) {
     res.render('./upload',{userName:req.body.userName});
 });
-
-// app.post('/main', function (req, res, next) {
-//         let userName = req.body.userName;
-//     // res.render('./index', { pdfname: req.body.pdfname , userName:req.body.userName});
-//     if (userName === 'teacher') {
-//         // res.redirect('/teacher');
-//         res.render('./teacher',{pdfname:req.body.pdfname,userName:userName});
-//     } else {
-//         res.render('./index',{pdfname:req.body.pdfname,userName: userName});
-//     }
-//     // console.log(req.body);
-// })
 
 //todo upload後の表示処理を考える
 app.post('/upload', upload.single('myFile'), (req, res,next) => {
@@ -175,9 +225,11 @@ let userList = new Map();
 
 //socket connect
 io = socketIO.listen(server);
+// io.use(socket_io_session.express_session);
+// io.use(socket_io_session.passport_initialize);
+// io.use(socket_io_session.passport_session);
 
 io.sockets.on('connection', function (socket) {
-    // console.log('connection');
     //接続時にPrivateIPを設定する.
     var handshake = socket.handshake
     // userList.set(handshake.address);
