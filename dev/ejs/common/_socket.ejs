@@ -9,17 +9,32 @@
     request.onload = function(){
         var config = request.response;
         socket = io.connect(config.address+':'+config.port);
+        socket.on('replaydata',(datas)=>{
+            let splitdata = datas.split('\n');
+            let list = [];
+            splitdata.forEach(element => {
+                if(element !== ''){
+                    let splitElement = element.split(' ');
+                    if(splitElement[1].slice(0,1) === 'M'){
+                        list.push(splitElement);
+                    }else if(splitElement[1].slice(0,1) === 'Q'){
+                        list.push(splitElement);
+                    }else if(splitElement[1].slice(0,1) === 'L'){
+                        list.push(splitElement);
+                        // console.log(list);
+                        // list = [];
+                        makeReplayData(list);
+                    }
+                    // console.log(splitElement);
+                    // makeReplayData(splitElement);
+                }
+            });
+        });
     }
-    // var socket = io.connect('ec2-13-59-114-31.us-east-2.compute.amazonaws.com:4000');
- 
-    // socket.on('connect',function(msg){
-        // console.log('connect');
-    // });
-
     function send(dist,obj,oCoords,pageNum,ident,text,time){
         if(dist == 'object'){
             console.log(text);
-            socket.emit(dist,getUserName(),obj,oCoords,pageNum,ident,text,time);
+            socket.emit(dist,getUserName(),obj,oCoords,pageNum,ident,text,getPdfName(),time);
         }else if(dist == 'userName'){
             console.log(oCoords);
             socket.emit(dist,obj,oCoords);
@@ -42,8 +57,8 @@
         socket.emit('clear',getUserName(),pageNum);
     }
 
-    // function send(dist,obj){
-        // socket.emit(dist,obj);
-    // }
+    function getData(){
+        socket.emit('getdata',getUserName());
+    }
 
 </script>

@@ -299,30 +299,65 @@ function make(data,pageNum, text) {
     // } else if (ident == identifier[1]) {
     //     line = makeLine(data);
     // }
-    // let path = makePath(data, text[0].color);
-    // setPage(path, pageNum);
+    let path = makePath(data, text[0].color);
+    setPage(path, pageNum);
     if (Array.isArray(text)) { let highLightList = [];
         text.forEach(textinfo => {
             console.log(textinfo);
             highLightList.push(makeTextHiglight(textinfo, textinfo.color));
         });
-        setPage(highLightList, pageNum);
+        // setPage(highLightList, pageNum);
 
     } else {
         line = makeTextHiglight(text.text, text.color);
         if (line !== null) {
             console.log(pageNum);
-            setPage(line, pageNum);
+            // setPage(line, pageNum);
         }
     }
 }
 
+function makeReplayData(list) {
+    let pathList = [];
+    list.forEach(path => {
+        // console.log(path[1].split(','));
+        let pathlit = path[1].split(',');
+        if (pathlit[0] === 'M') {
+            pathlit[1] = Number(pathlit[1]);
+            pathlit[2] = Number(pathlit[2]);
+        } else if (pathlit[0] === 'Q') {
+            pathlit[1] = Number(pathlit[1]);
+            pathlit[2] = Number(pathlit[2]);
+            pathlit[3] = Number(pathlit[3]);
+            pathlit[4] = Number(pathlit[4]);
+        } else {
+            pathlit[1] = Number(pathlit[1]);
+            pathlit[2] = Number(pathlit[2]);
+        }
+        pathList.push(pathlit); 
+    })
+    let data = makePath(pathList);
+    console.log(data);
+    // console.log(splitData[2]);
+    // setPage(data, 1);
+}
+
 function makePath(data,color) {
-    let path = new fabric.Path(data.path, {
-        fill: null,
-        stroke: 'black',
-        strokeWidth: 5
-    });
+    console.log(data);
+    let path;
+    if (Array.isArray(data)) {
+        path = new fabric.Path(data, {
+            fill: null,
+            stroke: 'black',
+            strokeWidth: 5
+        });
+    } else {
+        path = new fabric.Path(data.path, {
+            fill: null,
+            stroke: 'black',
+            strokeWidth: 5
+        });
+    }
     return path;
 }
 
@@ -413,3 +448,4 @@ global.Canvas = Canvas;
 global.setCanvasSize = setCanvasSize;
 global.Pen = Pen;
 global.make = make;
+global.makeReplayData = makeReplayData;

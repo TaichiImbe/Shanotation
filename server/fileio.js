@@ -11,16 +11,17 @@ let fs = require('fs');
  * @param {*} datas
  * @param {*} time
  */
-function fileWrite(filename, handshake, userName,datas,pageNum,time) {
+function fileWrite(filename, handshake, userName,datas,pageNum,pdfName,time) {
     // console.log(datas.type);
     if (datas.type == 'path') {
-        var data = datas.path;
-        var array = new Array();
-        str = '';
-        var ip = handshake.address.split(":");
+        let data = datas.path;
+        let array = new Array();
+        let ip = handshake.address.split(":");
+        // let str = userName + ' ' + data + ' ' + pageNum + ' ' + pdfName+ ' '+time + '\n';
+        let str = ''; 
         for (i = 0; i < data.length; i++) {
             // array.push(userName + ' ' + data[i] + ' '+ time +'\n');
-            str += userName + ' ' + data[i] + ' ' + pageNum +' '+time + '\n';
+            str += userName + ' ' + data[i] + ' ' + pageNum +' '+ pdfName + ' ' + time + '\n';
         }
         fs.open(filename, 'a', function (err, fd) {
 
@@ -51,6 +52,35 @@ function fileWrite(filename, handshake, userName,datas,pageNum,time) {
 
 }
 
+function getData(fileName) {
+        // const readline = require('readline');
+        let content = '';
+    let read = fs.readFileSync(fileName, 'utf-8');
+    let reader = read.split('\n');
+    reader.forEach(data => {
+        // console.log(data);
+        content += data + '\n'
+    });
+    return content;
+
+    //ストリームの読み込みは残しておく
+    //完全非同期につきfilesyncでメモリ不足にならない限りは使用しない
+        // let stream = fs.createReadStream(fileName, 'utf-8');
+        // let reader = readline.createInterface({ input: stream });
+        // reader.on('line', (data) => {
+        //     let split = data.split(' ');
+        //     // console.log(data);
+        //     content += data + '\n';
+        //     // console.log(content);
+        // })
+        // reader.on('close', function (data) {
+        //     console.log(content);
+        //     return content;
+        // })
+        // console.log(content);
+        // return content;
+}
+
 function writeData(data) {
     return new Promise(function (fullfill, reject) {
 
@@ -74,3 +104,4 @@ function writeData(data) {
 }
 
 exports.fileWrite = fileWrite;
+exports.getData = getData;

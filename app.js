@@ -25,7 +25,7 @@ let filename;
 // let local = require('passport-local');
 
 //ファイル書き出し処理
-let fileWrite = require('./server/fileio').fileWrite;
+let fileio = require('./server/fileio');
 
 //分析処理
 let analys = require('./server/analys');
@@ -244,7 +244,7 @@ io.sockets.on('connection', function (socket) {
         // console.log(socket.username);
     })
     //object resive
-    socket.on('object', function (name,data, oCoords, pageNum, ident,text,time) {
+    socket.on('object', function (name,data, oCoords, pageNum, ident,text,pdfName,time) {
         if (!userList.has(name)) {
             userList.set(name,name);
         }
@@ -259,7 +259,7 @@ io.sockets.on('connection', function (socket) {
                 console.log('err');
             }
             // console.log(ptext);
-            fileWrite('analysdata.txt', handshake,name, data, pageNum,time);
+            fileio.fileWrite('analysdata.txt', handshake,name, data, pageNum,pdfName,time);
             if (userList.get(handshake.address) != 'teacher') {
                 io.sockets.emit('teacher', data, oCoords,pageNum,ident,ptext);
             }
@@ -298,6 +298,17 @@ io.sockets.on('connection', function (socket) {
         analys.setLimit(limit);
         let ptext = analys.analys(pageNum,userList.size);
         io.sockets.emit('limit_set_teacher',pageNum,ptext);
+    });
+
+    socket.on('getdata', (userName) => {
+        let datas = '';
+        datas = fileio.getData('analysdata.txt');
+        io.sockets.emit('replaydata', datas);
+        // fileio.getData('analysdata.txt').then((readData) => {
+            // datas = readData;
+            // console.log(datas);
+        // })
+
     })
 });
 
