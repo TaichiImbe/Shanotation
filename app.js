@@ -220,6 +220,10 @@ app.post('/upload', upload.single('myFile'), (req, res,next) => {
     // res.redirect('./main');
 });
 
+app.get('/replay', (req, res, next) => {
+    res.render('./replay', { userName: req.body.userName ,pdfname:'imageprossesing6.pdf'});
+})
+
 //login userList 
 let userList = new Map();
 

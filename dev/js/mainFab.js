@@ -13,6 +13,7 @@ function setCanvasSize(viewport) {
     Canvas.setWidth(viewport.width);
     Canvas.setHeight(viewport.height);
 }
+global.replayflag = false;
 
 window.addEventListener('load', () => {
     // function init(viewport) {
@@ -26,7 +27,7 @@ window.addEventListener('load', () => {
     Canvas.freeDrawingBrush.width = 5;
     Canvas.freeDrawingBrush.shadowBlur = 0;
     Canvas.hoverCursor = 'move';
-    console.log("Fabric" + Canvas);
+    console.log(Canvas);
     Pen = new profile.Pencile(Canvas.freeDrawingBrush.color, Canvas.freeDrawingBrush.width, Canvas.freeDrawingBrush.shadowBlur);
     // }
 });
@@ -85,7 +86,8 @@ Canvas.on('object:added', function (e) {
             // })(object, text);
             // console.log(font);
             // console.log(object.oCoords);
-            if (!pageTrans) {
+            if (!pageTrans && !replayflag) {
+                console.log('not replay');
                 send('object', e.target, e.target.oCoords, pageNum, ident, font, realTime);
             }
         });
@@ -182,7 +184,7 @@ function getSubText(object, text) {
                 t4 += text.height;
             }
         });
-        console.log(charList);
+        // console.log(charList);
     } else {
         let transform = str.transform;
         let t4 = str.transform[4];
@@ -204,7 +206,7 @@ function getSubText(object, text) {
             }
                 t4 += str.height;
         }
-        console.log(charList);
+        // console.log(charList);
     }
 
     return charList;
@@ -299,26 +301,25 @@ function make(data,pageNum, text) {
     // } else if (ident == identifier[1]) {
     //     line = makeLine(data);
     // }
-    let path = makePath(data, text[0].color);
-    setPage(path, pageNum);
     if (Array.isArray(text)) { let highLightList = [];
         text.forEach(textinfo => {
             console.log(textinfo);
             highLightList.push(makeTextHiglight(textinfo, textinfo.color));
         });
-        // setPage(highLightList, pageNum);
+        setPage(highLightList, pageNum);
 
     } else {
         line = makeTextHiglight(text.text, text.color);
         if (line !== null) {
             console.log(pageNum);
-            // setPage(line, pageNum);
+            setPage(line, pageNum);
         }
     }
 }
 
 function makeReplayData(list) {
     let pathList = [];
+    // console.log(list);
     list.forEach(path => {
         // console.log(path[1].split(','));
         let pathlit = path[1].split(',');
@@ -336,24 +337,31 @@ function makeReplayData(list) {
         }
         pathList.push(pathlit); 
     })
-    let data = makePath(pathList);
-    console.log(data);
+    // console.log(pathList);
+    // pathList = [['M', 200, 100], ['Q', 200, 100, 201, 100], ['Q', 201, 100, 202, 100], ['L', 202, 100]];
+    let pageNum = Number(list[0][2]);
+    let data = makePath(pathList,'#fff');
+    data.setCoords();
+    // console.log(pageNum);
+    // console.log(data);
     // console.log(splitData[2]);
-    // setPage(data, 1);
+    setPage(data, pageNum);
 }
 
 function makePath(data,color) {
-    console.log(data);
+    // console.log(data);
     let path;
     if (Array.isArray(data)) {
         path = new fabric.Path(data, {
-            fill: null,
+            fill: 'none',
             stroke: 'black',
             strokeWidth: 5
         });
+        // console.log(path);
     } else {
+        // console.log(data.path);
         path = new fabric.Path(data.path, {
-            fill: null,
+            fill: 'none',
             stroke: 'black',
             strokeWidth: 5
         });

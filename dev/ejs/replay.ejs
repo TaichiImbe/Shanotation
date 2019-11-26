@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+<html>
+  <head>
+      <% include common/_head %>
+      <!-- とりあえずコネクション周りは残しておく -->
+      <% include common/_userInfo %>
+      <% include common/_socket %>
+  </head>
+  <body>
+    <% include common/_function %>
+    <% include common/_fabric %>
+    <script>
+      window.addEventListener('load',function(){
+        let div_limit = document.getElementById('div_limit');
+        div_limit.style.display='none';
+      })
+      replayflag = true;
+    </script>
+  </body>
+</html><!DOCTYPE html></html>

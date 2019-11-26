@@ -163,7 +163,7 @@ drawingLine.onchange = function () {
 //todo 毎回PageAnooに追加するArrayをリセット
 //      or 配列の中身をみる
 function setPage(data, page) {
-    console.log(data);
+    // console.log(data);
     var collection = new Array();
     if (Array.isArray(data)) {
         data.forEach(text => {
@@ -180,7 +180,6 @@ function setPage(data, page) {
     }
     // Canvas.add(data);
     PageAnno.set(page, collection);
-    // console.log(PageAnno);
     AnnotationSet(pageNum).then(function () {
 
     });
@@ -192,8 +191,10 @@ function AnnotationSet(pageNum) {
 
         Canvas.clear();
         const Anno = PageAnno.get(pageNum);
+        // console.log(Anno);
         if (Anno != null) {
             Anno.forEach(element => {
+                // console.log(element);
                 Canvas.add(element);
             });
         }
