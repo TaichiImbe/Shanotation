@@ -44,9 +44,9 @@
         }
     }
 
-    function removeObject(obj,oCoords,pageNum,text,ident){
+    function removeObject(obj,oCoords,pageNum,text,ident,time){
         console.log(text);
-        socket.emit('remove',getUserName(),obj,oCoords,pageNum,text,ident);
+        socket.emit('remove',getUserName(),obj,oCoords,pageNum,text,ident,getPdfName(),time);
     }
 
     window.addEventListener('beforeunload',function(e){

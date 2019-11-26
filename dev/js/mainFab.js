@@ -38,12 +38,7 @@ Canvas.on('object:selected', function (e) {
 
 
 let rmflag = false;
-Canvas.on('object:added', function (e) {
-    // console.log(e.target);
-    let object = e.target;
-    // Canvas.getObjects().forEach(element => {
-    // console.log(element);
-    // });
+let getNowTime = function () {
     let time = new Date();
     let y = time.getFullYear();
     let m = ("00" + (time.getMonth() + 1)).slice(-2);
@@ -51,8 +46,14 @@ Canvas.on('object:added', function (e) {
     let hh = ("00" + time.getHours()).slice(-2);
     let mm = ("00" + time.getMinutes()).slice(-2);
     let ss = ("00" + time.getSeconds()).slice(-2);
-    // logPrint(time);
-    let realTime = y + "/" + m + "/" + d + " " + hh + ":" + mm + ":" + ss
+    return y + "/" + m + "/" + d + " " + hh + ":" + mm + ":" + ss
+}
+Canvas.on('object:added', function (e) {
+    // console.log(e.target);
+    let object = e.target;
+    // Canvas.getObjects().forEach(element => {
+    // console.log(element);
+    // });
     // logPrint(y+"/"+m+"/"+d+" "+hh+":"+mm+":"+ss);
     // logPrint(e);
     //消しゴムモードが起動している時
@@ -75,7 +76,7 @@ Canvas.on('object:added', function (e) {
     } else {
         ident = identification(object);
 
-        AnnoCollection.set(realTime, e.target);
+        AnnoCollection.set(getNowTime(), e.target);
         getPdfText(pageNum).then(function (text) {
             // var font = textCheck(object,text);
             // console.log(object.oCoords);
@@ -88,7 +89,7 @@ Canvas.on('object:added', function (e) {
             // console.log(object.oCoords);
             if (!pageTrans && !replayflag) {
                 console.log('not replay');
-                send('object', e.target, e.target.oCoords, pageNum, ident, font, realTime);
+                send('object', e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
             }
         });
     }
@@ -101,7 +102,7 @@ Canvas.on('object:removed', function (e) {
         console.log(e);
         getPdfText(pageNum).then(function (text) {
             let font = getSubText(object, text);
-            removeObject(object, object.oCoords, pageNum, font, ident);
+            removeObject(object, object.oCoords, pageNum, font, ident,getNowTime());
         });
     }
     //    remvoeObject(e,pageNum); 
