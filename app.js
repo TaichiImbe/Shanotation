@@ -248,7 +248,7 @@ io.sockets.on('connection', function (socket) {
         // console.log(socket.username);
     })
     //object resive
-    socket.on('object', function (name,data, oCoords, pageNum, ident,text,pdfName,time) {
+    socket.on('object', function (name,data,canvas, oCoords, pageNum, ident,text,pdfName,time) {
         if (!userList.has(name)) {
             userList.set(name,name);
         }
@@ -263,7 +263,7 @@ io.sockets.on('connection', function (socket) {
                 console.log('err');
             }
             // console.log(ptext);
-            fileio.fileWrite('analysdata.txt', handshake,name, data, pageNum,pdfName,'insert',time);
+            fileio.fileWrite('analysdata.txt', handshake,name,data,canvas, pageNum,pdfName,'insert',time);
             if (userList.get(handshake.address) != 'teacher') {
                 io.sockets.emit('teacher', data, oCoords,pageNum,ident,ptext);
             }
