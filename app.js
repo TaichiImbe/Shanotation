@@ -272,6 +272,10 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
+    socket.on('annotation', (name, data, canvas, pageNum, pdfName,time)=>{
+        fileio.fileWrite('analysdata.txt', handshake,name,data,canvas, pageNum,pdfName,'insert',time);
+    })
+
     socket.on('canvas', function (canvas) {
         console.log(canvas);
     });

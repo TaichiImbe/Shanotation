@@ -89,7 +89,11 @@ Canvas.on('object:added', function (e) {
             // console.log(object.oCoords);
             if (!pageTrans && !replayflag) {
                 console.log('not replay');
-                send('object', e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
+                if (font) {
+                    send('object', e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
+                } else {
+                    sendAnnotation(e.target, pageNum, getNowTime());
+                }
             }
         });
     }
@@ -162,6 +166,9 @@ function getSubText(object, text) {
     }
 
     let charList = [];
+    if (!str) {
+        return null;
+    }
     if (Array.isArray(str)) {
         str.forEach(text => {
             let transform = str.transform;
