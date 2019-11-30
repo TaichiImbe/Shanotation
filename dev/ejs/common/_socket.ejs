@@ -15,16 +15,19 @@
             splitdata.forEach(element => {
                 if(element !== ''){
                     let splitElement = element.split(' ');
-                    if(splitElement[1].slice(0,1) === 'M'){
-                        list.push(splitElement);
-                    }else if(splitElement[1].slice(0,1) === 'Q'){
-                        list.push(splitElement);
-                    }else if(splitElement[1].slice(0,1) === 'L'){
-                        list.push(splitElement);
+                    if(splitElement[0] === getUserName() && splitElement[3] === getPdfName()){
+
+                        if(splitElement[1].slice(0,1) === 'M'){
+                            list.push(splitElement);
+                        }else if(splitElement[1].slice(0,1) === 'Q'){
+                            list.push(splitElement);
+                        }else if(splitElement[1].slice(0,1) === 'L'){
+                            list.push(splitElement);
                         // console.log(list);
                         // list = [];
-                        makeReplayData(list);
-                        list=[];
+                            makeReplayData(list);
+                            list=[];
+                        }
                     }
                     // console.log(splitElement);
                     // makeReplayData(splitElement);
@@ -68,7 +71,7 @@
     }
 
     function getData(){
-        socket.emit('getdata',getUserName());
+        socket.emit('getdata',getUserName(),getPdfName());
     }
 
 </script>
