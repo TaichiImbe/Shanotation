@@ -1,0 +1,35 @@
+const app = require('express');
+const router = app.Router();
+const fs = require('fs');
+const multer = require('multer');
+
+//ファイルパスの設定のファイル名の設定
+let storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'pdf')
+    },
+
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+//アップロードした後の諸々の処理はmulterに任せる
+let upload = multer({ storage: storage });
+
+//todo upload後の表示処理を考える
+router.route('/upload')
+    .get((req, res, next) => {
+        res.render('./upload');
+    })
+    .post(upload.single('myFile'), (req, res, next) => {
+        var img = fs.readFileSync(req.file.path);
+        fs.readdir('pdf/', function (err, files) {
+            if (err) throw err;
+            let fileList = files.filter(file => {
+                return /.*\.(pdf$|PDF$)/.test(file);
+            })
+            res.render('./main', { array: fileList, userName: req.body.userName });
+        })
+    })
+
+module.exports = router;

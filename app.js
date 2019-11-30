@@ -6,7 +6,6 @@ const app = express();
 const router = express.Router();
 const url = require('url');
 const config = require('config');
-const multer = require('multer');
 
 let port = config.port;
 let user = config.user;
@@ -28,25 +27,20 @@ let filename;
 let fileio = require('./server/fileio');
 
 //分析処理
-let analys = require('./server/analys');
+const analys = require('./server/analys');
+
+const route = require('./server/router/routes');
+const main = require('./server/router/main');
+const upload = require('./server/router/upload');
+const index = require('./server/router/index');
+const teacher = require('./server/router/teacher');
+const replay = require('./server/router/replay');
 
 //express server
 server = app.listen(port, function () {
     console.log('Node js is listening to PORT:' + server.address().port);
 });
 
-//ファイルパスの設定のファイル名の設定
-let storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null,'pdf')
-    },
-
-    filename: function (req, file, cb) {
-        cb(null,file.originalname)
-    }
-})
-//アップロードした後の諸々の処理はmulterに任せる
-let upload = multer({storage:storage});
 
 //express session initialization
 let sessionMiddleware = session({
@@ -77,6 +71,13 @@ app.use('/css', express.static(__dirname + '/views/css'));
 
 // webconfig path
 app.use('/config',express.static(__dirname + '/config'))
+app.set('view engine', 'ejs');
+app.use(route);
+app.use(main);
+app.use(upload);
+app.use(index);
+app.use(teacher);
+app.use(replay);
 
 // app.use(passport.initialize());
 // app.use(passport.session());
@@ -107,122 +108,10 @@ app.use('/config',express.static(__dirname + '/config'))
 // ファイルアップロード処理用
 // app.use(fileupload());
 
-app.set('view engine', 'ejs');
-
-//login view
-app.get('/', function (req, res, next) {
-    // console.log(os.networkInterfaces().en0[1].address);
-//     res.redirect('./login');
-// });
-
-//login setting
-// app.post('/', function (req, res, next) {
-//     // console.log(req.body);
-//     fs.readdir('pdf/', function (err, files) {
-//         if (err) throw err;
-//         let userName = req.body.userName;
-//         let fileList = files.filter(file => {
-//             return /.*\.(pdf$|PDF$)/.test(file);
-//         })
-//         // res.render('./main', {array: fileList});
-//         res.render('./main', { array:fileList, userName: userName });
-//     })
-// });
-
-// app.get('/login', function (req, res, next) {
-    res.render('./login');
-});
-
-app.post('/', function (req, res, next) {
-    // console.log(req.body);
-    fs.readdir('pdf/', function (err, files) {
-        if (err) throw err;
-        let userName = req.body.userName;
-        let fileList = files.filter(file => {
-            return /.*\.(pdf$|PDF$)/.test(file);
-        })
-        // res.render('./main', {array: fileList});
-        res.render('./main', { array:fileList, userName: userName });
-    })
-});
-// app.post('/login', (req, res, next) => {
-//     passport.authenticate('local', (err, user, info) => {
-//         if (err) { return next(err); }
-//         if (!user) { return res.redirect('/login'); }
-//         req.logIn(user, (err) => {
-//             if (err) { return next(err); }
-//             console.log(user);
-//             return res.redirect('/main');
-//         });
-//     })(req, res, next);
-// });
-// app.post('/login', passport.authenticate('local', {
-//         successRedirect:'/main',
-//         failureRedirect:'/login',
-//         session:true
-//     }
-// ));
-
-//index render
-app.get('/index', function (req, res, next) {
-    res.render('./index');
-});
 //pdf request
 app.get('/pdf', function (req, res, next) {
     res.sendFile(req.url);
 });
-
-//teacher render
-app.get('/teacher', function (req, res, next) {
-    res.render('./teacher');
-});
-
-app.get('/upload', function (req, res, next) {
-    console.log(req.body);
-    res.render('./upload');
-});
-
-app.route('/main')
-    .get(function (req, res, next) {
-        // console.log(req.session.passport.user);
-        fs.readdir('pdf/', function (err, files) {
-            if (err) throw err;
-            let fileList = files.filter(file => {
-                return /.*\.(pdf$|PDF$)/.test(file);
-            })
-            res.render('./main', { array: fileList });
-        })
-    }).post(function (req, res, next) {
-        let userName = req.body.userName;
-        // res.render('./index', { pdfname: req.body.pdfname , userName:req.body.userName});
-        if (userName === 'teacher') {
-            // res.redirect('/teacher');
-            res.render('./teacher', { pdfname: req.body.pdfname, userName: userName });
-        } else {
-            res.render('./index', { pdfname: req.body.pdfname, userName: userName });
-        }
-    });
-
-app.post('/pageTrans', function (req, res, next) {
-    res.render('./upload',{userName:req.body.userName});
-});
-
-//todo upload後の表示処理を考える
-app.post('/upload', upload.single('myFile'), (req, res,next) => {
-    var img = fs.readFileSync(req.file.path);
-    fs.readdir('pdf/', function (err, files) {
-        if (err) throw err;
-        let fileList = files.filter(file => {
-            return /.*\.(pdf$|PDF$)/.test(file);
-        })
-        res.render('./main', { array:fileList, userName: req.body.userName });
-    })
-    // res.redirect('./main');
-});
-
-app.get('/replay', (req, res, next) => {
-    res.render('./replay', { userName: req.body.userName ,pdfname:'imageprossesing6.pdf'});
-})
 
 //login userList 
 let userList = new Map();
