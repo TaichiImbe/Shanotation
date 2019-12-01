@@ -372,7 +372,7 @@ function makePath(data,color) {
     } else {
         // console.log(data.path);
         path = new fabric.Path(data.path, {
-            fill: 'none',
+            fill: 'rgba(0,0,0,0)',
             stroke: color,
             strokeWidth: 5
         });
