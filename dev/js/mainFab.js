@@ -347,8 +347,11 @@ function makeReplayData(list) {
     })
     // console.log(pathList);
     // pathList = [['M', 200, 100], ['Q', 200, 100, 201, 100], ['Q', 201, 100, 202, 100], ['L', 202, 100]];
-    let pageNum = Number(list[0][2]);
-    let data = makePath(pathList,'#fff');
+    let pageNum = Number(list[0][3]);
+    let data = makePath(pathList,list[0][2]);
+    if (pageNum === 3) {
+        console.log(pathList);
+    }
     data.setCoords();
     // console.log(pageNum);
     // console.log(data);
@@ -361,8 +364,8 @@ function makePath(data,color) {
     let path;
     if (Array.isArray(data)) {
         path = new fabric.Path(data, {
-            fill: 'none',
-            stroke: 'black',
+            fill: 'rgba(0,0,0,0)',
+            stroke: color,
             strokeWidth: 5
         });
         // console.log(path);
@@ -370,7 +373,7 @@ function makePath(data,color) {
         // console.log(data.path);
         path = new fabric.Path(data.path, {
             fill: 'none',
-            stroke: 'black',
+            stroke: color,
             strokeWidth: 5
         });
     }

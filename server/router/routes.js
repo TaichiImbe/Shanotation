@@ -14,7 +14,7 @@ router.route('/')
                 return /.*\.(pdf$|PDF$)/.test(file);
             });
             req.session.userName = userName;
-            console.log(req.session)
+            // console.log(req.session)
             res.render('./main', { array: fileList, userName: userName });
        }) 
     })

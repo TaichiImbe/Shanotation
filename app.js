@@ -173,9 +173,10 @@ io.sockets.on('connection', function (socket) {
         // console.log('disconnect');
     });
 
-    socket.on('remove',function(name,obj,oCoords,pageNum,text,ident,pdfName,time){
+    socket.on('remove',function(name,obj,canvas,oCoords,pageNum,text,ident,pdfName,time){
         analys.dataRemove(userList.get(name),obj,oCoords,pageNum,text);
-        fileio.fileWrite('analysdata.txt', handshake,name, obj, pageNum,pdfName,'delete',time);
+        fileio.fileWrite('analysdata.txt'
+        ,handshake, name, obj, canvas, pageNum, pdfName, 'delete', time);
         let ptext = analys.analys(pageNum,userList.size);
         if (userList.get(handshake.address) != 'teacher') {
             io.sockets.emit('teacher', obj, oCoords,pageNum,ident,ptext);
@@ -200,7 +201,8 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('getdata', (userName) => {
         let datas = '';
-        datas = fileio.getData('analysdata.txt');
+        datas = fileio.getData('replaydata.txt');
+        // datas = fileio.getData('replaydata.txt');
         io.sockets.emit('replaydata', datas);
         // fileio.getData('analysdata.txt').then((readData) => {
             // datas = readData;
