@@ -6,15 +6,11 @@
 <body>
     <% var array %>
     <form method="post" action='/main'>
-            <input type='hidden' name='userName' value=<%= userName %>>
         <% array.forEach(function(value,key){ %>
             <input type="submit" name='pdfname' value=<%= value %> >
         <% }) ;%>
     </form>
-    <form method="post" action="/pageTrans">
-        <input type='hidden' name='userName' value=<%= userName %>>
-        <input type="submit" value='アップロード'>
-    </form>
+    <a href='/main/upload/' type='submit'>アップロード</a>
 
 </body>
 </html>

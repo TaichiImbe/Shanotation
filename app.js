@@ -35,6 +35,7 @@ const upload = require('./server/router/upload');
 const index = require('./server/router/index');
 const teacher = require('./server/router/teacher');
 const replay = require('./server/router/replay');
+const login = require('./server/router/login');
 
 //express server
 server = app.listen(port, function () {
@@ -78,6 +79,7 @@ app.use(upload);
 app.use(index);
 app.use(teacher);
 app.use(replay);
+app.use(login);
 
 // app.use(passport.initialize());
 // app.use(passport.session());

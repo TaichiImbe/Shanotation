@@ -16,7 +16,7 @@
                 <a id='next' class='btn btn-primary nav-link' href='#'>Next</a>
         <div class='tab-pane active' id='div_limit'>
                 <input type='text' value='' id='limit'>
-                <input type='button'  value='制限' name='submit' onclick="setList()">
+                <input type='button'  value='制限' name='submit' onclick="setLimit()">
         </div>
         <div class='tab-pane active' id='replay'>
             <input type='button' value='リプレイ'
@@ -39,7 +39,7 @@
 </main>
 
 <script>
-    let setList = function(e){
+    let setLimit = function(e){
         let limit = document.getElementById('limit');
         send('limit',limit.value);
     }
