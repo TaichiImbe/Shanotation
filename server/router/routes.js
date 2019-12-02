@@ -4,7 +4,7 @@ let fs = require('fs');
 
 router.route('/')
     .get((req, res, next) => {
-        res.render('./login');
+        res.redirect('./login');
     })
     .post((req, res, next) => {
         fs.readdir('pdf/', (err, files) => {
