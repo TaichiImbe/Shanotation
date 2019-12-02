@@ -5,9 +5,9 @@
     request.open('GET',webconfig);
     request.responseType = 'json';
     request.send();
-    var socket;
+    let socket;
     request.onload = function(){
-        var config = request.response;
+        let config = request.response;
         socket = io.connect(config.address+':'+config.port);
         socket.on('replaydata',(datas)=>{
             let splitdata = datas.split('\n');

@@ -201,7 +201,24 @@ function AnnotationSet(pageNum) {
         global.pageTrans = false;
     })
 }
+let replayData = new Map();
+/**
+ *リプレイ用情報の記録
+ *
+ * @param {*} data
+ * @param {*} pageNum
+ */
+function replaySet(data, pageNum) {
+    let list = [];
+    if (replayData.has(pageNum)) {
+        list = replayData.get(pageNum);
+    }
+    list.push(data);
+    replayData.set(pageNum, list);
+}
+
 global.setPage = setPage;
 global.eraserMode = eraserMode;
 global.pageTrans = pageTrans;
 global.$f = $f;
+global.replaySet = replaySet;

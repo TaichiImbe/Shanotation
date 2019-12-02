@@ -1,0 +1,16 @@
+<!DOCTYPE html> 
+<html lang="ja">
+<head>
+    <% include common/_head %>
+</head>
+<body>
+    <p>リプレイするpdfを選択</p>
+    <% var array %>
+    <form method="post" action='/replaymenu'>
+            <input type='hidden' name='userName' value=<%= userName %>>
+        <% array.forEach(function(value,key){ %>
+            <input type="submit" name='pdfname' value=<%= value %> >
+        <% }) ;%>
+    </form>
+</body>
+</html>

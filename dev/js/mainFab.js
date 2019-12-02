@@ -87,8 +87,7 @@ Canvas.on('object:added', function (e) {
             // })(object, text);
             // console.log(font);
             // console.log(object.oCoords);
-            if (!pageTrans && !replayflag) {
-                console.log('not replay');
+            if (!pageTrans) {
                 if (font) {
                     send('object', e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
                 } else {
@@ -343,20 +342,20 @@ function makeReplayData(list) {
             pathlit[1] = Number(pathlit[1]);
             pathlit[2] = Number(pathlit[2]);
         }
-        pathList.push(pathlit); 
+        pathList.push(pathlit);
     })
     // console.log(pathList);
     // pathList = [['M', 200, 100], ['Q', 200, 100, 201, 100], ['Q', 201, 100, 202, 100], ['L', 202, 100]];
     let pageNum = Number(list[0][3]);
     let data = makePath(pathList,list[0][2]);
-    if (pageNum === 3) {
-        console.log(pathList);
-    }
+    let time = list[0][list[0].length-2]+" "+list[0][list[0].length - 1];
+    data.time = time;
     data.setCoords();
     // console.log(pageNum);
     // console.log(data);
     // console.log(splitData[2]);
-    setPage(data, pageNum);
+    // setPage(data, pageNum);
+    replaySet(data, pageNum);
 }
 
 function makePath(data,color) {

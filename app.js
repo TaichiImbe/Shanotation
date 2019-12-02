@@ -35,6 +35,7 @@ const upload = require('./server/router/upload');
 const index = require('./server/router/index');
 const teacher = require('./server/router/teacher');
 const replay = require('./server/router/replay');
+const replaymenu = require('./server/router/replaymenu');
 
 //express server
 server = app.listen(port, function () {
@@ -78,6 +79,7 @@ app.use(upload);
 app.use(index);
 app.use(teacher);
 app.use(replay);
+app.use(replaymenu);
 
 // app.use(passport.initialize());
 // app.use(passport.session());
@@ -142,6 +144,7 @@ io.sockets.on('connection', function (socket) {
             userList.set(name,name);
         }
         if (data.type === 'path') {
+            let parser = new URL(socket.handshake.headers.referer);
             var path = data.path;
             analys.dataset(name, data, oCoords,pageNum,ident,text);
             // console.log(userList);
@@ -152,7 +155,11 @@ io.sockets.on('connection', function (socket) {
                 console.log('err');
             }
             // console.log(ptext);
-            fileio.fileWrite('analysdata.txt', handshake,name,data,canvas, pageNum,pdfName,'insert',time);
+            if (parser.pathname === '/main') {
+                fileio.fileWrite('analysdata.txt', handshake,name,data,canvas, pageNum,pdfName,'insert',time);
+            } else if(parser.pathname === '/replaymenu'){
+                fileio.fileWrite('replay.txt', handshake,name,data,canvas, pageNum,pdfName,'insert',time);
+            }
             if (userList.get(handshake.address) != 'teacher') {
                 io.sockets.emit('teacher', data, oCoords,pageNum,ident,ptext);
             }
