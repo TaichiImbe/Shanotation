@@ -39,9 +39,9 @@ prevButton.onclick = function () {
     pageRender(pageNum).then(function () {
     });
     // pageMoveArea.value = pageNum;
-        if (global.eraserMode) {
-            eraserButton.onclick();
-        }
+    if (global.eraserMode) {
+        eraserButton.onclick();
+    }
     pageMoveArea.textContent = pageNum;
 }
 
@@ -57,9 +57,9 @@ nextButton.onclick = function () {
     });
     pageRender(pageNum).then(function () {
     });
-        if (global.eraserMode) {
-            eraserButton.onclick();
-        }
+    if (global.eraserMode) {
+        eraserButton.onclick();
+    }
     pageMoveArea.textContent = pageNum;
     // eraserButton.onclick();
 }
@@ -185,6 +185,10 @@ function setPage(data, page) {
     });
 }
 
+function removePage(data, page) {
+
+}
+
 function AnnotationSet(pageNum) {
     global.pageTrans = true;
     return new Promise(function () {
@@ -217,8 +221,19 @@ function replaySet(data, pageNum) {
     replayData.set(pageNum, list);
 }
 
+function replayView(time) {
+    replayData.forEach((value, key) => {
+        value.forEach(annotation => {
+            if (parseInt(Date.parse(annotation.time)) < time) {
+                setPage(value, key);
+            }
+        })
+    });
+}
+
 global.setPage = setPage;
 global.eraserMode = eraserMode;
 global.pageTrans = pageTrans;
 global.$f = $f;
 global.replaySet = replaySet;
+global.replayView = replayView;

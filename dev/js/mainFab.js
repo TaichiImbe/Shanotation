@@ -38,15 +38,30 @@ Canvas.on('object:selected', function (e) {
 
 
 let rmflag = false;
-let getNowTime = function () {
+
+/*https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Date
+*/
+let getNowTime = function (unixTime) {
     let time = new Date();
-    let y = time.getFullYear();
-    let m = ("00" + (time.getMonth() + 1)).slice(-2);
-    let d = ("00" + time.getDate()).slice(-2);
-    let hh = ("00" + time.getHours()).slice(-2);
-    let mm = ("00" + time.getMinutes()).slice(-2);
-    let ss = ("00" + time.getSeconds()).slice(-2);
-    return y + "/" + m + "/" + d + " " + hh + ":" + mm + ":" + ss
+    if (unixTime != null) {
+        time = new Date(unixTime);
+        let y = time.getFullYear();
+        let m = ("00" + (time.getMonth() + 1)).slice(-2);
+        let d = ("00" + time.getDate()).slice(-2);
+        let hh = ("00" + time.getHours()).slice(-2);
+        let mm = ("00" + time.getMinutes()).slice(-2);
+        let ss = ("00" + time.getSeconds()).slice(-2);
+        return y + "-" + m + "-" + d + "T" + hh + ":" + mm + ":" + ss
+    } else {
+
+        let y = time.getFullYear();
+        let m = ("00" + (time.getMonth() + 1)).slice(-2);
+        let d = ("00" + time.getDate()).slice(-2);
+        let hh = ("00" + time.getHours()).slice(-2);
+        let mm = ("00" + time.getMinutes()).slice(-2);
+        let ss = ("00" + time.getSeconds()).slice(-2);
+        return y + "/" + m + "/" + d + " " + hh + ":" + mm + ":" + ss
+    }
 }
 Canvas.on('object:added', function (e) {
     // console.log(e.target);
@@ -324,6 +339,11 @@ function make(data,pageNum, text) {
     }
 }
 
+/**
+ *リプレイデータを作成
+ *
+ * @param {*} list
+ */
 function makeReplayData(list) {
     let pathList = [];
     // console.log(list);
@@ -467,3 +487,4 @@ global.setCanvasSize = setCanvasSize;
 global.Pen = Pen;
 global.make = make;
 global.makeReplayData = makeReplayData;
+global.getNowTime = getNowTime;

@@ -11,14 +11,19 @@
     <% include common/_function %>
     <% include common/_fabric %>
     <div>
-      <input type="range" id="Penwidth" value="0" min="0" max="30">
+      <input type='datetime-local' id='replay-start-time' placeholder='開始時刻' autocomplete="on" step='1' required> 
+      <input type="range" id="replay-time-range" value="0" min="0" max="3600" step='60' >
+      <input type='datetime-local' id='replay-end-time' placeholder='終了時刻' autocomplete="on" step='1' required> 
+      <input type='submit' id='hoge' value='click'>
+    </div>
+      <input type='datetime-local' id='timer' step='1' readonly>
+    <div>
+
     </div>
 
     <script>
-      getData();
       window.addEventListener('load',function(){
-        if(getUserName() === 'teacher'){
-          Canvas.isDrawingMode = false;
+          
           let text = $f('picker'),
           penSize = $f('penSize');
           select = $f('select');
@@ -28,9 +33,13 @@
           pentab = $f('pentab');
           selecttab = $f('selecttab');
           erasetab = $f('erastab');
+          div_limit = $f('div_limit');
+          canvas_wrapper = $f('canvas-wrapper');
+          timer_range = $f('replay-time-range');
+          timer = $f('timer');
 
-          text.style.display = 'none';
           penSize.style.display = 'none';
+          text.style.display = 'none'; penSize.style.display = 'none';
           select.style.display = 'none';
           draw.style.display = 'none';
       // clearButton.style.display = 'none';
@@ -38,10 +47,33 @@
           pentab.style.display = 'none';
           selecttab.style.display = 'none';
           erasetab.style.display = 'none';
-        }else{
-          let div_limit = document.getElementById('div_limit');
+          canvas_wrapper.style.display = 'none';
+          timer_range.style.display = 'none';
+          timer.style.display = 'none'
+        if(getUserName() !== 'teacher'){
           div_limit.style.display='none';
         }
+        /*
+        * 参考
+        * https://www.tagindex.com/html5/form/input_datetime_local.html
+        */
+          $f('hoge').addEventListener('click',(e)=>{
+            console.log(Date.parse($('#replay-start-time').val()));
+            timer_range.min = parseInt(Date.parse(($('#replay-start-time').val())));
+            timer_range.max = parseInt(Date.parse(($('#replay-end-time').val()))); 
+
+            getData();
+            canvas_wrapper.style.display = 'block';
+            timer_range.style.display = 'inline';
+            timer.style.display = 'block'
+            timer.value = $('#replay-start-time').val();
+          });
+          timer_range.onchange = function(e){
+            //rangeのvalueはstring型
+            timer.value = getNowTime(parseInt(this.value));
+
+            replayView(parseInt(this.value));
+          }
       })
       replayflag = true;
     </script>
