@@ -211,7 +211,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('getdata', (userName) => {
         let datas = '';
-        datas = fileio.getData('analysdata.txt');
+        datas = fileio.getData('test.txt');
         // datas = fileio.getData('replaydata.txt');
         io.sockets.emit('replaydata', datas);
         // fileio.getData('analysdata.txt').then((readData) => {
