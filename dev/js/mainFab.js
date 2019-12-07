@@ -102,7 +102,7 @@ Canvas.on('object:added', function (e) {
             // console.log(object.oCoords);
             if (!pageTrans) {
                 if (font) {
-                    send('object', e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
+                    sendObject(e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
                 } else {
                     sendAnnotation(e.target, pageNum, getNowTime());
                 }

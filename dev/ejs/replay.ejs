@@ -53,15 +53,6 @@
       timer.style.display = 'none'
       if (getUserName() !== 'teacher') {
         div_limit.style.display = 'none';
-      } else {
-        socket.on('teacher', function (data, oCoords, pageNum, identifier, text) {
-          // console.log(identifier);
-          // console.log(data);
-          console.log(text);
-          // make(data, oCoords,pageNum, identifier,text);
-          make(pageNum, text);
-          // Canvas.add(data);
-        });
       }
       /*
       * 参考
