@@ -115,7 +115,6 @@ Canvas.on('object:removed', function (e) {
     let object = e.target;
     ident = identification(object);
     if (rmflag) {
-        console.log(e);
         getPdfText(pageNum).then(function (text) {
             let font = getSubText(object, text);
             removeObject(object, object.oCoords, pageNum, font, ident,getNowTime());
@@ -314,19 +313,21 @@ function textCheck(canvas, text) {
  * @param {*} ident
  */
 // function make(data, oCoords, pageNum, ident, text) {
-function make(data,pageNum, text) {
+function make(pageNum, text) {
     var line
     // if (ident == identifier[0]) {
     //     line = makeEnclosure(oCoords);
     // } else if (ident == identifier[1]) {
     //     line = makeLine(data);
     // }
-    if (Array.isArray(text)) { let highLightList = [];
+    if (Array.isArray(text)) {
+        let highLightList = [];
         text.forEach(textinfo => {
             console.log(textinfo);
             highLightList.push(makeTextHiglight(textinfo, textinfo.color));
         });
         setPage(highLightList, pageNum);
+        AnnotationSet(pageNum);
 
     } else {
         line = makeTextHiglight(text.text, text.color);

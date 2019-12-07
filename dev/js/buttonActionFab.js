@@ -256,3 +256,4 @@ global.$f = $f;
 global.replaySet = replaySet;
 global.replayView = replayView;
 global.replayRemove = replayRemove;
+global.AnnotationSet = AnnotationSet;

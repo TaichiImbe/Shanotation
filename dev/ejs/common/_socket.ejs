@@ -39,7 +39,6 @@
     function send(dist,obj,oCoords,pageNum,ident,text,time){
         if(dist == 'object'){
             // console.log(text);
-            // console.log(obj.canvas);
             socket.emit(dist,getUserName(),obj,obj.canvas.freeDrawingBrush,oCoords,pageNum,ident,text,getPdfName(),time);
         }else if(dist == 'userName'){
             console.log(oCoords);
@@ -58,7 +57,7 @@
     }
 
     function removeObject(obj,oCoords,pageNum,text,ident,time){
-        console.log(text);
+        console.log(obj.canvas);
         socket.emit('remove',getUserName(),obj,obj.canvas.freeDrawingBrush,oCoords,pageNum,text,ident,getPdfName(),time);
     }
 
