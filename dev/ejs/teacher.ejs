@@ -7,45 +7,7 @@
   <% include common/_userInfo %>
   <!-- とりあえずコネクション周りは残しておく -->
   <script src='/socket.io/socket.io.js'></script>
-  <script>
-    var webconfig = './config/webconfig.json';
-    var request = new XMLHttpRequest();
-    request.open('GET',webconfig);
-    request.responseType = 'json';
-    request.send();
-    var socket;
-    request.onload = function () {
-      var config = request.response;
-      socket = io.connect(config.address + ':' + config.port);
-      socket.on('connect', function (msg) {
-        console.log('connect');
-      });
-
-      socket.on('limit_set_teacher',function(pageNum,text){
-        console.log(text);
-        make(pageNum,text);
-      });
-
-      socket.on('teacher', function (data, oCoords,pageNum,identifier,text) {
-        // console.log(identifier);
-        // console.log(data);
-        console.log(text);
-        // make(data, oCoords,pageNum, identifier,text);
-        make(data,pageNum,text);
-        // Canvas.add(data);
-      });
-    }
-    function send(dist,limitVal){
-      if(dist === 'limit'){
-        socket.emit('limit',limitVal,pageNum);
-      }
-    }
-
-    window.addEventListener('beforeunload',function(e){
-        socket.emit('reload',getUserName());
-    })
-    
-  </script>
+  <% include common/_socket %>
 
 </head>
 

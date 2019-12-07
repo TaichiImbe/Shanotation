@@ -11,7 +11,7 @@ let fs = require('fs');
  * @param {*} datas
  * @param {*} time
  */
-function fileWrite(filename, handshake, userName,path,canvas,pageNum,pdfName,ident,time) {
+function fileWrite(filename, handshake, userName,path,color,pageNum,pdfName,ident,time) {
     // console.log(datas.type);
     if (path.type == 'path') {
         let data = path.path;
@@ -21,7 +21,7 @@ function fileWrite(filename, handshake, userName,path,canvas,pageNum,pdfName,ide
         let str = ''; 
         for (i = 0; i < data.length; i++) {
             // array.push(userName + ' ' + data[i] + ' '+ time +'\n');
-            str += userName + ' ' + data[i] + ' ' + canvas.color+ ' '+ pageNum +' '+ pdfName + ' '+ ident + ' ' + time + '\n';
+            str += userName + ' ' + data[i] + ' ' + color+ ' '+ pageNum +' '+ pdfName + ' '+ ident + ' ' + time + '\n';
         }
         fs.open(filename, 'a', function (err, fd) {
 

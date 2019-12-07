@@ -416,7 +416,9 @@ function getHeatMapColor( min, max, value) {
     // let pos = Math.sin(value/max);
     // console.log('min : ' + min + ' max : ' + max + ' value : ' + value);
     let hue = ((value - min) / (max - min)) * (0 - 270) + 270;
-    // console.log(hue);
+    if (hue <= 0) {
+        hue = 0;
+    }
     const hsv = colorsys.parseCss('hsv('+hue+',100%,100%)');
     // console.log(hsv);
     // console.log(colorsys.hsv2Hex(hsv));

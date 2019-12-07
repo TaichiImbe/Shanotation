@@ -2,32 +2,32 @@
 <script>
     var webconfig = './config/webconfig.json';
     var request = new XMLHttpRequest();
-    request.open('GET',webconfig);
+    request.open('GET', webconfig);
     request.responseType = 'json';
     request.send();
-    var socket;
-    request.onload = function(){
-        var config = request.response;
-        socket = io.connect(config.address+':'+config.port);
-        socket.on('replaydata',(datas)=>{
+    let socket;
+    request.onload = function () {
+        let config = request.response;
+        socket = io.connect(config.address + ':' + config.port);
+        socket.on('replaydata', (datas) => {
             let splitdata = datas.split('\n');
             let list = [];
             splitdata.forEach(element => {
-                if(element !== ''){
+                if (element !== '') {
                     let splitElement = element.split(' ');
-                    if(splitElement[0] === getUserName() && splitElement[4] === getPdfName() ){
+                    if (splitElement[0] === getUserName() && splitElement[4] === getPdfName()) {
                         // if(splitElement[0] === getUserName()){
 
-                        if(splitElement[1].slice(0,1) === 'M'){
+                        if (splitElement[1].slice(0, 1) === 'M') {
                             list.push(splitElement);
-                        }else if(splitElement[1].slice(0,1) === 'Q'){
+                        } else if (splitElement[1].slice(0, 1) === 'Q') {
                             list.push(splitElement);
-                        }else if(splitElement[1].slice(0,1) === 'L'){
+                        } else if (splitElement[1].slice(0, 1) === 'L') {
                             list.push(splitElement);
-                        // console.log(list);
-                        // list = [];
+                            // console.log(list);
+                            // list = [];
                             makeReplayData(list);
-                            list=[];
+                            list = [];
                         }
                     }
                     // console.log(splitElement);
@@ -35,45 +35,62 @@
                 }
             });
         });
-    }
-    function send(dist,obj,oCoords,pageNum,ident,text,time){
-        if(dist == 'object'){
-            console.log(text);
-            console.log(obj.canvas);
-            socket.emit(dist,getUserName(),obj,obj.canvas.freeDrawingBrush,oCoords,pageNum,ident,text,getPdfName(),time);
-        }else if(dist == 'userName'){
-            console.log(oCoords);
-            socket.emit(dist,obj,oCoords);
-        }else if(dist === 'annotation'){
-            socket.emit(dist,getUserName(),obj,obj.canvas.freeDrawingBrush,pageNum,getPdfName(),time);
+        if (getUserName() === 'teacher') {
 
-        }else{
-            socket.emit(dist,obj);
+            socket.on('limit_set_teacher', function (pageNum, text) {
+                console.log(text);
+                make(pageNum, text);
+            });
+            socket.on('teacher', function (data, oCoords, pageNum, identifier, text) {
+                // console.log(identifier);
+                // console.log(data);
+                console.log(text);
+                // make(data, oCoords,pageNum, identifier,text);
+                make(pageNum, text);
+                // Canvas.add(data);
+            });
         }
     }
+    function sendObject(obj, oCoords, pageNum, ident, text, time) {
+        // console.log(text);
+        socket.emit('object', getUserName(), obj, obj.canvas.freeDrawingBrush.color, oCoords, pageNum, ident, text, getPdfName(), time);
+    }
+    function sendUserName(name, myIP) {
+        socket.emit('userName',name, myIP);
+    }
+    function send(dist, obj, oCoords, pageNum, ident, text, time) {
+        socket.emit(dist, obj);
+    }
+    function sendLimit(limit) {
+        socket.emit('limit', limit,pageNum);
+    }
 
-    function sendAnnotation(obj,pageNum,time){
-            socket.emit('annotation',getUserName(),obj,obj.canvas.freeDrawingBrush,pageNum,getPdfName(),time);
+    function sendAnnotation(obj, pageNum, time) {
+        socket.emit('annotation', getUserName(), obj, obj.canvas.freeDrawingBrush.color, pageNum, getPdfName(), time);
 
     }
 
-    function removeObject(obj,oCoords,pageNum,text,ident,time){
-        console.log(text);
-        socket.emit('remove',getUserName(),obj,obj.canvas.freeDrawingBrush,oCoords,pageNum,text,ident,getPdfName(),time);
+    function removeObject(obj, oCoords, pageNum, text, ident, time) {
+        console.log(obj.canvas);
+        socket.emit('remove', getUserName(), obj, obj.stroke, oCoords, pageNum, text, ident, getPdfName(), time);
     }
 
-    window.addEventListener('beforeunload',function(e){
-        socket.emit('reload',getUserName());
-        socket.emit('clear',getUserName(),pageNum);
+    window.addEventListener('beforeunload', function (e) {
+        if (getUserName() !== 'teacher') {
+            socket.emit('reload', getUserName());
+            socket.emit('clear', getUserName(), pageNum);
+        } else {
+            socket.emit('reload', getUserName());
+        }
     })
 
-    function clearObject(pageNum){
-        socket.emit('clear',getUserName(),pageNum);
+    function clearObject(pageNum) {
+        socket.emit('clear', getUserName(), pageNum);
     }
 
-    function getData(){
+    function getData() {
         replayflag = true;
-        socket.emit('getdata',getUserName(),getPdfName());
+        socket.emit('getdata', getUserName(), getPdfName());
     }
 
 </script>

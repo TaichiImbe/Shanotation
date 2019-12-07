@@ -10,7 +10,14 @@
             <input type="submit" name='pdfname' value=<%= value %> >
         <% }) ;%>
     </form>
-    <a href='/main/upload/' type='submit'>アップロード</a>
+    <form method="post" action="/pageTrans">
+        <input type='hidden' name='userName' value=<%= userName %>>
+        <input type="submit" value='アップロード'>
+    </form>
+    <form method="post" action="/repMenu">
+        <input type='hidden' name='userName' value=<%= userName %>>
+        <input type="submit" value='リプレイ'>
+    </form>
 
 </body>
 </html>

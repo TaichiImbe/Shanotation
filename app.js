@@ -35,7 +35,7 @@ const upload = require('./server/router/upload');
 const index = require('./server/router/index');
 const teacher = require('./server/router/teacher');
 const replay = require('./server/router/replay');
-const login = require('./server/router/login');
+const replaymenu = require('./server/router/replaymenu');
 
 //express server
 server = app.listen(port, function () {
@@ -79,7 +79,7 @@ app.use(upload);
 app.use(index);
 app.use(teacher);
 app.use(replay);
-app.use(login);
+app.use(replaymenu);
 
 // app.use(passport.initialize());
 // app.use(passport.session());
@@ -132,39 +132,44 @@ io.sockets.on('connection', function (socket) {
         console.log('massage');
         io.sockets.emit('massage', { value: data.value });
     });
-    socket.on('userName', function (name,ip) {
+    socket.on('userName', function (name, ip) {
         socket.username = name;
         userList.set(name, name);
         console.log(userList);
         // console.log(socket.username);
     })
     //object resive
-    socket.on('object', function (name,data,canvas, oCoords, pageNum, ident,text,pdfName,time) {
+    socket.on('object', function (name, data, color, oCoords, pageNum, ident, text, pdfName, time) {
         if (!userList.has(name)) {
-            userList.set(name,name);
+            userList.set(name, name);
         }
         if (data.type === 'path') {
+            let parser = new URL(socket.handshake.headers.referer);
             var path = data.path;
-            analys.dataset(name, data, oCoords,pageNum,ident,text);
+            analys.dataset(name, data, oCoords, pageNum, ident, text);
             // console.log(userList);
             // console.log(userList.size);
-            let ptext = analys.analys(pageNum,userList.size);
+            let ptext = analys.analys(pageNum, userList.size);
             // let ptext = analys.analysOne(pageNum,text,userList.size);
             if (ptext == null) {
                 console.log('err');
             }
             // console.log(ptext);
-            fileio.fileWrite('analysdata.txt', handshake,name,data,canvas, pageNum,pdfName,'insert',time);
+            if (parser.pathname === '/main') {
+                fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+            } else if (parser.pathname === '/replaymenu') {
+                fileio.fileWrite('replay.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+            }
             if (userList.get(handshake.address) != 'teacher') {
-                io.sockets.emit('teacher', data, oCoords,pageNum,ident,ptext);
+                io.sockets.emit('teacher', data, oCoords, pageNum, ident, ptext);
             }
         } else {
-            console.log(data);
+            // console.log(data);
         }
     });
 
-    socket.on('annotation', (name, data, canvas, pageNum, pdfName,time)=>{
-        fileio.fileWrite('analysdata.txt', handshake,name,data,canvas, pageNum,pdfName,'insert',time);
+    socket.on('annotation', (name, data, color, pageNum, pdfName, time) => {
+        fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
     })
 
     socket.on('canvas', function (canvas) {
@@ -175,10 +180,13 @@ io.sockets.on('connection', function (socket) {
         // console.log('disconnect');
     });
 
-    socket.on('remove',function(name,obj,canvas,oCoords,pageNum,text,ident,pdfName,time){
-        analys.dataRemove(userList.get(name),obj,oCoords,pageNum,text);
-        fileio.fileWrite('analysdata.txt'
-        ,handshake, name, obj, canvas, pageNum, pdfName, 'delete', time);
+    socket.on('remove', function (name, obj, color, oCoords, pageNum, text, ident, pdfName, time) {
+        analys.dataRemove(userList.get(name), obj, oCoords, pageNum, text);
+        if (parser.pathname === '/main') {
+            fileio.fileWrite('analysdata.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
+        }else if (parser.pathname === '/replaymenu'){
+            fileio.fileWrite('replay.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
+        }
         let ptext = analys.analys(pageNum,userList.size);
         if (userList.get(handshake.address) != 'teacher') {
             io.sockets.emit('teacher', obj, oCoords,pageNum,ident,ptext);
@@ -203,7 +211,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('getdata', (userName) => {
         let datas = '';
-        datas = fileio.getData('replaydata.txt');
+        datas = fileio.getData('test.txt');
         // datas = fileio.getData('replaydata.txt');
         io.sockets.emit('replaydata', datas);
         // fileio.getData('analysdata.txt').then((readData) => {

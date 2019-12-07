@@ -39,9 +39,9 @@ prevButton.onclick = function () {
     pageRender(pageNum).then(function () {
     });
     // pageMoveArea.value = pageNum;
-        if (global.eraserMode) {
-            eraserButton.onclick();
-        }
+    if (global.eraserMode) {
+        eraserButton.onclick();
+    }
     pageMoveArea.textContent = pageNum;
 }
 
@@ -50,6 +50,7 @@ nextButton.onclick = function () {
         return;
     }
     PageAnno.set(pageNum, Canvas.getObjects());
+    console.log(PageAnno);
     // Canvas.clear()
     // logPrint(PageAnno);
     pageNum++;
@@ -57,9 +58,9 @@ nextButton.onclick = function () {
     });
     pageRender(pageNum).then(function () {
     });
-        if (global.eraserMode) {
-            eraserButton.onclick();
-        }
+    if (global.eraserMode) {
+        eraserButton.onclick();
+    }
     pageMoveArea.textContent = pageNum;
     // eraserButton.onclick();
 }
@@ -164,7 +165,7 @@ drawingLine.onchange = function () {
 //      or 配列の中身をみる
 function setPage(data, page) {
     // console.log(data);
-    var collection = new Array();
+    let collection = [];
     if (Array.isArray(data)) {
         data.forEach(text => {
             collection.push(text);
@@ -173,17 +174,27 @@ function setPage(data, page) {
 
         if (PageAnno.has(page)) {
             collection = PageAnno.get(page);
-            collection.push(data);
+            if (collection.indexOf(data) == -1) {
+                collection.push(data);
+            }
         } else {
             collection.push(data);
         }
     }
     // Canvas.add(data);
     PageAnno.set(page, collection);
-    AnnotationSet(pageNum).then(function () {
-
-    });
 }
+
+function removePage(data, page) {
+    if (PageAnno.has(page)) {
+        let pageData = PageAnno.get(page);
+        let newReplayData = pageData.filter(annotation => {
+            return JSON.stringify(annotation.path) != JSON.stringify(data.path) && JSON.stringify(annotation.stroke) != JSON.stringify(data.stroke);
+        });
+        PageAnno.set(page, newReplayData);
+    }
+}
+
 
 function AnnotationSet(pageNum) {
     global.pageTrans = true;
@@ -201,7 +212,48 @@ function AnnotationSet(pageNum) {
         global.pageTrans = false;
     })
 }
+let replayData = new Map();
+/**
+ *リプレイ用情報の記録
+ *
+ * @param {*} data
+ * @param {*} pageNum
+ */
+function replaySet(data, pageNum) {
+    let list = [];
+    if (replayData.has(pageNum)) {
+        list = replayData.get(pageNum);
+    }
+    list.push(data);
+    replayData.set(pageNum, list);
+}
+
+function replayView(time) {
+    replayData.forEach((value, key) => {
+        value.forEach(annotation => {
+            if (parseInt(Date.parse(annotation.time)) < time) {
+                    setPage(annotation, key);
+            } else {
+                    removePage(annotation, key);
+            }
+        })
+    });
+    AnnotationSet(pageNum);
+}
+
+function replayRemove(data, pageNum) {
+    let dataList = replayData.get(pageNum);
+    let newReplayData = dataList.filter(annotation => {
+        return JSON.stringify(annotation.path) != JSON.stringify(data.path) && JSON.stringify(annotation.stroke) != JSON.stringify(data.stroke);
+    });
+    replayData.set(pageNum, newReplayData);
+}
+
 global.setPage = setPage;
 global.eraserMode = eraserMode;
 global.pageTrans = pageTrans;
 global.$f = $f;
+global.replaySet = replaySet;
+global.replayView = replayView;
+global.replayRemove = replayRemove;
+global.AnnotationSet = AnnotationSet;

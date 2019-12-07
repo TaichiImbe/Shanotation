@@ -35,9 +35,7 @@
     let myIP = '';
     $('#login').click(function () {
         var name = $('#name').val();
-        console.log(name);
-        console.log(myIP);
-        send('userName', name, myIP);
+        sendUserName(name, myIP);
     });
 
     window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
