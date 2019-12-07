@@ -8,7 +8,6 @@ let Canvas = new fabric.Canvas('draw-area', {
 // console.log(Canvas);
 let Pen;
 let identifier = ['enclosure', 'line'];
-let AnnoCollection = new Map();
 function setCanvasSize(viewport) {
     Canvas.setWidth(viewport.width);
     Canvas.setHeight(viewport.height);
@@ -91,7 +90,6 @@ Canvas.on('object:added', function (e) {
     } else {
         ident = identification(object);
 
-        AnnoCollection.set(getNowTime(), e.target);
         getPdfText(pageNum).then(function (text) {
             // var font = textCheck(object,text);
             // console.log(object.oCoords);
@@ -375,7 +373,11 @@ function makeReplayData(list) {
     // console.log(data);
     // console.log(splitData[2]);
     // setPage(data, pageNum);
-    replaySet(data, pageNum);
+    if (list[0][5] === 'insert') {
+        replaySet(data, pageNum);
+    } else {
+        replayRemove(data, pageNum);
+    }
 }
 
 function makePath(data,color) {

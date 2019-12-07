@@ -23,7 +23,6 @@
 
     <script>
       window.addEventListener('load',function(){
-          
           let text = $f('picker'),
           penSize = $f('penSize');
           select = $f('select');
@@ -58,6 +57,7 @@
         * https://www.tagindex.com/html5/form/input_datetime_local.html
         */
           $f('hoge').addEventListener('click',(e)=>{
+            Canvas.isDrawingMode = false;
             console.log(Date.parse($('#replay-start-time').val()));
             timer_range.min = parseInt(Date.parse(($('#replay-start-time').val())));
             timer_range.max = parseInt(Date.parse(($('#replay-end-time').val()))); 
@@ -73,6 +73,12 @@
             timer.value = getNowTime(parseInt(this.value));
 
             replayView(parseInt(this.value));
+          }
+          timer_range.oninput = function(e){
+            //rangeのvalueはstring型
+            timer.value = getNowTime(parseInt(this.value));
+
+            // replayView(parseInt(this.value));
           }
       })
       replayflag = true;
