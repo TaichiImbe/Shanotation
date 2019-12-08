@@ -1,8 +1,3 @@
-<!DOCTYPE html>
-<html lang="ja">
-<html>
-
-<head>
   <% include common/_head %>
   <!-- とりあえずコネクション周りは残しておく -->
   <% include common/_userInfo %>
@@ -12,6 +7,7 @@
 <body>
   <% include common/_function %>
   <% include common/_fabric %>
+    <div class='col-xs-8 col-sm-8 mx-auto'>
   <div>
     <input type='datetime-local' id='replay-start-time' placeholder='開始時刻' autocomplete="on" step='1' required>
     <input type="range" id="replay-time-range" value="0" min="0" max="3600" step='60'>
@@ -19,8 +15,6 @@
     <input type='submit' id='hoge' value='click'>
   </div>
   <input type='datetime-local' id='timer' step='1' readonly>
-  <div>
-
   </div>
 
   <script>
@@ -86,8 +80,5 @@
     replayflag = true;
   </script>
 </body>
-
-</html>
-<!DOCTYPE html>
 
 </html>

@@ -1,8 +1,3 @@
-<!DOCTYPE html>
-<html lang="ja">
-<html>
-
-<head>
     <% include common/_head %>
     <% include common/_socket %>
 </head>
@@ -29,7 +24,6 @@
         </p>
     </div>
 
-</body>
 <script>
 
     let myIP = '';
@@ -38,23 +32,7 @@
         sendUserName(name, myIP);
     });
 
-    window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
-    // RTCPeerConnectionコネクションを作成。NAT越えは不要なのでiceServersは未指定
-    let pc = new RTCPeerConnection({ iceServers: [] }), noop = function () { };
-    // データチャンネルを作成
-    pc.createDataChannel('');
-    // Offer送信
-    pc.createOffer(pc.setLocalDescription.bind(pc), noop);
-    pc.onicecandidate = function (ice) {
-        if (ice && ice.candidate && ice.candidate.candidate) {
-            console.log(ice.candidate.candidate);
-            // 正規表現を使ってIPアドレスだけ抜き出す。
-            myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
-            pc.onicecandidate = noop;
-        }
-    };
-
-
 </script>
+</body>
 
 </html>

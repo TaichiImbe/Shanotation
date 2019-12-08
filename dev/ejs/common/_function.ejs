@@ -1,4 +1,6 @@
 <main id="header" class='header p-3'>
+    <!-- mx-autoについて https://qiita.com/Fendo181/items/1f32cbbfa676766ae331 -->
+    <div class='container-field col-sm-8 mx-auto'>
     <ul class='nav nav-tabs'>
         <li id='pentab' class="nav-item">
             <a id='draw' href='#penCon' class='btn btn-primary nav-link active' data-toggle='tab' >ペン</a>
@@ -22,14 +24,10 @@
             <form method='post' action='/replay'>
                 <input type='hidden' name='pdfName' value=<%= pdfname %>>
                 <input type='hidden' name='userName' value=<%= userName %>>
-                <input type='submit' value='リプレイ'
-                name='submit' id='replayButton' >
             </form>
         </div>
     </ul>
-
     <div class='tab-content'>
-
         <div class='tab-pane active' id='penCon'>
             <input type="text" id="picker">
             <button id="penSize" class='btn btn-primary'>ペンのサイズ</button>
@@ -39,7 +37,8 @@
             <button id="clear-button">Clear</button>
         </div>
     </div>
-    
+
+    </div>
 </main>
 
 <script>

@@ -9,7 +9,7 @@ router.route('/main')
             let fileList = files.filter(file => {
                 return /.*\.(pdf$|PDF$)/.test(file);
             })
-            res.render('./main', { array: fileList });
+            res.render('./main', { array: fileList ,userName:req.query.id});
         })
     })
     .post((req, res, next) => {
