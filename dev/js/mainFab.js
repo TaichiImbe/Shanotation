@@ -93,12 +93,12 @@ Canvas.on('object:added', function (e) {
         getPdfText(pageNum).then(function (text) {
             // var font = textCheck(object,text);
             // console.log(object.oCoords);
-            // console.log(text);
+            console.log(text);
             var font = getSubText(object, text);
             // console.log(font);
             //     (function (object, text) {
             // })(object, text);
-            // console.log(font);
+            console.log(font);
             // console.log(object.oCoords);
             if (!pageTrans) {
                 if (font) {
@@ -141,36 +141,23 @@ function getSubText(object, text) {
     // console.log(text.items[6]);
     for (i = 0; i < text.items.length; i++) {
         if (oCoords.bl.y - thresh * 1.5 <= text.items[i].transform[5] && text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)) {
-            if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
+            // if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
                 // console.log(text.items[i]);
                 subsubtextlist.push(text.items[i]);
-            }
+            // }
             subtextlist.push(text.items[i]);
         }
     }
     // console.log(subsubtextlist);
     // console.log(subtextlist);
-    if (subsubtextlist.length != 0) {
-        str = subsubtextlist;
-    } else if (subtextlist.length != 0) {
-
-        let minl = Math.sqrt(Math.pow(subtextlist[0].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[0].transform[5] - oCoords.bl.y, 2));
-        str = subtextlist[0];
-
-        for (i = 1; i < subtextlist.length; i++) {
-
-            if (minl > Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2))) {
-                minil = Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2));
-                str = subtextlist[i];
-            }
-        }
+    if (subtextlist.length != 0) {
+        str = subtextlist;
     } else {
-
         let minl = Math.sqrt(Math.pow(text.items[0].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[0].transform[5] - oCoords.bl.y, 2));
         for (i = 1; i < text.items.length; i++) {
 
             if (minl > Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2)) && text.items[i].transform[5] <= oCoords.bl.y) {
-                minil = Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2));
+                minl = Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2));
                 str = text.items[i];
             }
         }
@@ -327,7 +314,7 @@ function make(pageNum, text) {
             highLightList.push(makeTextHiglight(textinfo, textinfo.color));
         });
         setPage(highLightList, pageNum);
-        AnnotationSet(pageNum);
+        AnnotationSet(global.pageNum);
 
     } else {
         line = makeTextHiglight(text.text, text.color);
