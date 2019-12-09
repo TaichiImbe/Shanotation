@@ -52,6 +52,20 @@ function fileWrite(filename, handshake, userName,path,color,pageNum,pdfName,iden
 
 }
 
+function pageTransInfo(filename, userName, ident, pageNum, pdfName, time) {
+    let str = userName + ' ' + ident + ' ' + pageNum + ' ' + pdfName + ' ' + time +'\n';
+    fs.open(filename, 'a', function (err, fd) {
+
+        if (err) throw err;
+        fs.appendFile(fd, str, 'utf8', function (err) {
+            if (err) throw err;
+            fs.close(fd, function (err) {
+                if (err) throw err;
+            })
+        });
+    });
+}
+
 function getData(fileName) {
         // const readline = require('readline');
         let content = '';
@@ -105,3 +119,4 @@ function writeData(data) {
 
 exports.fileWrite = fileWrite;
 exports.getData = getData;
+exports.pageTransInfo = pageTransInfo;

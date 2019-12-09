@@ -220,6 +220,10 @@ io.sockets.on('connection', function (socket) {
         // })
 
     })
+
+    socket.on('pageTrans', (userName, ident, pageNum, pdfName, time)=>{
+        fileio.pageTransInfo('pageTrans.txt',userName,ident, pageNum, pdfName, time);
+    });
 });
 
 io.use(function (socket, next) {

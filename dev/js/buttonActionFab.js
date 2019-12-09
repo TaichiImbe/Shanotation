@@ -30,10 +30,13 @@ prevButton.onclick = function () {
     if (pageNum <= 1) {
         return;
     }
+    let pageT = pageNum + ' ';
     PageAnno.set(pageNum, Canvas.getObjects());
     // Canvas.clear()
     // logPrint(PageAnno);
     pageNum--;
+    pageT += pageNum;
+    sendTrans('prev', pageT);
     AnnotationSet(pageNum).then(function () {
     });
     pageRender(pageNum).then(function () {
@@ -49,11 +52,14 @@ nextButton.onclick = function () {
     if (pageNum >= getPdfPage()) {
         return;
     }
+    let pageT = pageNum + ' ';
     PageAnno.set(pageNum, Canvas.getObjects());
     console.log(PageAnno);
     // Canvas.clear()
     // logPrint(PageAnno);
     pageNum++;
+    pageT += pageNum;
+    sendTrans('next', pageT);
     AnnotationSet(pageNum).then(function () {
     });
     pageRender(pageNum).then(function () {

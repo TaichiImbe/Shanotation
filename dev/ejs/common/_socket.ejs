@@ -76,6 +76,10 @@
         socket.emit('remove', getUserName(), obj, obj.stroke, oCoords, pageNum, text, ident, getPdfName(), time);
     }
 
+    function sendTrans(ident,pageNum){
+        socket.emit('pageTrans',getUserName(),ident,pageNum,getPdfName(),getNowTime());
+    }
+
     window.addEventListener('beforeunload', function (e) {
         if (getUserName() !== 'teacher') {
             socket.emit('reload', getUserName());
