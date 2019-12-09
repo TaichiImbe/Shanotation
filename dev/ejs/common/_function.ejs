@@ -18,14 +18,6 @@
                 <input type='text' value='' id='limit'>
                 <input type='button'  value='制限' name='submit' onclick="setList()">
         </div>
-        <div class='tab-pane active' id='replay'>
-            <form method='post' action='/replay'>
-                <input type='hidden' name='pdfName' value=<%= pdfname %>>
-                <input type='hidden' name='userName' value=<%= userName %>>
-                <input type='submit' value='リプレイ'
-                name='submit' id='replayButton' >
-            </form>
-        </div>
     </ul>
 
     <div class='tab-content'>
