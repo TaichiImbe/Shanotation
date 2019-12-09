@@ -386,7 +386,8 @@ function makeReplayData(list) {
     // console.log(splitData[2]);
     // setPage(data, pageNum);
     console.log(list[5])
-    if (list[5] === 'insert') {
+    // if (list[5] === 'insert') {
+    if (list[0][5] === 'insert') {
         replaySet(data, pageNum);
     } else {
         replayRemove(data, pageNum);
