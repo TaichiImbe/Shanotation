@@ -17,12 +17,12 @@ function fileWrite(filename, handshake, userName,path,color,pageNum,pdfName,iden
         let data = path.path;
         let array = new Array();
         let ip = handshake.address.split(":");
-        // let str = userName + ' ' + data + ' ' + pageNum + ' ' + pdfName+ ' '+time + '\n';
-        let str = ''; 
-        for (i = 0; i < data.length; i++) {
+        let str = userName + ' ' + data + ' ' + pageNum + ' ' + pdfName+ ' '+time + '\n';
+        // let str = ''; 
+        // for (i = 0; i < data.length; i++) {
             // array.push(userName + ' ' + data[i] + ' '+ time +'\n');
-            str += userName + ' ' + data[i] + ' ' + color+ ' '+ pageNum +' '+ pdfName + ' '+ ident + ' ' + time + '\n';
-        }
+            // str += userName + ' ' + data[i] + ' ' + color+ ' '+ pageNum +' '+ pdfName + ' '+ ident + ' ' + time + '\n';
+        // }
         fs.open(filename, 'a', function (err, fd) {
 
             if (err) throw err;

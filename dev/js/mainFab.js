@@ -117,7 +117,7 @@ Canvas.on('object:removed', function (e) {
     if (rmflag) {
         getPdfText(pageNum).then(function (text) {
             let font = getSubText(object, text);
-            removeObject(object, object.oCoords, pageNum, font, ident,getNowTime());
+            removeObject(object, object.oCoords, pageNum, font, ident, getNowTime());
         });
     }
     //    remvoeObject(e,pageNum); 
@@ -142,8 +142,8 @@ function getSubText(object, text) {
     for (i = 0; i < text.items.length; i++) {
         if (oCoords.bl.y - thresh * 1.5 <= text.items[i].transform[5] && text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)) {
             // if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
-                // console.log(text.items[i]);
-                subsubtextlist.push(text.items[i]);
+            // console.log(text.items[i]);
+            subsubtextlist.push(text.items[i]);
             // }
             subtextlist.push(text.items[i]);
         }
@@ -174,7 +174,7 @@ function getSubText(object, text) {
             for (i = 0; i < text.str.length; i++) {
                 if (
                     t4 <= oCoords.bl.x && t4 + text.height >= oCoords.bl.x
-                     || t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
+                    || t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
                     charList.push({
                         dir: text.dir,
                         fontName: text.fontName,
@@ -197,7 +197,7 @@ function getSubText(object, text) {
         for (i = 0; i < str.str.length; i++) {
             if (t4 <= oCoords.bl.x && t4 + str.height >= oCoords.bl.x
                 || t4 >= oCoords.bl.x && oCoords.br.x >= t4
-                 ){
+            ) {
                 charList.push({
                     dir: str.dir,
                     fontName: str.fontName,
@@ -210,7 +210,7 @@ function getSubText(object, text) {
             if (t4 > oCoords.br.x) {
                 break;
             }
-                t4 += str.height;
+            t4 += str.height;
         }
         // console.log(charList);
     }
@@ -332,9 +332,10 @@ function make(pageNum, text) {
  */
 function makeReplayData(list) {
     let pathList = [];
+    console.log(list);
     // console.log(list);
     list.forEach(path => {
-        // console.log(path[1].split(','));
+        console.log(path[1].split(','));
         let pathlit = path[1].split(',');
         if (pathlit[0] === 'M') {
             pathlit[1] = Number(pathlit[1]);
@@ -350,25 +351,49 @@ function makeReplayData(list) {
         }
         pathList.push(pathlit);
     })
-    // console.log(pathList);
-    // pathList = [['M', 200, 100], ['Q', 200, 100, 201, 100], ['Q', 201, 100, 202, 100], ['L', 202, 100]];
+    // pathList = list[1];
     let pageNum = Number(list[0][3]);
     let data = makePath(pathList,list[0][2]);
     let time = list[0][list[0].length-2]+" "+list[0][list[0].length - 1];
+    // let plist = list[1].split(',');
+    // const check = (str) => {
+    //     return str.match(/^[-|+]?[0-9]*\.[0-9]+$|^[+|-]?[0-9]+$/) ? true : false
+    // }
+    // let subList = [];
+    // plist.forEach(path => {
+    //     if (check(path)) {
+    //         subList.push(Number(path));
+    //     } else {
+    //         if (subList.length != 0) {
+    //             pathList.push(subList);
+    //         }
+    //         subList = [];
+    //         subList.push(path);
+    //         // pathList.push(path);
+    //     }
+    // })
+    // if (subList.length != 0) {
+    //     pathList.push(subList);
+    // }
+    // pathList = plist;
+    // let pageNum = Number(list[3]);
+    // let data = makePath(pathList, list[2]);
+    // let time = list[6] + " " + list[7];
     data.time = time;
     data.setCoords();
     // console.log(pageNum);
     // console.log(data);
     // console.log(splitData[2]);
     // setPage(data, pageNum);
-    if (list[0][5] === 'insert') {
+    console.log(list[5])
+    if (list[5] === 'insert') {
         replaySet(data, pageNum);
     } else {
         replayRemove(data, pageNum);
     }
 }
 
-function makePath(data,color) {
+function makePath(data, color) {
     // console.log(data);
     let path;
     if (Array.isArray(data)) {
