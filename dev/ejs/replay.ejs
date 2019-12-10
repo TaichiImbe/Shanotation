@@ -13,8 +13,12 @@
   <% include common/_function %>
   <% include common/_fabric %>
   <div>
+    <!-- https://www.tagindex.com/html5/form/input_time.html
+        https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Date
+        https://www.tagindex.com/html5/form/input_datetime_local.html -->
     <input type='datetime-local' id='replay-start-time' placeholder='開始時刻' autocomplete="on" step='1' required>
     <input type="range" id="replay-time-range" value="0" min="0" max="3600" step='60'>
+    <!-- https://beiznotes.org/input-range-show-value/ -->
     <input type='datetime-local' id='replay-end-time' placeholder='終了時刻' autocomplete="on" step='1' required>
     <input type='submit' id='hoge' value='click'>
   </div>

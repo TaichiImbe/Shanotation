@@ -27,6 +27,7 @@ pageMoveArea.addEventListener('keydown', event => {
 
 
 prevButton.onclick = function () {
+    global.pageTrans = true;
     if (pageNum <= 1) {
         return;
     }
@@ -46,9 +47,11 @@ prevButton.onclick = function () {
         eraserButton.onclick();
     }
     pageMoveArea.textContent = pageNum;
+    global.pageTrans = false;
 }
 
 nextButton.onclick = function () {
+    global.pageTrans = true;
     if (pageNum >= getPdfPage()) {
         return;
     }
@@ -69,6 +72,7 @@ nextButton.onclick = function () {
     }
     pageMoveArea.textContent = pageNum;
     // eraserButton.onclick();
+    global.pageTrans = false;
 }
 
 //canvas上の絵を全部消す
@@ -180,6 +184,7 @@ function setPage(data, page) {
 
         if (PageAnno.has(page)) {
             collection = PageAnno.get(page);
+            // https://qiita.com/koyopro/items/8faced246d0d5ed921e0
             if (collection.indexOf(data) == -1) {
                 collection.push(data);
             }
@@ -195,6 +200,7 @@ function removePage(data, page) {
     if (PageAnno.has(page)) {
         let pageData = PageAnno.get(page);
         let newReplayData = pageData.filter(annotation => {
+            ///https://marycore.jp/prog/js/array-equal/#JSON文字列による比較
             return JSON.stringify(annotation.path) != JSON.stringify(data.path) && JSON.stringify(annotation.stroke) != JSON.stringify(data.stroke);
         });
         PageAnno.set(page, newReplayData);
@@ -203,7 +209,7 @@ function removePage(data, page) {
 
 
 function AnnotationSet(pageNum) {
-    global.pageTrans = true;
+    // global.pageTrans = true;
     return new Promise(function () {
 
         Canvas.clear();
@@ -215,7 +221,7 @@ function AnnotationSet(pageNum) {
                 Canvas.add(element);
             });
         }
-        global.pageTrans = false;
+        // global.pageTrans = false;
     })
 }
 let replayData = new Map();
