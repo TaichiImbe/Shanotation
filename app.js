@@ -181,6 +181,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('remove', function (name, obj, color, oCoords, pageNum, text, ident, pdfName, time) {
+        let parser = new URL(socket.handshake.headers.referer);
         analys.dataRemove(userList.get(name), obj, oCoords, pageNum, text);
         if (parser.pathname === '/main') {
             fileio.fileWrite('analysdata.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);

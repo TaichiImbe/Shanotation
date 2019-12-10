@@ -17,7 +17,7 @@ function fileWrite(filename, handshake, userName,path,color,pageNum,pdfName,iden
         let data = path.path;
         let array = new Array();
         let ip = handshake.address.split(":");
-        let str = userName + ' ' + data + ' ' + +' '+color +' '+ pageNum + ' ' + pdfName+ ' '+' '+ident+' '+time + '\n';
+        let str = userName + ' ' + data + ' ' + color +' '+ pageNum + ' ' + pdfName+ ' '+ident+' '+time + '\n';
         // let str = ''; 
         // for (i = 0; i < data.length; i++) {
             // array.push(userName + ' ' + data[i] + ' '+ time +'\n');
