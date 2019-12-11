@@ -27,7 +27,6 @@ pageMoveArea.addEventListener('keydown', event => {
 
 
 prevButton.onclick = function () {
-    global.pageTrans = true;
     if (pageNum <= 1) {
         return;
     }
@@ -43,15 +42,13 @@ prevButton.onclick = function () {
     pageRender(pageNum).then(function () {
     });
     // pageMoveArea.value = pageNum;
-    if (global.eraserMode) {
-        eraserButton.onclick();
-    }
+    // if (global.eraserMode) {
+    //     eraserButton.onclick();
+    // }
     pageMoveArea.textContent = pageNum;
-    global.pageTrans = false;
 }
 
 nextButton.onclick = function () {
-    global.pageTrans = true;
     if (pageNum >= getPdfPage()) {
         return;
     }
@@ -67,12 +64,11 @@ nextButton.onclick = function () {
     });
     pageRender(pageNum).then(function () {
     });
-    if (global.eraserMode) {
-        eraserButton.onclick();
-    }
+    // if (global.eraserMode) {
+    //     eraserButton.onclick();
+    // }
     pageMoveArea.textContent = pageNum;
     // eraserButton.onclick();
-    global.pageTrans = false;
 }
 
 //canvas上の絵を全部消す
