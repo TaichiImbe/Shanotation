@@ -182,12 +182,12 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('remove', function (name, obj, color, oCoords, pageNum, text, ident, pdfName, time) {
         let parser = new URL(socket.handshake.headers.referer);
-        analys.dataRemove(name, obj, oCoords, pageNum, text);
         if (parser.pathname === '/main') {
             fileio.fileWrite('removedata.txt', handshake, name, obj, color, pageNum, pdfName, 'delete ', time);
         }else if (parser.pathname === '/replaymenu'){
             fileio.fileWrite('replay.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
         }
+        analys.dataRemove(name, obj, oCoords, pageNum, text);
         let ptext = analys.analys(pageNum,userList.size);
         if (userList.get(handshake.address) != 'teacher') {
             io.sockets.emit('teacher', obj, oCoords,pageNum,ident,ptext);
