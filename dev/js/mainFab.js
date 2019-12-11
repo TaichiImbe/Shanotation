@@ -75,7 +75,6 @@ Canvas.on('object:added', function (e) {
     // 遷移時の送信はおそらく改善
     if (eraserMode) {
         if (!pageTrans) {
-
             Canvas.remove(object);
             Canvas.getObjects().forEach(element => {
                 rmflag = true;
@@ -117,7 +116,13 @@ Canvas.on('object:removed', function (e) {
     if (rmflag) {
         getPdfText(pageNum).then(function (text) {
             let font = getSubText(object, text);
-            removeObject(object, object.oCoords, pageNum, font, ident, getNowTime());
+            if (font) {
+                removeObject(object, object.oCoords, pageNum, font, ident, getNowTime());
+            } else {
+                font = [];
+                removeObject(object, object.oCoords, pageNum, font, ident, getNowTime())
+            }
+            
         });
     }
     //    remvoeObject(e,pageNum); 

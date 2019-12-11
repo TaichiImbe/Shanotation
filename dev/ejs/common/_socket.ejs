@@ -72,7 +72,7 @@
     }
 
     function removeObject(obj, oCoords, pageNum, text, ident, time) {
-        console.log(obj.canvas);
+        console.log(obj.stroke);
         socket.emit('remove', getUserName(), obj, obj.stroke, oCoords, pageNum, text, ident, getPdfName(), time);
     }
 

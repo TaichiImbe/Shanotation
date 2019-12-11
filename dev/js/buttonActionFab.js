@@ -205,9 +205,8 @@ function removePage(data, page) {
 
 
 function AnnotationSet(pageNum) {
-    // global.pageTrans = true;
+    global.pageTrans = true;
     return new Promise(function () {
-
         Canvas.clear();
         const Anno = PageAnno.get(pageNum);
         // console.log(Anno);
@@ -217,7 +216,7 @@ function AnnotationSet(pageNum) {
                 Canvas.add(element);
             });
         }
-        // global.pageTrans = false;
+        global.pageTrans = false;
     })
 }
 let replayData = new Map();
