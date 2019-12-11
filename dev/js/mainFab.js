@@ -116,7 +116,7 @@ Canvas.on('object:removed', function (e) {
     if (rmflag) {
         getPdfText(pageNum).then(function (text) {
             let font = getSubText(object, text);
-            if (font) {
+            if (font != null) {
                 removeObject(object, object.oCoords, pageNum, font, ident, getNowTime());
             } else {
                 font = [];
