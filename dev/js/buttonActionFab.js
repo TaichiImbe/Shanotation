@@ -42,9 +42,6 @@ prevButton.onclick = function () {
     pageRender(pageNum).then(function () {
     });
     // pageMoveArea.value = pageNum;
-    if (global.eraserMode) {
-        eraserButton.onclick();
-    }
     pageMoveArea.textContent = pageNum;
 }
 
@@ -64,9 +61,6 @@ nextButton.onclick = function () {
     });
     pageRender(pageNum).then(function () {
     });
-    if (global.eraserMode) {
-        eraserButton.onclick();
-    }
     pageMoveArea.textContent = pageNum;
     // eraserButton.onclick();
 }
@@ -93,6 +87,7 @@ eraserButton.onclick = function () {
     // canvas.contextTop.globalCompositeOperation = 'xor';
     // context.globalCompositeOperation = 'source-out';
     context.globalCompositeOperation = 'destination-out';
+    console.log(Canvas.contextTop);
 };
 
 //ペンボタン

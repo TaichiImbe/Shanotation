@@ -11,6 +11,9 @@ let identifier = ['enclosure', 'line'];
 function setCanvasSize(viewport) {
     Canvas.setWidth(viewport.width);
     Canvas.setHeight(viewport.height);
+    if (global.eraserMode) {
+        Canvas.contextTop.globalCompositeOperation = 'destination-out';
+    }
 }
 global.replayflag = false;
 
