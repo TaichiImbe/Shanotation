@@ -11,6 +11,8 @@ let identifier = ['enclosure', 'line'];
 function setCanvasSize(viewport) {
     Canvas.setWidth(viewport.width);
     Canvas.setHeight(viewport.height);
+    //ページを遷移する時にsetWidthをすると,contextが変更される
+    //今まで動いていたのは謎
     if (global.eraserMode) {
         Canvas.contextTop.globalCompositeOperation = 'destination-out';
     }
