@@ -42,9 +42,9 @@ prevButton.onclick = function () {
     pageRender(pageNum).then(function () {
     });
     // pageMoveArea.value = pageNum;
-    // if (global.eraserMode) {
-    //     eraserButton.onclick();
-    // }
+    if (global.eraserMode) {
+        eraserButton.onclick();
+    }
     pageMoveArea.textContent = pageNum;
 }
 
@@ -64,9 +64,9 @@ nextButton.onclick = function () {
     });
     pageRender(pageNum).then(function () {
     });
-    // if (global.eraserMode) {
-    //     eraserButton.onclick();
-    // }
+    if (global.eraserMode) {
+        eraserButton.onclick();
+    }
     pageMoveArea.textContent = pageNum;
     // eraserButton.onclick();
 }
