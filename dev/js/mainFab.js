@@ -97,12 +97,10 @@ Canvas.on('object:added', function (e) {
         getPdfText(pageNum).then(function (text) {
             // var font = textCheck(object,text);
             // console.log(object.oCoords);
-            console.log(text);
             var font = getSubText(object, text);
             // console.log(font);
             //     (function (object, text) {
             // })(object, text);
-            console.log(font);
             // console.log(object.oCoords);
             if (!pageTrans) {
                 if (font) {
@@ -342,62 +340,60 @@ function make(pageNum, text) {
  */
 function makeReplayData(list) {
     let pathList = [];
-    console.log(list);
     // console.log(list);
-    list.forEach(path => {
-        console.log(path[1].split(','));
-        let pathlit = path[1].split(',');
-        if (pathlit[0] === 'M') {
-            pathlit[1] = Number(pathlit[1]);
-            pathlit[2] = Number(pathlit[2]);
-        } else if (pathlit[0] === 'Q') {
-            pathlit[1] = Number(pathlit[1]);
-            pathlit[2] = Number(pathlit[2]);
-            pathlit[3] = Number(pathlit[3]);
-            pathlit[4] = Number(pathlit[4]);
-        } else {
-            pathlit[1] = Number(pathlit[1]);
-            pathlit[2] = Number(pathlit[2]);
-        }
-        pathList.push(pathlit);
-    })
-    // pathList = list[1];
-    let pageNum = Number(list[0][3]);
-    let data = makePath(pathList,list[0][2]);
-    let time = list[0][list[0].length-2]+" "+list[0][list[0].length - 1];
-    // let plist = list[1].split(',');
-    // const check = (str) => {
-    //     return str.match(/^[-|+]?[0-9]*\.[0-9]+$|^[+|-]?[0-9]+$/) ? true : false
-    // }
-    // let subList = [];
-    // plist.forEach(path => {
-    //     if (check(path)) {
-    //         subList.push(Number(path));
+    // list.forEach(path => {
+    //     console.log(path[1].split(','));
+    //     let pathlit = path[1].split(',');
+    //     if (pathlit[0] === 'M') {
+    //         pathlit[1] = Number(pathlit[1]);
+    //         pathlit[2] = Number(pathlit[2]);
+    //     } else if (pathlit[0] === 'Q') {
+    //         pathlit[1] = Number(pathlit[1]);
+    //         pathlit[2] = Number(pathlit[2]);
+    //         pathlit[3] = Number(pathlit[3]);
+    //         pathlit[4] = Number(pathlit[4]);
     //     } else {
-    //         if (subList.length != 0) {
-    //             pathList.push(subList);
-    //         }
-    //         subList = [];
-    //         subList.push(path);
-    //         // pathList.push(path);
+    //         pathlit[1] = Number(pathlit[1]);
+    //         pathlit[2] = Number(pathlit[2]);
     //     }
+    //     pathList.push(pathlit);
     // })
-    // if (subList.length != 0) {
-    //     pathList.push(subList);
-    // }
+    // // pathList = list[1];
+    // let pageNum = Number(list[0][3]);
+    // let data = makePath(pathList,list[0][2]);
+    // let time = list[0][list[0].length-2]+" "+list[0][list[0].length - 1];
+    let plist = list[1].split(',');
+    const check = (str) => {
+        return str.match(/^[-|+]?[0-9]*\.[0-9]+$|^[+|-]?[0-9]+$/) ? true : false
+    }
+    let subList = [];
+    plist.forEach(path => {
+        if (check(path)) {
+            subList.push(Number(path));
+        } else {
+            if (subList.length != 0) {
+                pathList.push(subList);
+            }
+            subList = [];
+            subList.push(path);
+            // pathList.push(path);
+        }
+    })
+    if (subList.length != 0) {
+        pathList.push(subList);
+    }
     // pathList = plist;
-    // let pageNum = Number(list[3]);
-    // let data = makePath(pathList, list[2]);
-    // let time = list[6] + " " + list[7];
+    let pageNum = Number(list[3]);
+    let data = makePath(pathList, list[2]);
+    let time = list[6] + " " + list[7];
     data.time = time;
     data.setCoords();
     // console.log(pageNum);
     // console.log(data);
     // console.log(splitData[2]);
     // setPage(data, pageNum);
-    console.log(list[5])
-    // if (list[5] === 'insert') {
-    if (list[0][5] === 'insert') {
+    if (list[5] === 'insert') {
+    // if (list[0][5] === 'insert') {
         replaySet(data, pageNum);
     } else {
         replayRemove(data, pageNum);

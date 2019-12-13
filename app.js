@@ -146,6 +146,12 @@ io.sockets.on('connection', function (socket) {
         if (data.type === 'path') {
             let parser = new URL(socket.handshake.headers.referer);
             var path = data.path;
+            // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/includes
+            if (parser.pathname.includes('/main')) {
+                fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+            } else if (parser.pathname.includes('/replay')) {
+                fileio.fileWrite('replay.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+            }
             analys.dataset(name, data, oCoords, pageNum, ident, text);
             // console.log(userList);
             // console.log(userList.size);
@@ -154,22 +160,22 @@ io.sockets.on('connection', function (socket) {
             if (ptext == null) {
                 console.log('err');
             }
-            // console.log(ptext);
-            if (parser.pathname === '/main') {
-                fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
-            } else if (parser.pathname === '/replaymenu') {
-                fileio.fileWrite('replay.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
-            }
             if (userList.get(handshake.address) != 'teacher') {
                 io.sockets.emit('teacher', data, oCoords, pageNum, ident, ptext);
             }
+            // console.log(ptext);
         } else {
             // console.log(data);
         }
     });
 
     socket.on('annotation', (name, data, color, pageNum, pdfName, time) => {
-        fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+        let parser = new URL(socket.handshake.headers.referer);
+            if (parser.pathname.includes('/main')) {
+                fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+            } else if (parser.pathname.includes('/replay')) {
+                fileio.fileWrite('replay.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+            }
     })
 
     socket.on('canvas', function (canvas) {
@@ -210,9 +216,9 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('limit_set_teacher',pageNum,ptext);
     });
 
-    socket.on('getdata', (userName) => {
+    socket.on('getdata', (userName,pdfName,startTime,endTime) => {
         let datas = '';
-        datas = fileio.getData('test.txt');
+        datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime);
         // datas = fileio.getData('replaydata.txt');
         io.sockets.emit('replaydata', datas);
         // fileio.getData('analysdata.txt').then((readData) => {

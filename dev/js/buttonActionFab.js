@@ -51,7 +51,6 @@ nextButton.onclick = function () {
     }
     let pageT = pageNum + ' ';
     PageAnno.set(pageNum, Canvas.getObjects());
-    console.log(PageAnno);
     // Canvas.clear()
     // logPrint(PageAnno);
     pageNum++;
@@ -87,7 +86,6 @@ eraserButton.onclick = function () {
     // canvas.contextTop.globalCompositeOperation = 'xor';
     // context.globalCompositeOperation = 'source-out';
     context.globalCompositeOperation = 'destination-out';
-    console.log(Canvas.contextTop);
 };
 
 //ペンボタン
@@ -176,7 +174,7 @@ function setPage(data, page) {
         if (PageAnno.has(page)) {
             collection = PageAnno.get(page);
             // https://qiita.com/koyopro/items/8faced246d0d5ed921e0
-            if (collection.indexOf(data) == -1) {
+            if (!collection.includes(data)) {
                 collection.push(data);
             }
         } else {
@@ -192,7 +190,7 @@ function removePage(data, page) {
         let pageData = PageAnno.get(page);
         let newReplayData = pageData.filter(annotation => {
             ///https://marycore.jp/prog/js/array-equal/#JSON文字列による比較
-            return JSON.stringify(annotation.path) != JSON.stringify(data.path) && JSON.stringify(annotation.stroke) != JSON.stringify(data.stroke);
+            return JSON.stringify(annotation.path) !== JSON.stringify(data.path) && JSON.stringify(annotation.stroke) !== JSON.stringify(data.stroke);
         });
         PageAnno.set(page, newReplayData);
     }

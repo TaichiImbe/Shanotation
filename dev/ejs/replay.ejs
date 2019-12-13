@@ -20,7 +20,7 @@
     <input type="range" id="replay-time-range" value="0" min="0" max="3600" step='60'>
     <!-- https://beiznotes.org/input-range-show-value/ -->
     <input type='datetime-local' id='replay-end-time' placeholder='終了時刻' autocomplete="on" step='1' required>
-    <input type='submit' id='hoge' value='click'>
+    <input type='submit' id='getReplayDatas' value='click'>
   </div>
   <input type='datetime-local' id='timer' step='1' readonly>
   <div>
@@ -62,13 +62,13 @@
       * 参考
       * https://www.tagindex.com/html5/form/input_datetime_local.html
       */
-      $f('hoge').addEventListener('click', (e) => {
+      $f('getReplayDatas').addEventListener('click', (e) => {
         Canvas.isDrawingMode = false;
         console.log(Date.parse($('#replay-start-time').val()));
         timer_range.min = parseInt(Date.parse(($('#replay-start-time').val())));
         timer_range.max = parseInt(Date.parse(($('#replay-end-time').val())));
 
-        getData();
+        getData(timer_range.min,timer_range.max);
         canvas_wrapper.style.display = 'block';
         timer_range.style.display = 'inline';
         timer.style.display = 'block'

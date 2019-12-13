@@ -66,14 +66,20 @@ function pageTransInfo(filename, userName, ident, pageNum, pdfName, time) {
     });
 }
 
-function getData(fileName) {
+function getData(fileName,userName,pdfName,startTime,endTime) {
         // const readline = require('readline');
         let content = '';
     let read = fs.readFileSync(fileName, 'utf-8');
     let reader = read.split('\n');
     reader.forEach(data => {
+        multiData = data.split(' ');
+        if (multiData[0] === userName && multiData[4] === pdfName) {
+            let writeTime = parseInt(Date.parse(multiData[6] +' '+ multiData[7]))
+            if (startTime < writeTime && writeTime < endTime) {
+                content += data + '\n'
+            }
+        }
         // console.log(data);
-        content += data + '\n'
     });
     return content;
 
