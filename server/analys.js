@@ -418,7 +418,7 @@ function getHeatMapColor( min, max, value) {
 
     // let pos = Math.sin(value/max);
     // console.log('min : ' + min + ' max : ' + max + ' value : ' + value);
-    let hue = ((value - min) / (max - min)) * (0 - 270) + 270;
+    let hue = ((value - min) / (max - min)) * (0 - 230) + 230;
     if (hue <= 0) {
         hue = 0;
     }

@@ -81,6 +81,21 @@ function getData(fileName,userName,pdfName,startTime,endTime) {
         }
         // console.log(data);
     });
+    read = fs.readFileSync('removedata.txt', 'utf-8');
+    reader = read.split('\n');
+    reader.forEach(data => {
+        //https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/split
+        multiData = data.split(' ');
+        if (multiData[0] === userName && multiData[4] === pdfName) {
+            
+            let writeTime = parseInt(Date.parse(multiData[6] +' '+ multiData[7]))
+            if (startTime < writeTime && writeTime < endTime) {
+                content += data + '\n'
+            }
+        }
+        // console.log(data);
+    });
+
     return content;
 
     //ストリームの読み込みは残しておく
@@ -99,28 +114,6 @@ function getData(fileName,userName,pdfName,startTime,endTime) {
         // })
         // console.log(content);
         // return content;
-}
-
-function writeData(data) {
-    return new Promise(function (fullfill, reject) {
-
-    });
-    fs.open(filename, 'a', function (err, fd) {
-
-        if (err) throw err;
-        // if (data instanceof Array) {
-        // for (i = 0; i < data.length; i++) {
-        // console.log(i);
-        // fs.appendFile(fd, handshake.address + " " + data[i] + '\n', 'utf8', function (err) {
-        fs.appendFile(fd, handshake.address + " " + data + '\n', 'utf8', function (err) {
-            if (err) throw err;
-            fs.close(fd, function (err) {
-                if (err) throw err;
-            })
-        });
-        // }
-        // }
-    });
 }
 
 exports.fileWrite = fileWrite;

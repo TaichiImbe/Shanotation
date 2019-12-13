@@ -189,7 +189,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('remove', function (name, obj, color, oCoords, pageNum, text, ident, pdfName, time) {
         let parser = new URL(socket.handshake.headers.referer);
         if (parser.pathname === '/main') {
-            fileio.fileWrite('removedata.txt', handshake, name, obj, color, pageNum, pdfName, 'delete ', time);
+            fileio.fileWrite('removedata.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
         }else if (parser.pathname === '/replaymenu'){
             fileio.fileWrite('replay.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
         }

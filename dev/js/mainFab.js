@@ -318,7 +318,6 @@ function make(pageNum, text) {
     if (Array.isArray(text)) {
         let highLightList = [];
         text.forEach(textinfo => {
-            console.log(textinfo);
             highLightList.push(makeTextHiglight(textinfo, textinfo.color));
         });
         setPage(highLightList, pageNum);
@@ -327,7 +326,6 @@ function make(pageNum, text) {
     } else {
         line = makeTextHiglight(text.text, text.color);
         if (line !== null) {
-            console.log(pageNum);
             setPage(line, pageNum);
         }
     }
