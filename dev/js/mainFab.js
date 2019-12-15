@@ -323,7 +323,7 @@ function make(pageNum, text) {
         setPage(highLightList, pageNum);
         AnnotationSet(global.pageNum);
 
-    } else {
+    } else if(text != null){
         line = makeTextHiglight(text.text, text.color);
         if (line !== null) {
             setPage(line, pageNum);
