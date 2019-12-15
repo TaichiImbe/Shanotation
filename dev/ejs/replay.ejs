@@ -17,16 +17,14 @@
         https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Date
         https://www.tagindex.com/html5/form/input_datetime_local.html -->
     <input type='datetime-local' id='replay-start-time' placeholder='開始時刻' autocomplete="on" step='1' required>
-    <input type="range" id="replay-time-range" value="0" min="0" max="3600" step='60'>
+    <input type="range" id="replay-time-range" value="0" min="0" max="3600" step='1'>
     <!-- https://beiznotes.org/input-range-show-value/ -->
     <input type='datetime-local' id='replay-end-time' placeholder='終了時刻' autocomplete="on" step='1' required>
     <input type='submit' id='getReplayDatas' value='click'>
   </div>
-  <input type='datetime-local' id='timer' step='1' readonly>
+  <input type='datetime-local' id='timer' step='1'>
   <div>
-
   </div>
-
   <script>
     window.addEventListener('load', function () {
       let text = $f('picker'),
@@ -44,7 +42,7 @@
       timer = $f('timer');
 
       penSize.style.display = 'none';
-      text.style.display = 'none'; penSize.style.display = 'none';
+      text.style.display = 'none'; 
       select.style.display = 'none';
       draw.style.display = 'none';
       // clearButton.style.display = 'none';
@@ -78,13 +76,17 @@
         //rangeのvalueはstring型
         timer.value = getNowTime(parseInt(this.value));
 
-        // replayView(parseInt(this.value));
+        replayView(parseInt(this.value));
       }
       timer_range.oninput = function (e) {
         //rangeのvalueはstring型
         timer.value = getNowTime(parseInt(this.value));
 
-        replayView(parseInt(this.value));
+        // replayView(parseInt(this.value));
+      }
+      timer.onchange = (e)=>{
+        timer_range.value = Date.parse(e.target.value);
+        replayView(parseInt(Date.parse(e.target.value)));
       }
     })
     replayflag = true;

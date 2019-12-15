@@ -161,7 +161,7 @@ io.sockets.on('connection', function (socket) {
                 console.log('err');
             }
             if (userList.get(handshake.address) != 'teacher') {
-                io.sockets.emit('teacher', ptext);
+                io.sockets.emit('teacher', ptext,pageNum);
             }
             // console.log(ptext);
         } else {
@@ -196,7 +196,7 @@ io.sockets.on('connection', function (socket) {
         analys.dataRemove(name, obj, oCoords, pageNum, text);
         let ptext = analys.analys(pageNum,userList.size);
         if (userList.get(handshake.address) != 'teacher') {
-            io.sockets.emit('teacher', ptext);
+            io.sockets.emit('teacher', ptext,pageNum);
         }
     });
 
@@ -230,7 +230,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('highlightReq', (pageNum) => {
         let ptext = analys.analys(pageNum, userList.size);
-        io.sockets.emit('teacher', ptext);
+        io.sockets.emit('replayteacher', ptext,pageNum);
     })
 
     socket.on('pageTrans', (userName, ident, pageNum, pdfName, time)=>{

@@ -190,7 +190,8 @@ function removePage(data, page) {
         let pageData = PageAnno.get(page);
         let newReplayData = pageData.filter(annotation => {
             ///https://marycore.jp/prog/js/array-equal/#JSON文字列による比較
-            return JSON.stringify(annotation.path) !== JSON.stringify(data.path) && JSON.stringify(annotation.stroke) !== JSON.stringify(data.stroke);
+            // return JSON.stringify(annotation.path) !== JSON.stringify(data.path);
+            return annotation != data;
         });
         PageAnno.set(page, newReplayData);
     }
@@ -229,24 +230,36 @@ function replaySet(data, pageNum) {
 }
 
 function replayView(time) {
+    global.rmflag = true;
     replayData.forEach((value, key) => {
         value.forEach(annotation => {
+            let p = Date.parse(annotation.time);
             if (parseInt(Date.parse(annotation.time)) < time) {
                     setPage(annotation, key);
             } else {
                     removePage(annotation, key);
+                    if(pageNum === key){
+                        if (Canvas.getObjects().includes(annotation)) {
+                           
+                            Canvas.remove(annotation);
+                            
+                        }
+                    }
             }
         })
     });
-    AnnotationSet(pageNum);
+    global.rmflag = false;
+            AnnotationSet(pageNum);
 }
 
 function replayRemove(data, pageNum) {
-    let dataList = replayData.get(pageNum);
-    let newReplayData = dataList.filter(annotation => {
-        return JSON.stringify(annotation.path) != JSON.stringify(data.path) && JSON.stringify(annotation.stroke) != JSON.stringify(data.stroke);
-    });
-    replayData.set(pageNum, newReplayData);
+    if (replayData.has(pageNum)) {
+        let dataList = replayData.get(pageNum);
+        let newReplayData = dataList.filter(annotation => {
+            return JSON.stringify(annotation.path) !== JSON.stringify(data.path);
+        });
+        replayData.set(pageNum, newReplayData);
+    }
 }
 
 global.setPage = setPage;

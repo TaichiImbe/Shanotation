@@ -41,7 +41,7 @@ Canvas.on('object:selected', function (e) {
 });
 
 
-let rmflag = false;
+global.rmflag = false;
 
 /*https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Date
 */
@@ -82,14 +82,14 @@ Canvas.on('object:added', function (e) {
         if (!pageTrans) {
             Canvas.remove(object);
             Canvas.getObjects().forEach(element => {
-                rmflag = true;
+                global.rmflag = true;
                 element.path.forEach(path => {
                     if (coverd(path, object)) {
                         Canvas.remove(element);
                     }
                 });
             });
-            rmflag = false;
+            global.rmflag = false;
         }
     } else {
         ident = identification(object);
@@ -116,7 +116,7 @@ Canvas.on('object:added', function (e) {
 Canvas.on('object:removed', function (e) {
     let object = e.target;
     ident = identification(object);
-    if (rmflag) {
+    if (global.rmflag) {
         getPdfText(pageNum).then(function (text) {
             let font = getSubText(object, text);
             if (font != null) {
