@@ -3,6 +3,7 @@
 <html>
 
 <head>
+  <script>    replayflag = true;</script>
   <% include common/_head %>
   <!-- とりあえずコネクション周りは残しておく -->
   <% include common/_userInfo %>
@@ -89,7 +90,6 @@
         replayView(parseInt(Date.parse(e.target.value)));
       }
     })
-    replayflag = true;
   </script>
 </body>
 
