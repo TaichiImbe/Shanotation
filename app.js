@@ -160,8 +160,12 @@ io.sockets.on('connection', function (socket) {
             if (ptext == null) {
                 console.log('err');
             }
-            if (userList.get(handshake.address) != 'teacher') {
-                io.sockets.emit('teacher', ptext,pageNum);
+            if (name != 'teacher') {
+                if (parser.pathname.includes('/main')) {
+                    io.sockets.emit('teacher', ptext, pageNum);
+                } else if (parser.pathname.includes('/replay')) {
+                    io.sockets.emit('replayteacher', ptext, pageNum); 
+                }
             }
             // console.log(ptext);
         } else {
@@ -196,7 +200,11 @@ io.sockets.on('connection', function (socket) {
         analys.dataRemove(name, obj, oCoords, pageNum, text);
         let ptext = analys.analys(pageNum,userList.size);
         if (userList.get(handshake.address) != 'teacher') {
-            io.sockets.emit('teacher', ptext,pageNum);
+            if (parser.pathname.includes('/main')) {
+                io.sockets.emit('teacher', ptext, pageNum);
+            } else if (parser.pathname.includes('/replay')) {
+                io.sockets.emit('replayteacher', ptext, pageNum); 
+            }
         }
     });
 
@@ -236,6 +244,25 @@ io.sockets.on('connection', function (socket) {
     socket.on('pageTrans', (userName, ident, pageNum, pdfName, time)=>{
         fileio.pageTransInfo('pageTrans.txt',userName,ident, pageNum, pdfName, time);
     });
+
+    socket.on('replayData', (name, data, color, oCoords, pageNum, ident, text, pdfName, time) => {
+        analys.dataset(name, data, oCoords, pageNum, ident, text);
+            let ptext = analys.analys(pageNum, userList.size);
+            if (ptext == null) {
+                console.log('err');
+            }
+        if (name != teacher) {
+            io.sockets.emit('replayteacher', ptext, pageNum);
+        }
+            
+    });
+    socket.on('replayRemove', (name, obj, color, oCoords, pageNum, text, ident, pdfName, time) => {
+        analys.dataRemove(name, obj, oCoords, pageNum, text);
+        let ptext = analys.analys(pageNum,userList.size);
+        if (name != 'teacher') {
+                io.sockets.emit('replayteacher', ptext, pageNum); 
+        }
+    })
 });
 
 io.use(function (socket, next) {

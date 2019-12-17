@@ -310,41 +310,38 @@ function dataRemove(userName, path, oCoords, pageNum, textList) {
     if (Pages.has(pageNum)) {
         let userMap = Pages.get(pageNum);
         let texts = userMap.get(userName);
-        let newArray = [];
-        let removeArray = [];
+        // let removeArray = [];
         if (texts) {
-            texts.forEach(rmtext => {
-                textList.forEach(text => {
+            textList.forEach(text => {
+                let newArray = [];
+                texts.forEach(rmtext => {
                     if (rmtext.text.str !== text.str) {
                         if (rmtext.text.transform[4] !== text.transform[4] &&
                             rmtext.text.transform[5] !== text.transform[5]) {
                                     newArray.push(rmtext);
-    
                         } else {
                             if (rmtext.oCoords.bl.x !== oCoords.bl.x &&
                                 rmtext.oCoords.bl.y !== oCoords.bl.y) {
                                     newArray.push(rmtext);
                             }
-                            removeArray.push(rmtext);
+                            // removeArray.push(rmtext);
                         }
                     } else {
                         if (rmtext.text.transform[4] !== text.transform[4] &&
                             rmtext.text.transform[5] !== text.transform[5]) {
                                     newArray.push(rmtext);
-    
                         } else {
                             if (rmtext.oCoords.bl.x !== oCoords.bl.x &&
                                 rmtext.oCoords.bl.y !== oCoords.bl.y) {
                                     newArray.push(rmtext);
                             }
-                            removeArray.push(rmtext);
+                            // removeArray.push(rmtext);
                         }
-    
                     }
-                    
                 });
+                texts = newArray;
             });
-            userMap.set(userName, newArray);
+            userMap.set(userName, texts);
             Pages.set(pageNum, userMap);
         }
         

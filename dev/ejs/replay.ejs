@@ -22,6 +22,7 @@
     <!-- https://beiznotes.org/input-range-show-value/ -->
     <input type='datetime-local' id='replay-end-time' placeholder='終了時刻' autocomplete="on" step='1' required>
     <input type='submit' id='getReplayDatas' value='click'>
+    <input type='button' value='データ取得' id='highlight'>
   </div>
   <input type='datetime-local' id='timer' step='1'>
   <div>
@@ -41,6 +42,7 @@
       canvas_wrapper = $f('canvas-wrapper');
       timer_range = $f('replay-time-range');
       timer = $f('timer');
+      highlight = $f('highlight');
 
       penSize.style.display = 'none';
       text.style.display = 'none'; 
@@ -56,6 +58,7 @@
       timer.style.display = 'none'
       if (getUserName() !== 'teacher') {
         div_limit.style.display = 'none';
+        highlight.style.display = 'none';
       }
       /*
       * 参考
@@ -88,6 +91,9 @@
       timer.onchange = (e)=>{
         timer_range.value = Date.parse(e.target.value);
         replayView(parseInt(Date.parse(e.target.value)));
+      }
+      highlight.onclick = (e) =>{
+        highlightReq();
       }
     })
   </script>
