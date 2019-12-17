@@ -39,9 +39,7 @@
         if (getUserName() === 'teacher') {
 
             socket.on('limit_set_teacher', function (pageNum, text) {
-                if(!replayflag){
                     make(pageNum, text);
-                }
             });
             socket.on('teacher', function (text,pageNum) {
                 // console.log(identifier);
