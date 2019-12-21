@@ -181,16 +181,32 @@ function getSubText(object, text) {
             let t4 = text.transform[4];
             for (i = 0; i < text.str.length; i++) {
                 if (
-                    t4 <= oCoords.bl.x && t4 + text.height >= oCoords.bl.x
+                    t4 < oCoords.bl.x && t4 + text.height >= oCoords.bl.x
                     || t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
-                    charList.push({
-                        dir: text.dir,
-                        fontName: text.fontName,
-                        height: text.height,
-                        width: text.height,
-                        transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
-                        str: text.str[i]
-                    });
+                    /*   正規表現 https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String
+                        半角文字のみ取得 http://2011428.blog.fc2.com/blog-entry-79.html
+                    */
+                    if (text.height > text.width) {
+                        charList.push({
+                            dir: text.dir,
+                            fontName: text.fontName,
+                            height: text.height,
+                            width: text.width,
+                            transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
+                            str: text.str[i]
+                        });
+                   }
+                     else {
+                        charList.push({
+                            dir: text.dir,
+                            fontName: text.fontName,
+                            height: text.height,
+                            width: text.height,
+                            transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
+                            str: text.str[i]
+                        });
+                    }
+                    
                 }
                 if (t4 > oCoords.br.x) {
                     break;
@@ -478,6 +494,7 @@ function makeEnclosure(oCoords, color) {
  * @param {*} color is color code
  */
 function makeTextHiglight(text, color) {
+    console.log(text.height + ' ' + text.width);
     height = text.height;
     width = text.width;
     var Highlight = new fabric.Rect({
