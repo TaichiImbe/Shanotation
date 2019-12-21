@@ -15,6 +15,7 @@
             splitdata.forEach(element => {
                 if (element !== '') {
                     let splitElement = element.split(' ');
+                    if(getUserName() !== 'teacher'){
                     if (splitElement[0] === getUserName() && splitElement[4] === getPdfName()) {
                         // if(splitElement[0] === getUserName()){
 
@@ -30,6 +31,11 @@
                         //     list = [];
                         // }
                         makeReplayData(splitElement);
+                    }
+                    }else{
+                        if(splitElement[4] === getPdfName()){
+                        makeReplayData(splitElement);
+                        }
                     }
                     // console.log(splitElement);
                     // makeReplayData(splitElement);
@@ -113,9 +119,13 @@
         socket.emit('clear', getUserName(), pageNum);
     }
 
-    function getData(startTime,endTime) {
+    function getData(startTime,endTime,name) {
         replayflag = true;
-        socket.emit('getdata', getUserName(), getPdfName(),startTime,endTime);
+        if(name === '' || !name){
+            socket.emit('getdata', getUserName(), getPdfName(),startTime,endTime);
+        }else{
+            socket.emit('getdata', getUserName(), getPdfName(),startTime,endTime,name);
+        }
     }
 
 </script>

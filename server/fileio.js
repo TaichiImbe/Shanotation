@@ -66,17 +66,38 @@ function pageTransInfo(filename, userName, ident, pageNum, pdfName, time) {
     });
 }
 
-function getData(fileName,userName,pdfName,startTime,endTime) {
+function getData(fileName,userName,pdfName,startTime,endTime,names) {
         // const readline = require('readline');
         let content = '';
     let read = fs.readFileSync(fileName, 'utf-8');
     let reader = read.split('\n');
     reader.forEach(data => {
         multiData = data.split(' ');
-        if (multiData[0] === userName && multiData[4] === pdfName) {
-            let writeTime = parseInt(Date.parse(multiData[6] +' '+ multiData[7]))
-            if (startTime < writeTime && writeTime < endTime) {
-                content += data + '\n'
+        if (userName === 'teacher') {
+            if (names) {
+                splitname = names.split(',');
+                splitname.forEach(user => {
+                    if (multiData[0] === user && multiData[4] === pdfName) {
+                        let writeTime = parseInt(Date.parse(multiData[6] +' '+ multiData[7]))
+                        if (startTime < writeTime && writeTime < endTime) {
+                            content += data + '\n'
+                        }
+                    }
+                })
+            } else {
+                if (multiData[4] === pdfName) {
+                    let writeTime = parseInt(Date.parse(multiData[6] +' '+ multiData[7]))
+                    if (startTime < writeTime && writeTime < endTime) {
+                        content += data + '\n'
+                    }
+                }
+            }
+        } else {
+            if (multiData[0] === userName && multiData[4] === pdfName) {
+                let writeTime = parseInt(Date.parse(multiData[6] +' '+ multiData[7]))
+                if (startTime < writeTime && writeTime < endTime) {
+                    content += data + '\n'
+                }
             }
         }
         // console.log(data);
@@ -86,13 +107,41 @@ function getData(fileName,userName,pdfName,startTime,endTime) {
     reader.forEach(data => {
         //https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/split
         multiData = data.split(' ');
-        if (multiData[0] === userName && multiData[4] === pdfName) {
-            
-            let writeTime = parseInt(Date.parse(multiData[6] +' '+ multiData[7]))
-            if (startTime < writeTime && writeTime < endTime) {
-                content += data + '\n'
+        if (userName === 'teacher') {
+            if (names) {
+                splitname = names.split(',');
+                splitname.forEach(user => {
+                    if (multiData[0] === user && multiData[4] === pdfName) {
+                        let writeTime = parseInt(Date.parse(multiData[6] +' '+ multiData[7]))
+                        if (startTime < writeTime && writeTime < endTime) {
+                            content += data + '\n'
+                        }
+                    }
+                })
+            } else {
+                if (multiData[4] === pdfName) {
+                    let writeTime = parseInt(Date.parse(multiData[6] +' '+ multiData[7]))
+                    if (startTime < writeTime && writeTime < endTime) {
+                        content += data + '\n'
+                    }
+                }
+            }
+        } else {
+
+            if (multiData[0] === userName && multiData[4] === pdfName) {
+                let writeTime = parseInt(Date.parse(multiData[6] +' '+ multiData[7]))
+                if (startTime < writeTime && writeTime < endTime) {
+                    content += data + '\n'
+                }
             }
         }
+        // if (multiData[0] === userName && multiData[4] === pdfName) {
+            
+        //     let writeTime = parseInt(Date.parse(multiData[6] +' '+ multiData[7]))
+        //     if (startTime < writeTime && writeTime < endTime) {
+        //         content += data + '\n'
+        //     }
+        // }
         // console.log(data);
     });
 

@@ -235,8 +235,13 @@ function replayView(time) {
         value.forEach(annotation => {
             let p = Date.parse(annotation.time);
             if (parseInt(Date.parse(annotation.time)) < time) {
+                if (getUserName() !== 'teacher') {
                     setPage(annotation, key);
+                } else {
+                    userHigh(annotation, key, 'insert');
+                }
             } else {
+                if (getUserName() !== 'teacher') {
                     removePage(annotation, key);
                     if(pageNum === key){
                         if (Canvas.getObjects().includes(annotation)) {
@@ -245,6 +250,9 @@ function replayView(time) {
                             
                         }
                     }
+                } else {
+                    userHigh(annotation, key, 'delete');
+                }
             }
         })
     });
@@ -260,6 +268,15 @@ function replayRemove(data, pageNum) {
         });
         replayData.set(pageNum, newReplayData);
     }
+}
+function userHigh(annotation, page, ident) {
+    if (ident === 'insert') {
+
+    }
+}
+
+function dataset(annotation,page) {
+    
 }
 
 global.setPage = setPage;

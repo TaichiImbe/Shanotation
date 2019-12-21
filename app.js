@@ -224,9 +224,13 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('limit_set_teacher',pageNum,ptext);
     });
 
-    socket.on('getdata', (userName,pdfName,startTime,endTime) => {
+    socket.on('getdata', (userName,pdfName,startTime,endTime,name) => {
         let datas = '';
-        datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime);
+        if (!name) {
+            datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime);
+        } else {
+            datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime,name);
+        }
         // datas = fileio.getData('replaydata.txt');
         io.sockets.emit('replaydata', datas);
         // fileio.getData('analysdata.txt').then((readData) => {

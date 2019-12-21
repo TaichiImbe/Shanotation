@@ -400,6 +400,7 @@ function makeReplayData(list) {
     let pageNum = Number(list[3]);
     let data = makePath(pathList, list[2]);
     let time = list[6] + " " + list[7];
+    data.userName = list[0];
     data.time = time;
     data.setCoords();
     // console.log(pageNum);
