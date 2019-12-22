@@ -227,6 +227,9 @@ function replaySet(data, pageNum) {
     }
     list.push(data);
     replayData.set(pageNum, list);
+    if (getUserName === 'teacher') {
+        userHigh(data, pageNum, 'insert');
+    }
 }
 
 function replayView(time) {
@@ -238,7 +241,7 @@ function replayView(time) {
                 if (getUserName() !== 'teacher') {
                     setPage(annotation, key);
                 } else {
-                    userHigh(annotation, key, 'insert');
+                    // userHigh(annotation, key, 'insert');
                 }
             } else {
                 if (getUserName() !== 'teacher') {
@@ -251,7 +254,7 @@ function replayView(time) {
                         }
                     }
                 } else {
-                    userHigh(annotation, key, 'delete');
+                    // userHigh(annotation, key, 'delete');
                 }
             }
         })
@@ -269,9 +272,32 @@ function replayRemove(data, pageNum) {
         replayData.set(pageNum, newReplayData);
     }
 }
-function userHigh(annotation, page, ident) {
-    if (ident === 'insert') {
 
+let textList = [];
+function userHigh(annotation, page, ident) {
+    let inCheck = function (text) {
+        for (i = 0; i < textList.length; i++) {
+            if (textList[i].str === text.str) {
+
+                if (textList[i].transform[4] == text.transform[4] && textList[i].transform[5] == text.transform[5]) {
+                    return false;
+
+                }
+            }
+        }
+        return true;
+    }
+    if (ident === 'insert') {
+            getPdfText(page).then(function (text) {
+                let font = getSubText(annotation, text);
+                text.forEach(character => {
+                    if (inCheck(character)) {
+                        character.count = 0;
+                        textList.push(character);
+                    }
+                })
+
+            });
     }
 }
 

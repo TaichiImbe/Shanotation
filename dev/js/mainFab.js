@@ -526,3 +526,5 @@ global.Pen = Pen;
 global.make = make;
 global.makeReplayData = makeReplayData;
 global.getNowTime = getNowTime;
+
+global.getSubText = getSubText;
