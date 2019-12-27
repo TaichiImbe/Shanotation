@@ -25,6 +25,31 @@ pageMoveArea.addEventListener('keydown', event => {
     }
 });
 
+let keys = null;
+document.addEventListener('keydown',(event)=> {
+    let keyname = event.key;
+    if (keyname === 'Meta') {
+        keys=keyname;
+    } else if (keyname.indexOf('[a-z]')) {
+        if (keys === 'Meta') {
+            if (keyname === 'c') {
+                getPdfText(pageNum).then((text) => {
+                    //https://qiita.com/simiraaaa/items/2e7478d72f365aa48356
+                    let tmp = document.createElement('div');
+                    let pre = document.createElement('pre');
+                    pre.style.webkitUserSelect = 'auto';
+                    pre.style.userSelect = 'auto';
+                    tmp.appendChild(pre).textContent = JSON.stringify(text);
+                    document.body.appendChild(tmp);
+                    document.getSelection().selectAllChildren(tmp);
+                    document.execCommand('copy');
+                    document.body.removeChild(tmp);
+                })
+            }
+        }
+    }
+})
+
 
 prevButton.onclick = function () {
     if (pageNum <= 1) {
