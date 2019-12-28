@@ -250,6 +250,9 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('replayData', (name, data, color, oCoords, pageNum, ident, text, pdfName, time) => {
+        if (!userList.has(name)) {
+            userList.set(name, name);
+        }
         analys.dataset(name, data, oCoords, pageNum, ident, text);
             let ptext = analys.analys(pageNum, userList.size);
             if (ptext == null) {

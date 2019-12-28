@@ -72,9 +72,14 @@
     }
     function sendObject(obj, oCoords, pageNum, ident, text, time) {
         // console.log(text);
-        if(replayflag && getUserName() !== 'teacher'){
+        if(replayflag){
+
+        if(getUserName() !== 'teacher'){
             socket.emit('replayData', getUserName(), obj, obj.canvas.freeDrawingBrush.color, oCoords, pageNum, ident, text, getPdfName(), time);
         }else{
+            socket.emit('replayData', obj.userName, obj, obj.fill, oCoords, pageNum, ident, text, getPdfName(), time); 
+        }
+    }else{
             socket.emit('object', getUserName(), obj, obj.canvas.freeDrawingBrush.color, oCoords, pageNum, ident, text, getPdfName(), time); 
         }
     }

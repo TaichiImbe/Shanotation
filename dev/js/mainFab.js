@@ -102,7 +102,7 @@ Canvas.on('object:added', function (e) {
             //     (function (object, text) {
             // })(object, text);
             // console.log(object.oCoords);
-            if (!pageTrans) {
+            if (!pageTrans && getUserName() !== 'teacher') {
                 if (font) {
                     sendObject(e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
                 } else {
@@ -402,6 +402,7 @@ function makeReplayData(list) {
     let time = list[6] + " " + list[7];
     data.userName = list[0];
     data.time = time;
+    data.sendFlg = false;
     data.setCoords();
     // console.log(pageNum);
     // console.log(data);

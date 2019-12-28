@@ -266,7 +266,10 @@ function replayView(time) {
                 if (getUserName() !== 'teacher') {
                     setPage(annotation, key);
                 } else {
-                    // userHigh(annotation, key, 'insert');
+                    if (!annotation.sendFlg) {
+                        annotation.sendFlg = true;
+                        userHigh(annotation, key, 'insert');
+                    }
                 }
             } else {
                 if (getUserName() !== 'teacher') {
@@ -300,34 +303,17 @@ function replayRemove(data, pageNum) {
 
 let textList = [];
 function userHigh(annotation, page, ident) {
-    let inCheck = function (text) {
-        for (i = 0; i < textList.length; i++) {
-            if (textList[i].str === text.str) {
-
-                if (textList[i].transform[4] == text.transform[4] && textList[i].transform[5] == text.transform[5]) {
-                    return false;
-
-                }
-            }
-        }
-        return true;
-    }
     if (ident === 'insert') {
             getPdfText(page).then(function (text) {
                 let font = getSubText(annotation, text);
-                text.forEach(character => {
-                    if (inCheck(character)) {
-                        character.count = 0;
-                        textList.push(character);
+                if (!pageTrans) {
+                    if (font) {
+                        sendObject(annotation,
+                            annotation.oCoords, page, ident, font, annotation.time);
                     }
-                })
-
+                }
             });
     }
-}
-
-function dataset(annotation,page) {
-    
 }
 
 global.setPage = setPage;
