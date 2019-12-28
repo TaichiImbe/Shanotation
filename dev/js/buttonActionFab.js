@@ -327,13 +327,13 @@ function userHigh(annotation, page, ident) {
         if (teacherPageAnno.has(page)) {
             let pageData = teacherPageAnno.get(page);
             if (pageData.includes(annotation)) {
-                getPdfText(pageNum).then((text) => {
+                getPdfText(page).then((text) => {
                     let font = getSubText(annotation, text);
                     if (font != null) {
-                        removeObject(annotation, annotation.oCoords, pageNum, font, ident, annotation.time);
+                        removeObject(annotation, annotation.oCoords, page, font, ident, annotation.time);
                     } else {
                         font = [];
-                        removeObject(annotation, annotation.oCoords, pageNum, font, ident, annotation.time);
+                        removeObject(annotation, annotation.oCoords, page, font, ident, annotation.time);
                     }
                 })
             }
