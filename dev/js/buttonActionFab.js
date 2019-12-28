@@ -252,9 +252,6 @@ function replaySet(data, pageNum) {
     }
     list.push(data);
     replayData.set(pageNum, list);
-    if (getUserName === 'teacher') {
-        userHigh(data, pageNum, 'insert');
-    }
 }
 
 function replayView(time) {
@@ -282,7 +279,8 @@ function replayView(time) {
                         }
                     }
                 } else {
-                    // userHigh(annotation, key, 'delete');
+                    annotation.sendFlg = false;
+                    userHigh(annotation, key, 'delete');
                 }
             }
         })
@@ -301,18 +299,51 @@ function replayRemove(data, pageNum) {
     }
 }
 
-let textList = [];
+let teacherPageAnno = new Map();
 function userHigh(annotation, page, ident) {
     if (ident === 'insert') {
-            getPdfText(page).then(function (text) {
-                let font = getSubText(annotation, text);
-                if (!pageTrans) {
-                    if (font) {
-                        sendObject(annotation,
+        collection = [];
+        if (teacherPageAnno.has(page)) {
+            collection = teacherPageAnno.get(page);
+            // https://qiita.com/koyopro/items/8faced246d0d5ed921e0
+            if (!collection.includes(annotation)) {
+                collection.push(annotation);
+            }
+        } else {
+            collection.push(annotation);
+        }
+         getPdfText(page).then(function (text) {
+            let font = getSubText(annotation, text);
+            if (!pageTrans) {
+                if (font) {
+                    sendObject(annotation,
                             annotation.oCoords, page, ident, font, annotation.time);
-                    }
                 }
+            }
+        });
+        teacherPageAnno.set(page, collection);
+    }
+    if (ident === 'delete') {
+        if (teacherPageAnno.has(page)) {
+            let pageData = teacherPageAnno.get(page);
+            if (pageData.includes(annotation)) {
+                getPdfText(pageNum).then((text) => {
+                    let font = getSubText(annotation, text);
+                    if (font != null) {
+                        removeObject(annotation, annotation.oCoords, pageNum, font, ident, annotation.time);
+                    } else {
+                        font = [];
+                        removeObject(annotation, annotation.oCoords, pageNum, font, ident, annotation.time);
+                    }
+                })
+            }
+                let newReplayData = pageData.filter(data => {
+                ///https://marycore.jp/prog/js/array-equal/#JSON文字列による比較
+                // return JSON.stringify(annotation.path) !== JSON.stringify(data.path);
+                return annotation !== data;
             });
+            teacherPageAnno.set(page, newReplayData); 
+        }
     }
 }
 

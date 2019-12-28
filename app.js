@@ -199,7 +199,7 @@ io.sockets.on('connection', function (socket) {
         }
         analys.dataRemove(name, obj, oCoords, pageNum, text);
         let ptext = analys.analys(pageNum,userList.size);
-        if (userList.get(handshake.address) != 'teacher') {
+        if (name !== 'teacher') {
             if (parser.pathname.includes('/main')) {
                 io.sockets.emit('teacher', ptext, pageNum);
             } else if (parser.pathname.includes('/replay')) {

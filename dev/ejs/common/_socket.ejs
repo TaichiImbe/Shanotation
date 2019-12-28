@@ -100,8 +100,12 @@
 
     function removeObject(obj, oCoords, pageNum, text, ident, time) {
         console.log(obj.stroke);
-        if(replayflag && getUserName() !== 'teacher'){
-            socket.emit('replayRemove', getUserName(), obj, obj.stroke, oCoords, pageNum, text, ident, getPdfName(), time);
+        if(replayflag){
+            if(getUserName() !== 'teacher'){
+                socket.emit('replayRemove', getUserName(), obj, obj.stroke, oCoords, pageNum, text, ident, getPdfName(), time);
+            }else{
+                socket.emit('replayRemove', obj.userName, obj, obj.stroke, oCoords, pageNum, text, ident, getPdfName(), time);
+            }
         }else{
             socket.emit('remove', getUserName(), obj, obj.stroke, oCoords, pageNum, text, ident, getPdfName(), time);
         }
