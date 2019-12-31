@@ -25,23 +25,48 @@ pageMoveArea.addEventListener('keydown', event => {
     }
 });
 
+let keys = null;
+document.addEventListener('keydown',(event)=> {
+    let keyname = event.key;
+    if (keyname === 'Meta') {
+        keys=keyname;
+    } else if (keyname.indexOf('[a-z]')) {
+        if (keys === 'Meta') {
+            if (keyname === 'c') {
+                getPdfText(pageNum).then((text) => {
+                    //https://qiita.com/simiraaaa/items/2e7478d72f365aa48356
+                    let tmp = document.createElement('div');
+                    let pre = document.createElement('pre');
+                    pre.style.webkitUserSelect = 'auto';
+                    pre.style.userSelect = 'auto';
+                    tmp.appendChild(pre).textContent = JSON.stringify(text);
+                    document.body.appendChild(tmp);
+                    document.getSelection().selectAllChildren(tmp);
+                    document.execCommand('copy');
+                    document.body.removeChild(tmp);
+                })
+            }
+        }
+    }
+})
+
 
 prevButton.onclick = function () {
     if (pageNum <= 1) {
         return;
     }
+    let pageT = pageNum + ' ';
     PageAnno.set(pageNum, Canvas.getObjects());
     // Canvas.clear()
     // logPrint(PageAnno);
     pageNum--;
+    pageT += pageNum;
+    sendTrans('prev', pageT);
     AnnotationSet(pageNum).then(function () {
     });
     pageRender(pageNum).then(function () {
     });
     // pageMoveArea.value = pageNum;
-    if (global.eraserMode) {
-        eraserButton.onclick();
-    }
     pageMoveArea.textContent = pageNum;
 }
 
@@ -49,18 +74,17 @@ nextButton.onclick = function () {
     if (pageNum >= getPdfPage()) {
         return;
     }
+    let pageT = pageNum + ' ';
     PageAnno.set(pageNum, Canvas.getObjects());
-    console.log(PageAnno);
     // Canvas.clear()
     // logPrint(PageAnno);
     pageNum++;
+    pageT += pageNum;
+    sendTrans('next', pageT);
     AnnotationSet(pageNum).then(function () {
     });
     pageRender(pageNum).then(function () {
     });
-    if (global.eraserMode) {
-        eraserButton.onclick();
-    }
     pageMoveArea.textContent = pageNum;
     // eraserButton.onclick();
 }
@@ -174,7 +198,8 @@ function setPage(data, page) {
 
         if (PageAnno.has(page)) {
             collection = PageAnno.get(page);
-            if (collection.indexOf(data) == -1) {
+            // https://qiita.com/koyopro/items/8faced246d0d5ed921e0
+            if (!collection.includes(data)) {
                 collection.push(data);
             }
         } else {
@@ -189,7 +214,9 @@ function removePage(data, page) {
     if (PageAnno.has(page)) {
         let pageData = PageAnno.get(page);
         let newReplayData = pageData.filter(annotation => {
-            return JSON.stringify(annotation.path) != JSON.stringify(data.path) && JSON.stringify(annotation.stroke) != JSON.stringify(data.stroke);
+            ///https://marycore.jp/prog/js/array-equal/#JSON文字列による比較
+            // return JSON.stringify(annotation.path) !== JSON.stringify(data.path);
+            return annotation != data;
         });
         PageAnno.set(page, newReplayData);
     }
@@ -199,7 +226,6 @@ function removePage(data, page) {
 function AnnotationSet(pageNum) {
     global.pageTrans = true;
     return new Promise(function () {
-
         Canvas.clear();
         const Anno = PageAnno.get(pageNum);
         // console.log(Anno);
@@ -229,24 +255,96 @@ function replaySet(data, pageNum) {
 }
 
 function replayView(time) {
+    global.rmflag = true;
     replayData.forEach((value, key) => {
         value.forEach(annotation => {
+            let p = Date.parse(annotation.time);
             if (parseInt(Date.parse(annotation.time)) < time) {
+                if (getUserName() !== 'teacher') {
                     setPage(annotation, key);
+                } else {
+                    if (!annotation.sendFlg) {
+                        annotation.sendFlg = true;
+                        userHigh(annotation, key, 'insert');
+                    }
+                }
             } else {
+                if (getUserName() !== 'teacher') {
                     removePage(annotation, key);
+                    if(pageNum === key){
+                        if (Canvas.getObjects().includes(annotation)) {
+                           
+                            Canvas.remove(annotation);
+                            
+                        }
+                    }
+                } else {
+                    annotation.sendFlg = false;
+                    userHigh(annotation, key, 'delete');
+                }
             }
         })
     });
-    AnnotationSet(pageNum);
+    global.rmflag = false;
+            AnnotationSet(pageNum);
 }
 
 function replayRemove(data, pageNum) {
-    let dataList = replayData.get(pageNum);
-    let newReplayData = dataList.filter(annotation => {
-        return JSON.stringify(annotation.path) != JSON.stringify(data.path) && JSON.stringify(annotation.stroke) != JSON.stringify(data.stroke);
-    });
-    replayData.set(pageNum, newReplayData);
+    if (replayData.has(pageNum)) {
+        let dataList = replayData.get(pageNum);
+        let newReplayData = dataList.filter(annotation => {
+            return JSON.stringify(annotation.path) !== JSON.stringify(data.path);
+        });
+        replayData.set(pageNum, newReplayData);
+    }
+}
+
+let teacherPageAnno = new Map();
+function userHigh(annotation, page, ident) {
+    if (ident === 'insert') {
+        collection = [];
+        if (teacherPageAnno.has(page)) {
+            collection = teacherPageAnno.get(page);
+            // https://qiita.com/koyopro/items/8faced246d0d5ed921e0
+            if (!collection.includes(annotation)) {
+                collection.push(annotation);
+            }
+        } else {
+            collection.push(annotation);
+        }
+         getPdfText(page).then(function (text) {
+            let font = getSubText(annotation, text);
+            if (!pageTrans) {
+                if (font) {
+                    sendObject(annotation,
+                            annotation.oCoords, page, ident, font, annotation.time);
+                }
+            }
+        });
+        teacherPageAnno.set(page, collection);
+    }
+    if (ident === 'delete') {
+        if (teacherPageAnno.has(page)) {
+            let pageData = teacherPageAnno.get(page);
+            if (pageData.includes(annotation)) {
+                getPdfText(page).then((text) => {
+                    let font = getSubText(annotation, text);
+                    if (font != null) {
+                        removeObject(annotation, annotation.oCoords, page, font, ident, annotation.time);
+                    } else {
+                        font = [];
+                        removeObject(annotation, annotation.oCoords, page, font, ident, annotation.time);
+                    }
+                })
+            }
+                let newReplayData = pageData.filter(data => {
+                ///https://marycore.jp/prog/js/array-equal/#JSON文字列による比較
+                // return JSON.stringify(annotation.path) !== JSON.stringify(data.path);
+                return annotation !== data;
+            });
+            teacherPageAnno.set(page, newReplayData); 
+        }
+    }
 }
 
 global.setPage = setPage;

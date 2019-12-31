@@ -148,6 +148,12 @@ io.sockets.on('connection', function (socket) {
         if (data.type === 'path') {
             let parser = new URL(socket.handshake.headers.referer);
             var path = data.path;
+            // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/includes
+            if (parser.pathname.includes('/main')) {
+                fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+            } else if (parser.pathname.includes('/replay')) {
+                fileio.fileWrite('replay.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+            }
             analys.dataset(name, data, oCoords, pageNum, ident, text);
             // console.log(userList);
             // console.log(userList.size);
@@ -156,22 +162,26 @@ io.sockets.on('connection', function (socket) {
             if (ptext == null) {
                 console.log('err');
             }
+            if (name != 'teacher') {
+                if (parser.pathname.includes('/main')) {
+                    io.sockets.emit('teacher', ptext, pageNum);
+                } else if (parser.pathname.includes('/replay')) {
+                    io.sockets.emit('replayteacher', ptext, pageNum); 
+                }
+            }
             // console.log(ptext);
-            if (parser.pathname === '/main') {
-                fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
-            } else if (parser.pathname === '/replaymenu') {
-                fileio.fileWrite('replay.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
-            }
-            if (userList.get(handshake.address) != 'teacher') {
-                io.sockets.emit('teacher', data, oCoords, pageNum, ident, ptext);
-            }
         } else {
             // console.log(data);
         }
     });
 
     socket.on('annotation', (name, data, color, pageNum, pdfName, time) => {
-        fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+        let parser = new URL(socket.handshake.headers.referer);
+            if (parser.pathname.includes('/main')) {
+                fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+            } else if (parser.pathname.includes('/replay')) {
+                fileio.fileWrite('replay.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+            }
     })
 
     socket.on('canvas', function (canvas) {
@@ -183,15 +193,20 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('remove', function (name, obj, color, oCoords, pageNum, text, ident, pdfName, time) {
-        analys.dataRemove(userList.get(name), obj, oCoords, pageNum, text);
+        let parser = new URL(socket.handshake.headers.referer);
         if (parser.pathname === '/main') {
-            fileio.fileWrite('analysdata.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
+            fileio.fileWrite('removedata.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
         }else if (parser.pathname === '/replaymenu'){
             fileio.fileWrite('replay.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
         }
+        analys.dataRemove(name, obj, oCoords, pageNum, text);
         let ptext = analys.analys(pageNum,userList.size);
-        if (userList.get(handshake.address) != 'teacher') {
-            io.sockets.emit('teacher', obj, oCoords,pageNum,ident,ptext);
+        if (name !== 'teacher') {
+            if (parser.pathname.includes('/main')) {
+                io.sockets.emit('teacher', ptext, pageNum);
+            } else if (parser.pathname.includes('/replay')) {
+                io.sockets.emit('replayteacher', ptext, pageNum); 
+            }
         }
     });
 
@@ -211,9 +226,13 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('limit_set_teacher',pageNum,ptext);
     });
 
-    socket.on('getdata', (userName) => {
+    socket.on('getdata', (userName,pdfName,startTime,endTime,name) => {
         let datas = '';
-        datas = fileio.getData('test.txt');
+        if (!name) {
+            datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime);
+        } else {
+            datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime,name);
+        }
         // datas = fileio.getData('replaydata.txt');
         io.sockets.emit('replaydata', datas);
         // fileio.getData('analysdata.txt').then((readData) => {
@@ -221,6 +240,37 @@ io.sockets.on('connection', function (socket) {
             // console.log(datas);
         // })
 
+    })
+
+    socket.on('highlightReq', (pageNum) => {
+        let ptext = analys.analys(pageNum, userList.size);
+        io.sockets.emit('replayteacher', ptext,pageNum);
+    })
+
+    socket.on('pageTrans', (userName, ident, pageNum, pdfName, time)=>{
+        fileio.pageTransInfo('pageTrans.txt',userName,ident, pageNum, pdfName, time);
+    });
+
+    socket.on('replayData', (name, data, color, oCoords, pageNum, ident, text, pdfName, time) => {
+        if (!userList.has(name)) {
+            userList.set(name, name);
+        }
+        analys.dataset(name, data, oCoords, pageNum, ident, text);
+            let ptext = analys.analys(pageNum, userList.size);
+            if (ptext == null) {
+                console.log('err');
+            }
+        if (name != teacher) {
+            io.sockets.emit('replayteacher', ptext, pageNum);
+        }
+            
+    });
+    socket.on('replayRemove', (name, obj, color, oCoords, pageNum, text, ident, pdfName, time) => {
+        analys.dataRemove(name, obj, oCoords, pageNum, text);
+        let ptext = analys.analys(pageNum,userList.size);
+        if (name != 'teacher') {
+                io.sockets.emit('replayteacher', ptext, pageNum); 
+        }
     })
 });
 

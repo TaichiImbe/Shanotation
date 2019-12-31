@@ -310,42 +310,42 @@ function dataRemove(userName, path, oCoords, pageNum, textList) {
     if (Pages.has(pageNum)) {
         let userMap = Pages.get(pageNum);
         let texts = userMap.get(userName);
-        let newArray = [];
-        let removeArray = [];
-
-        texts.forEach(rmtext => {
+        // let removeArray = [];
+        if (texts) {
             textList.forEach(text => {
-                if (rmtext.text.str !== text.str) {
-                    if (rmtext.text.transform[4] !== text.transform[4] &&
-                        rmtext.text.transform[5] !== text.transform[5]) {
-                                newArray.push(rmtext);
-
-                    } else {
-                        if (rmtext.oCoords.bl.x !== oCoords.bl.x &&
-                            rmtext.oCoords.bl.y !== oCoords.bl.y) {
-                                newArray.push(rmtext);
+                let newArray = [];
+                texts.forEach(rmtext => {
+                    if (rmtext.text.str !== text.str) {
+                        if (rmtext.text.transform[4] !== text.transform[4] &&
+                            rmtext.text.transform[5] !== text.transform[5]) {
+                                    newArray.push(rmtext);
+                        } else {
+                            if (rmtext.oCoords.bl.x !== oCoords.bl.x &&
+                                rmtext.oCoords.bl.y !== oCoords.bl.y) {
+                                    newArray.push(rmtext);
+                            }
+                            // removeArray.push(rmtext);
                         }
-                        removeArray.push(rmtext);
-                    }
-                } else {
-                    if (rmtext.text.transform[4] !== text.transform[4] &&
-                        rmtext.text.transform[5] !== text.transform[5]) {
-                                newArray.push(rmtext);
-
                     } else {
-                        if (rmtext.oCoords.bl.x !== oCoords.bl.x &&
-                            rmtext.oCoords.bl.y !== oCoords.bl.y) {
-                                newArray.push(rmtext);
+                        if (rmtext.text.transform[4] !== text.transform[4] &&
+                            rmtext.text.transform[5] !== text.transform[5]) {
+                                    newArray.push(rmtext);
+                        } else {
+                            if (rmtext.oCoords.bl.x !== oCoords.bl.x &&
+                                rmtext.oCoords.bl.y !== oCoords.bl.y) {
+                                    newArray.push(rmtext);
+                            }
+                            // removeArray.push(rmtext);
                         }
-                        removeArray.push(rmtext);
                     }
-
-                }
-                
+                });
+                texts = newArray;
             });
-        });
-        userMap.set(userName, newArray);
-        Pages.set(pageNum, userMap);
+            userMap.set(userName, texts);
+            Pages.set(pageNum, userMap);
+        }
+        
+        
     }
 
 }
@@ -415,7 +415,7 @@ function getHeatMapColor( min, max, value) {
 
     // let pos = Math.sin(value/max);
     // console.log('min : ' + min + ' max : ' + max + ' value : ' + value);
-    let hue = ((value - min) / (max - min)) * (0 - 270) + 270;
+    let hue = ((value - min) / (max - min)) * (0 - 230) + 230;
     if (hue <= 0) {
         hue = 0;
     }

@@ -87,7 +87,19 @@ function getPdfText(pageNum) {
     });
 }
 
+function TransForm(transform) {
+    return pdf.getPage(pageNum).then(page => {
+        let scale = 1;
+        if (page._pageInfo.view[2] * scale < 720) {
+            scale = 2;
+        } 
+        let viewport = page.getViewport({ scale: scale });
+        return pdfjsLib.Util.transform(viewport.transform, transform);
+    })
+}
+
 global.pageRender = pageRender;
 global.pageNum = pageNum;
 global.getPdfPage = getPdfPage;
 global.getPdfText = getPdfText;
+global.TransForm = TransForm;

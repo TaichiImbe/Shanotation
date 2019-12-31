@@ -1,21 +1,40 @@
     <% include common/_head %>
 </head>
-<body>
-    <% var array %>
-    <form method="post" action='/main'>
-        <input type='hidden' name='userName' value=<%= userName %>>
-        <% array.forEach(function(value,key){ %>
-            <input type="submit" name='pdfname' value=<%= value %> >
-        <% }) ;%>
-    </form>
-    <form method="post" action="/pageTrans">
-        <input type='hidden' name='userName' value=<%= userName %>>
-        <input type="submit" value='アップロード'>
-    </form>
-    <form method="post" action="/repMenu">
-        <input type='hidden' name='userName' value=<%= userName %>>
-        <input type="submit" value='リプレイ'>
-    </form>
+
+<body class="main-body">
+    <div class="container">
+        <div class="col-sm-8 mx-auto">
+            <div class="row">
+                <% var array %>
+                <div class="col">
+                    <form method="post" action='/main'>
+                        <input type='hidden' name='userName' value=<%= userName %>>
+                        <% array.forEach(function(value,key){ %>
+                            <div >
+                                <input class="btn btn-light round-circle-0" type="submit" name='pdfname' value=<%= value %>>
+                            </div>
+                        <% }) ;%>
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <form method="post" action="/pageTrans">
+                        <input type='hidden'  name='userName' value=<%= userName %>>
+                        <input class="btn btn-light round-circle-0" type="submit" value='アップロード'>
+                    </form>
+                    <form method="post" action="/repMenu">
+                        <input type='hidden' name='userName' value=<%= userName %>>
+                        <input  class="btn btn-light round-circle-0"  type="submit" value='リプレイ'>
+                    </form>
+                </div>
+            </div>
+    
+        </div>
+        </div>
+    </div>
+    
 
 </body>
+
 </html>

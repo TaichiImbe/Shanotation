@@ -11,6 +11,11 @@ let identifier = ['enclosure', 'line'];
 function setCanvasSize(viewport) {
     Canvas.setWidth(viewport.width);
     Canvas.setHeight(viewport.height);
+    //ページを遷移する時にsetWidthをすると,contextが変更される
+    //今まで動いていたのは謎
+    if (global.eraserMode) {
+        Canvas.contextTop.globalCompositeOperation = 'destination-out';
+    }
 }
 global.replayflag = false;
 
@@ -33,10 +38,12 @@ window.addEventListener('load', () => {
 
 Canvas.on('object:selected', function (e) {
     console.log(e.target);
+    let p = TransForm(e.target.ownMatrixCache.value);
+    console.log(p);
 });
 
 
-let rmflag = false;
+global.rmflag = false;
 
 /*https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Date
 */
@@ -75,17 +82,16 @@ Canvas.on('object:added', function (e) {
     // 遷移時の送信はおそらく改善
     if (eraserMode) {
         if (!pageTrans) {
-
             Canvas.remove(object);
             Canvas.getObjects().forEach(element => {
-                rmflag = true;
+                global.rmflag = true;
                 element.path.forEach(path => {
                     if (coverd(path, object)) {
                         Canvas.remove(element);
                     }
                 });
             });
-            rmflag = false;
+            global.rmflag = false;
         }
     } else {
         ident = identification(object);
@@ -93,14 +99,12 @@ Canvas.on('object:added', function (e) {
         getPdfText(pageNum).then(function (text) {
             // var font = textCheck(object,text);
             // console.log(object.oCoords);
-            // console.log(text);
             var font = getSubText(object, text);
             // console.log(font);
             //     (function (object, text) {
             // })(object, text);
-            // console.log(font);
             // console.log(object.oCoords);
-            if (!pageTrans) {
+            if (!pageTrans && getUserName() !== 'teacher') {
                 if (font) {
                     sendObject(e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
                 } else {
@@ -114,10 +118,16 @@ Canvas.on('object:added', function (e) {
 Canvas.on('object:removed', function (e) {
     let object = e.target;
     ident = identification(object);
-    if (rmflag) {
+    if (global.rmflag) {
         getPdfText(pageNum).then(function (text) {
             let font = getSubText(object, text);
-            removeObject(object, object.oCoords, pageNum, font, ident,getNowTime());
+            if (font != null) {
+                removeObject(object, object.oCoords, pageNum, font, ident, getNowTime());
+            } else {
+                font = [];
+                removeObject(object, object.oCoords, pageNum, font, ident, getNowTime())
+            }
+            
         });
     }
     //    remvoeObject(e,pageNum); 
@@ -141,36 +151,23 @@ function getSubText(object, text) {
     // console.log(text.items[6]);
     for (i = 0; i < text.items.length; i++) {
         if (oCoords.bl.y - thresh * 1.5 <= text.items[i].transform[5] && text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)) {
-            if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
-                // console.log(text.items[i]);
-                subsubtextlist.push(text.items[i]);
-            }
+            // if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
+            // console.log(text.items[i]);
+            subsubtextlist.push(text.items[i]);
+            // }
             subtextlist.push(text.items[i]);
         }
     }
     // console.log(subsubtextlist);
     // console.log(subtextlist);
-    if (subsubtextlist.length != 0) {
-        str = subsubtextlist;
-    } else if (subtextlist.length != 0) {
-
-        let minl = Math.sqrt(Math.pow(subtextlist[0].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[0].transform[5] - oCoords.bl.y, 2));
-        str = subtextlist[0];
-
-        for (i = 1; i < subtextlist.length; i++) {
-
-            if (minl > Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2))) {
-                minil = Math.sqrt(Math.pow(subtextlist[i].transform[4] - oCoords.bl.x, 2) + Math.pow(subtextlist[i].transform[5] - oCoords.bl.y, 2));
-                str = subtextlist[i];
-            }
-        }
+    if (subtextlist.length != 0) {
+        str = subtextlist;
     } else {
-
         let minl = Math.sqrt(Math.pow(text.items[0].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[0].transform[5] - oCoords.bl.y, 2));
         for (i = 1; i < text.items.length; i++) {
 
             if (minl > Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2)) && text.items[i].transform[5] <= oCoords.bl.y) {
-                minil = Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2));
+                minl = Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2));
                 str = text.items[i];
             }
         }
@@ -186,16 +183,32 @@ function getSubText(object, text) {
             let t4 = text.transform[4];
             for (i = 0; i < text.str.length; i++) {
                 if (
-                    t4 <= oCoords.bl.x && t4 + text.height >= oCoords.bl.x
-                     || t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
-                    charList.push({
-                        dir: text.dir,
-                        fontName: text.fontName,
-                        height: text.height,
-                        width: text.height,
-                        transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
-                        str: text.str[i]
-                    });
+                    t4 < oCoords.bl.x && t4 + text.height >= oCoords.bl.x
+                    || t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
+                    /*   正規表現 https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String
+                        半角文字のみ取得 http://2011428.blog.fc2.com/blog-entry-79.html
+                    */
+                    if (text.height > text.width) {
+                        charList.push({
+                            dir: text.dir,
+                            fontName: text.fontName,
+                            height: text.height,
+                            width: text.width,
+                            transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
+                            str: text.str[i]
+                        });
+                   }
+                     else {
+                        charList.push({
+                            dir: text.dir,
+                            fontName: text.fontName,
+                            height: text.height,
+                            width: text.height,
+                            transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
+                            str: text.str[i]
+                        });
+                    }
+                    
                 }
                 if (t4 > oCoords.br.x) {
                     break;
@@ -210,7 +223,7 @@ function getSubText(object, text) {
         for (i = 0; i < str.str.length; i++) {
             if (t4 <= oCoords.bl.x && t4 + str.height >= oCoords.bl.x
                 || t4 >= oCoords.bl.x && oCoords.br.x >= t4
-                 ){
+            ) {
                 charList.push({
                     dir: str.dir,
                     fontName: str.fontName,
@@ -223,7 +236,7 @@ function getSubText(object, text) {
             if (t4 > oCoords.br.x) {
                 break;
             }
-                t4 += str.height;
+            t4 += str.height;
         }
         // console.log(charList);
     }
@@ -323,16 +336,14 @@ function make(pageNum, text) {
     if (Array.isArray(text)) {
         let highLightList = [];
         text.forEach(textinfo => {
-            console.log(textinfo);
             highLightList.push(makeTextHiglight(textinfo, textinfo.color));
         });
         setPage(highLightList, pageNum);
-        AnnotationSet(pageNum);
+        AnnotationSet(global.pageNum);
 
-    } else {
+    } else if(text != null){
         line = makeTextHiglight(text.text, text.color);
         if (line !== null) {
-            console.log(pageNum);
             setPage(line, pageNum);
         }
     }
@@ -346,42 +357,68 @@ function make(pageNum, text) {
 function makeReplayData(list) {
     let pathList = [];
     // console.log(list);
-    list.forEach(path => {
-        // console.log(path[1].split(','));
-        let pathlit = path[1].split(',');
-        if (pathlit[0] === 'M') {
-            pathlit[1] = Number(pathlit[1]);
-            pathlit[2] = Number(pathlit[2]);
-        } else if (pathlit[0] === 'Q') {
-            pathlit[1] = Number(pathlit[1]);
-            pathlit[2] = Number(pathlit[2]);
-            pathlit[3] = Number(pathlit[3]);
-            pathlit[4] = Number(pathlit[4]);
+    // list.forEach(path => {
+    //     console.log(path[1].split(','));
+    //     let pathlit = path[1].split(',');
+    //     if (pathlit[0] === 'M') {
+    //         pathlit[1] = Number(pathlit[1]);
+    //         pathlit[2] = Number(pathlit[2]);
+    //     } else if (pathlit[0] === 'Q') {
+    //         pathlit[1] = Number(pathlit[1]);
+    //         pathlit[2] = Number(pathlit[2]);
+    //         pathlit[3] = Number(pathlit[3]);
+    //         pathlit[4] = Number(pathlit[4]);
+    //     } else {
+    //         pathlit[1] = Number(pathlit[1]);
+    //         pathlit[2] = Number(pathlit[2]);
+    //     }
+    //     pathList.push(pathlit);
+    // })
+    // // pathList = list[1];
+    // let pageNum = Number(list[0][3]);
+    // let data = makePath(pathList,list[0][2]);
+    // let time = list[0][list[0].length-2]+" "+list[0][list[0].length - 1];
+    let plist = list[1].split(',');
+    const check = (str) => {
+        return str.match(/^[-|+]?[0-9]*\.[0-9]+$|^[+|-]?[0-9]+$/) ? true : false
+    }
+    let subList = [];
+    plist.forEach(path => {
+        if (check(path)) {
+            subList.push(Number(path));
         } else {
-            pathlit[1] = Number(pathlit[1]);
-            pathlit[2] = Number(pathlit[2]);
+            if (subList.length != 0) {
+                pathList.push(subList);
+            }
+            subList = [];
+            subList.push(path);
+            // pathList.push(path);
         }
-        pathList.push(pathlit);
     })
-    // console.log(pathList);
-    // pathList = [['M', 200, 100], ['Q', 200, 100, 201, 100], ['Q', 201, 100, 202, 100], ['L', 202, 100]];
-    let pageNum = Number(list[0][3]);
-    let data = makePath(pathList,list[0][2]);
-    let time = list[0][list[0].length-2]+" "+list[0][list[0].length - 1];
+    if (subList.length != 0) {
+        pathList.push(subList);
+    }
+    // pathList = plist;
+    let pageNum = Number(list[3]);
+    let data = makePath(pathList, list[2]);
+    let time = list[6] + " " + list[7];
+    data.userName = list[0];
     data.time = time;
+    data.sendFlg = false;
     data.setCoords();
     // console.log(pageNum);
     // console.log(data);
     // console.log(splitData[2]);
     // setPage(data, pageNum);
-    if (list[0][5] === 'insert') {
+    if (list[5] === 'insert') {
+    // if (list[0][5] === 'insert') {
         replaySet(data, pageNum);
     } else {
         replayRemove(data, pageNum);
     }
 }
 
-function makePath(data,color) {
+function makePath(data, color) {
     // console.log(data);
     let path;
     if (Array.isArray(data)) {
@@ -461,6 +498,7 @@ function makeEnclosure(oCoords, color) {
  * @param {*} color is color code
  */
 function makeTextHiglight(text, color) {
+    console.log(text.height + ' ' + text.width);
     height = text.height;
     width = text.width;
     var Highlight = new fabric.Rect({
@@ -491,3 +529,5 @@ global.Pen = Pen;
 global.make = make;
 global.makeReplayData = makeReplayData;
 global.getNowTime = getNowTime;
+
+global.getSubText = getSubText;

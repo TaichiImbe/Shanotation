@@ -3,33 +3,46 @@
 </head>
 
 <body>
-    <form action='/login' method='post'>
-        <input id='name' type='text' name='userName' placeholder='ユーザ名'>
-        <input id='password' type='text' name='passWord' placeholder='パスワード'>
-        <button id='login' type='submit' value='Login'>ログイン</button>
-    </form>
-    <div>
-        <p>
+    <div class="container">
+        <div class="row">
 
-            <table border="1">
-                <tr>
-                    <th>ユーザ名</th>
-                    <th>パスワード</th>
-                </tr>
-                <tr>
-                    <th>学籍番号</th>
-                    <th style="color:red;">今は使用ので不要</th>
-                </tr>
-            </table>
-        </p>
+            <dvi class="col col-sm-8 mx-auto">
+                <div class="row">
+                    <form action='/login' method='post'>
+                        <input id='name' type='text' name='userName' placeholder='ユーザ名'>
+                        <input id='password' type='text' name='passWord' placeholder='パスワード'>
+                        <div>
+                            <button id='login' type='submit' value='Login'>ログイン</button>
+                        </div>
+                    </form>
+            </dvi>
+        </div>
+        <div class="row">
+            <div class="col mx-auto">
+                <p>
+                    <table border="1">
+                        <tr>
+                            <th>ユーザ名</th>
+                            <th>パスワード</th>
+                        </tr>
+                        <tr>
+                            <th>学籍番号</th>
+                            <th style="color:red;">今は使用ので不要</th>
+                        </tr>
+                    </table>
+                </p>
+            </div>
+        </div>
     </div>
+
+</body>
 
 <script>
 
     let myIP = '';
     $('#login').click(function () {
         var name = $('#name').val();
-        sendUserName(name, myIP);
+        sendUserName(name);
     });
 
 </script>

@@ -15,19 +15,26 @@
             splitdata.forEach(element => {
                 if (element !== '') {
                     let splitElement = element.split(' ');
+                    if(getUserName() !== 'teacher'){
                     if (splitElement[0] === getUserName() && splitElement[4] === getPdfName()) {
                         // if(splitElement[0] === getUserName()){
 
-                        if (splitElement[1].slice(0, 1) === 'M') {
-                            list.push(splitElement);
-                        } else if (splitElement[1].slice(0, 1) === 'Q') {
-                            list.push(splitElement);
-                        } else if (splitElement[1].slice(0, 1) === 'L') {
-                            list.push(splitElement);
-                            // console.log(list);
-                            // list = [];
-                            makeReplayData(list);
-                            list = [];
+                        // if (splitElement[1].slice(0, 1) === 'M') {
+                        //     list.push(splitElement);
+                        // } else if (splitElement[1].slice(0, 1) === 'Q') {
+                        //     list.push(splitElement);
+                        // } else if (splitElement[1].slice(0, 1) === 'L') {
+                        //     list.push(splitElement);
+                        //     // console.log(list);
+                        //     // list = [];
+                        //     makeReplayData(list);
+                        //     list = [];
+                        // }
+                        makeReplayData(splitElement);
+                    }
+                    }else{
+                        if(splitElement[4] === getPdfName()){
+                        makeReplayData(splitElement);
                         }
                     }
                     // console.log(splitElement);
@@ -38,22 +45,43 @@
         if (getUserName() === 'teacher') {
 
             socket.on('limit_set_teacher', function (pageNum, text) {
-                console.log(text);
-                make(pageNum, text);
+                    make(pageNum, text);
             });
-            socket.on('teacher', function (data, oCoords, pageNum, identifier, text) {
+            socket.on('teacher', function (text,pageNum) {
                 // console.log(identifier);
                 // console.log(data);
-                console.log(text);
                 // make(data, oCoords,pageNum, identifier,text);
+                if(!replayflag){
                 make(pageNum, text);
+                }
                 // Canvas.add(data);
             });
+            if(replayflag){
+                // setInterval(()=>{
+                //     socket.emit('highlightReq',pageNum);    
+                // } , 2000)
+                socket.on('replayteacher',function(text,pageNum){
+                    console.log('req');
+                    make(pageNum,text);
+                })
+            }
         }
+    }
+    function highlightReq(){
+        socket.emit('highlightReq',pageNum);    
     }
     function sendObject(obj, oCoords, pageNum, ident, text, time) {
         // console.log(text);
-        socket.emit('object', getUserName(), obj, obj.canvas.freeDrawingBrush.color, oCoords, pageNum, ident, text, getPdfName(), time);
+        if(replayflag){
+
+        if(getUserName() !== 'teacher'){
+            socket.emit('replayData', getUserName(), obj, obj.canvas.freeDrawingBrush.color, oCoords, pageNum, ident, text, getPdfName(), time);
+        }else{
+            socket.emit('replayData', obj.userName, obj, obj.fill, oCoords, pageNum, ident, text, getPdfName(), time); 
+        }
+    }else{
+            socket.emit('object', getUserName(), obj, obj.canvas.freeDrawingBrush.color, oCoords, pageNum, ident, text, getPdfName(), time); 
+        }
     }
     function sendUserName(name, myIP) {
         socket.emit('userName',name, myIP);
@@ -71,8 +99,20 @@
     }
 
     function removeObject(obj, oCoords, pageNum, text, ident, time) {
-        console.log(obj.canvas);
-        socket.emit('remove', getUserName(), obj, obj.stroke, oCoords, pageNum, text, ident, getPdfName(), time);
+        console.log(obj.stroke);
+        if(replayflag){
+            if(getUserName() !== 'teacher'){
+                socket.emit('replayRemove', getUserName(), obj, obj.stroke, oCoords, pageNum, text, ident, getPdfName(), time);
+            }else{
+                socket.emit('replayRemove', obj.userName, obj, obj.stroke, oCoords, pageNum, text, ident, getPdfName(), time);
+            }
+        }else{
+            socket.emit('remove', getUserName(), obj, obj.stroke, oCoords, pageNum, text, ident, getPdfName(), time);
+        }
+    }
+
+    function sendTrans(ident,pageNum){
+        socket.emit('pageTrans',getUserName(),ident,pageNum,getPdfName(),getNowTime());
     }
 
     window.addEventListener('beforeunload', function (e) {
@@ -88,9 +128,13 @@
         socket.emit('clear', getUserName(), pageNum);
     }
 
-    function getData() {
+    function getData(startTime,endTime,name) {
         replayflag = true;
-        socket.emit('getdata', getUserName(), getPdfName());
+        if(name === '' || !name){
+            socket.emit('getdata', getUserName(), getPdfName(),startTime,endTime);
+        }else{
+            socket.emit('getdata', getUserName(), getPdfName(),startTime,endTime,name);
+        }
     }
 
 </script>

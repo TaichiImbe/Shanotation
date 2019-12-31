@@ -1,13 +1,25 @@
     <% include common/_head %>
 </head>
 <body>
-    <p>リプレイするpdfを選択</p>
-    <% var array %>
-    <form method="post" action='/replaymenu'>
-            <input type='hidden' name='userName' value=<%= userName %>>
-        <% array.forEach(function(value,key){ %>
-            <input type="submit" name='pdfname' value=<%= value %> >
-        <% }) ;%>
-    </form>
+    <div class="container">
+        <div class="col-sm-8 mx-auto">
+            <p>リプレイするpdfを選択</p>
+            <div class="row">
+                <% var array %>
+                <div class="col">
+                    <form method="post" action='/main'>
+                        <input type='hidden' name='userName' value=<%= userName %>>
+                        <% array.forEach(function(value,key){ %>
+                            <div >
+                                <input class="btn btn-light round-circle-0" type="submit" name='pdfname' value=<%= value %>>
+                            </div>
+                        <% }) ;%>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
 </body>
 </html>
