@@ -38,6 +38,8 @@ window.addEventListener('load', () => {
 
 Canvas.on('object:selected', function (e) {
     console.log(e.target);
+    let p = TransForm(e.target.ownMatrixCache.value);
+    console.log(p);
 });
 
 
