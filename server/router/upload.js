@@ -2,6 +2,7 @@ const app = require('express');
 const router = app.Router();
 const fs = require('fs');
 const multer = require('multer');
+const url = require('url');
 
 //ファイルパスの設定のファイル名の設定
 let storage = multer.diskStorage({
@@ -28,7 +29,11 @@ router.route('/upload')
             let fileList = files.filter(file => {
                 return /.*\.(pdf$|PDF$)/.test(file);
             })
-            res.render('./main', { array: fileList, userName: req.body.userName });
+            let query = url.parse(req.headers.referer,true).query;
+            // console.log(query);
+            // res.redirect('back');
+            res.redirect('/main?id='+query.id);
+            // res.render('./main', { array: fileList, userName: req.body.userName });
         })
     })
 

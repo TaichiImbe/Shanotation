@@ -7,8 +7,6 @@ router.route('/login')
         res.render('./login')
     })
     .post((req, res, next) => {
-        console.log(req.body.userName);
-        console.log(req.body.passWord);
         req.session.userName = req.body.userName;
         res.redirect('./main?id='+req.body.userName);
     })

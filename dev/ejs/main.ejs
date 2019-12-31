@@ -7,26 +7,38 @@
             <div class="row">
                 <% var array %>
                 <div class="col">
-                    <form method="post" action='/main'>
+                    <% array.forEach(function(value,key){ %>
+                            <div >
+                                <a href='/index?id=<%= userName %>&pdfname=<%= value %>'
+                                 class="btn btn-light round-circle-0" type="submit" name='pdfname'><%= value %></a>
+                            </div>
+                        <% }) ;%>
+                    <!-- <form method="post" action='/main'>
                         <input type='hidden' name='userName' value=<%= userName %>>
                         <% array.forEach(function(value,key){ %>
                             <div >
                                 <input class="btn btn-light round-circle-0" type="submit" name='pdfname' value=<%= value %>>
                             </div>
                         <% }) ;%>
-                    </form>
+                    </form> -->
                 </div>
             </div>
             <div class="row">
                 <div class="col">
-                    <form method="post" action="/pageTrans">
+                    <a href='/upload?id=<%= userName %>' class="btn btn-light round-circle-0" type="submit">
+                        アップロード
+                    </a>
+                    <a href="/replaymenu?id=<%= userName %>" class="btn btn-light round-circle-0">
+                        リプレイ
+                    </a>
+                    <!-- <form method="post" action="/pageTrans">
                         <input type='hidden'  name='userName' value=<%= userName %>>
                         <input class="btn btn-light round-circle-0" type="submit" value='アップロード'>
-                    </form>
-                    <form method="post" action="/repMenu">
+                    </form> -->
+                    <!-- <form method="post" action="/repMenu">
                         <input type='hidden' name='userName' value=<%= userName %>>
                         <input  class="btn btn-light round-circle-0"  type="submit" value='リプレイ'>
-                    </form>
+                    </form> -->
                 </div>
             </div>
     

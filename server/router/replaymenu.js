@@ -10,7 +10,8 @@ router.route('/replaymenu')
             let fileList = files.filter(file => {
                 return /.*\.(pdf$|PDF$)/.test(file);
             })
-            res.render('./replay', { array: fileList });
+            res.render('./replaymenu', { userName:req.query.id,array: fileList });
+            // res.render('./replay', { array: fileList });
         })
     })
     .post((req, res, next) => {
