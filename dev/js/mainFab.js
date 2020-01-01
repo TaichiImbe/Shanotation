@@ -498,7 +498,7 @@ function makeEnclosure(oCoords, color) {
  * @param {*} color is color code
  */
 function makeTextHiglight(text, color) {
-    console.log(text.height + ' ' + text.width);
+    // console.log(text.height + ' ' + text.width);
     height = text.height;
     width = text.width;
     var Highlight = new fabric.Rect({
