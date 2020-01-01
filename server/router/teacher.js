@@ -5,8 +5,9 @@ const fs = require('fs');
 //teacher render
 router.route('/teacher')
     .get((req, res, next) => {
-        let userName = req.body.userName;
-        res.render('./teacher', { pdfname: req.body.pdfname, userName: userName });
+        const userName = req.query.id;
+        const pdfname = req.query.pdfname; 
+        res.render('./teacher', { pdfname: pdfname, userName: userName });
     })
 
 module.exports = router;
