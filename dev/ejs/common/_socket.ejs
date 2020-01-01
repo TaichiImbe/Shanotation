@@ -56,15 +56,16 @@
                 }
                 // Canvas.add(data);
             });
+            socket.on('replayteacher',function(text,pageNum){
             if(replayflag){
                 // setInterval(()=>{
                 //     socket.emit('highlightReq',pageNum);    
                 // } , 2000)
-                socket.on('replayteacher',function(text,pageNum){
+                
                     console.log('req');
                     make(pageNum,text);
-                })
-            }
+                }
+            })
         }
     }
     function highlightReq(){
