@@ -149,7 +149,7 @@ io.sockets.on('connection', function (socket) {
             let parser = new URL(socket.handshake.headers.referer);
             var path = data.path;
             // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/includes
-            if (parser.pathname.includes('/main')) {
+            if (parser.pathname.includes('/index')) {
                 fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
             } else if (parser.pathname.includes('/replay')) {
                 fileio.fileWrite('replay.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
@@ -202,7 +202,7 @@ io.sockets.on('connection', function (socket) {
         analys.dataRemove(name, obj, oCoords, pageNum, text);
         let ptext = analys.analys(pageNum,userList.size);
         if (name !== 'teacher') {
-            if (parser.pathname.includes('/main')) {
+            if (parser.pathname.includes('/index')) {
                 io.sockets.emit('teacher', ptext, pageNum);
             } else if (parser.pathname.includes('/replay')) {
                 io.sockets.emit('replayteacher', ptext, pageNum); 
