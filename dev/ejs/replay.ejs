@@ -13,15 +13,15 @@
         https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Date
         https://www.tagindex.com/html5/form/input_datetime_local.html -->
         <div class='col-xs-8 col-sm-8 mx-auto'>
-    <input type='text' id='getname' placeholder='ユーザ名をカンマ区切りで入力'>
+    <!-- <input type='text' id='getname' placeholder='ユーザ名をカンマ区切りで入力'> -->
     <input type='datetime-local' id='replay-start-time' placeholder='開始時刻' autocomplete="on" step='1' required>
-    <input type="range" id="replay-time-range" value="0" min="0" max="3600" step='1'>
     <!-- https://beiznotes.org/input-range-show-value/ -->
     <input type='datetime-local' id='replay-end-time' placeholder='終了時刻' autocomplete="on" step='1' required>
     <input type='submit' id='getReplayDatas' value='データ取得' class="btn btn-primary" >
     <input type='button' value='任意のタイミングで取得' id='highlight' class="btn btn-primary" >
     <div>
       <input type='datetime-local' id='timer' step='1'>
+      <input type="range" id="replay-time-range" value="0" min="0" max="3600" step='1'>
     </div>
   </div>
 </div>
@@ -42,7 +42,7 @@
       timer_range = $f('replay-time-range');
       timer = $f('timer');
       highlight = $f('highlight');
-      names = $f('getname');
+      // names = $f('getname');
 
       penSize.style.display = 'none';
       text.style.display = 'none'; 
@@ -59,7 +59,7 @@
       highlight.style.display = 'none';
       if (getUserName() !== 'teacher') {
         div_limit.style.display = 'none';
-        names.style.display = 'none'
+        // names.style.display = 'none'
       }
       /*
       * 参考
@@ -71,13 +71,14 @@
         timer_range.min = parseInt(Date.parse(($('#replay-start-time').val())));
         timer_range.max = parseInt(Date.parse(($('#replay-end-time').val())));
 
-        getData(timer_range.min,timer_range.max,$('#name').val());
+        // getData(timer_range.min,timer_range.max,$('#name').val());
+        getData(timer_range.min,timer_range.max);
         canvas_wrapper.style.display = 'block';
         timer_range.style.display = 'inline';
         timer.style.display = 'inline-block'
         timer.value = $('#replay-start-time').val();
         if(getUserName() === 'teacher'){
-          highlight.style.display = 'inline-block';
+          // highlight.style.display = 'inline-block';
         }
       });
       timer_range.onchange = function (e) {

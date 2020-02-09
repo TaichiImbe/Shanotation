@@ -411,9 +411,11 @@ function makeReplayData(list) {
     // console.log(splitData[2]);
     // setPage(data, pageNum);
     if (list[5] === 'insert') {
+        data.ident = 'insert';
     // if (list[0][5] === 'insert') {
         replaySet(data, pageNum);
     } else {
+        data.ident = 'delete';
         replayRemove(data, pageNum);
     }
 }

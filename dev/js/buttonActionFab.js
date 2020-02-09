@@ -261,7 +261,11 @@ function replayView(time) {
             let p = Date.parse(annotation.time);
             if (parseInt(Date.parse(annotation.time)) < time) {
                 if (getUserName() !== 'teacher') {
-                    setPage(annotation, key);
+                    if (annotation.ident === 'insert') {
+                        setPage(annotation, key);
+                    } else {
+                        removePage(annotation, key);
+                    }
                 } else {
                     if (!annotation.sendFlg) {
                         annotation.sendFlg = true;
@@ -284,6 +288,7 @@ function replayView(time) {
                 }
             }
         })
+        console.log(PageAnno);
     });
     global.rmflag = false;
             AnnotationSet(pageNum);

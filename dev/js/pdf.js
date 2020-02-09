@@ -74,6 +74,12 @@ function getPdfText(pageNum) {
         if (page._pageInfo.view[2] * scale < 720) {
             scale = 2;
         } 
+        page.getAnnotations().then((data) => {
+            console.log(data);
+        })
+        page.getOperatorList().then((data) => {
+            console.log(data);
+        })
         return page.getTextContent().then(function (textContent) {
             // console.log(textContent);
             let viewport = page.getViewport({ scale: scale });

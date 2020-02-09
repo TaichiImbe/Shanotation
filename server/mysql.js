@@ -25,6 +25,15 @@ let select = function () {
     });
 }
 
+let HandWrinteinsert = function (tableName,userName,path,color,pagenum,filename,identifier,date,time) {
+    connection.query(
+        'INSERT INTO ' + tableName +
+        'VALUES (?),(?),(?),(?),(?),(?),(?)', [userName,path,color,pagenum,filename,identifier,date,time]
+        , (error, results, field) => {
+            if (error) throw error;
+        });
+}
+
 let con_exit = function () {
     connection.end();
 }

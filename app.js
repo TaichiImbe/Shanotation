@@ -26,6 +26,9 @@ let filename;
 //ファイル書き出し処理
 let fileio = require('./server/fileio');
 
+//データベース
+const mongodb = require('./server/mongodb');
+
 //分析処理
 const analys = require('./server/analys');
 
