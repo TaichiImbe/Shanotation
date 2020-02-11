@@ -23,13 +23,13 @@ module.exports = {
     },
     Insert: (name,data) => {
         return new Promise((resolve, reject) => {
-            const collection = db.collection(name);
+            const collection = _db.collection(name);
             collection.insertMany(data, (err, result) => {
                 assert.equal(err, null);
             })
         })
     },
-    Clone: () => {
+    Close: () => {
         return new Promise((resolve, reject) => {
             _client.close();
         })

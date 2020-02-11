@@ -120,6 +120,9 @@ app.get('/pdf', function (req, res, next) {
     res.sendFile(req.url);
 });
 
+const mongourl = 'mongodb://127.0.0.1:27017';
+mongodb.Connect(mongourl,'testdb');
+
 //login userList 
 let userList = new Map();
 
@@ -154,6 +157,7 @@ io.sockets.on('connection', function (socket) {
             // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/includes
             if (parser.pathname.includes('/index')) {
                 fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+                mongodb.Insert('analys',[{userName:name,data:data,color:color,pageNum,pageNum,pdfName:pdfName,indet:'insert',time:time}]);
             } else if (parser.pathname.includes('/replay')) {
                 fileio.fileWrite('replay.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
             }
@@ -250,8 +254,9 @@ io.sockets.on('connection', function (socket) {
         io.sockets.emit('replayteacher', ptext,pageNum);
     })
 
-    socket.on('pageTrans', (userName, ident, pageNum, pdfName, time)=>{
-        fileio.pageTransInfo('pageTrans.txt',userName,ident, pageNum, pdfName, time);
+    socket.on('pageTrans', (userName, ident, pageNum, pdfName, time) => {
+        fileio.pageTransInfo('pageTrans.txt', userName, ident, pageNum, pdfName, time);
+        mongodb.Insert('pagetrans', [{ 'userName': userName, 'ident': ident, 'ppage': parseInt(pageNum.split(' ')[0],10), 'npage': parseInt(pageNum.split(' ')[1],10), 'pdfName': pdfName,'day':time.split(' ')[0],'time':time.split(' ')[1]}]);
     });
 
     socket.on('replayData', (name, data, color, oCoords, pageNum, ident, text, pdfName, time) => {
