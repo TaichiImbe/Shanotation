@@ -63,6 +63,7 @@ prevButton.onclick = function () {
     pageT += pageNum;
     sendTrans('prev', pageT);
     AnnotationSet(pageNum).then(function () {
+        global.pageTrans = false;
     });
     pageRender(pageNum).then(function () {
     });
@@ -82,6 +83,7 @@ nextButton.onclick = function () {
     pageT += pageNum;
     sendTrans('next', pageT);
     AnnotationSet(pageNum).then(function () {
+        global.pageTrans = false;
     });
     pageRender(pageNum).then(function () {
     });
@@ -235,7 +237,6 @@ function AnnotationSet(pageNum) {
                 Canvas.add(element);
             });
         }
-        global.pageTrans = false;
     })
 }
 let replayData = new Map();
