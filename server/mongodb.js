@@ -29,6 +29,15 @@ module.exports = {
             })
         })
     },
+    Find: (name,query,callback) => {
+        return new Promise((resolve, reject) => {
+            const collection = _db.collection(name);
+            collection.find(query).toArray((err, docs) => {
+                assert.equal(err, null);
+                callback(docs);
+            })
+        });
+    },
     Close: () => {
         return new Promise((resolve, reject) => {
             _client.close();

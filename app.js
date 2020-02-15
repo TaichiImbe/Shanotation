@@ -287,5 +287,3 @@ io.use(function (socket, next) {
     // fileWrite(socket.request);
     sessionMiddleware(socket.request, socket.request.res, next);
 });
-
-module.exports = app;
