@@ -80,7 +80,6 @@ function _pageRender(page) {
             var viewport = page.getViewport({ scale: scale });
             var pdfCan = document.getElementById('pdfCan');
             var context = pdfCan.getContext('2d');
-            console.log(canvasWrapper.scrollWidth / viewport.width)
             scale = canvasWrapper.scrollWidth / viewport.width;
             viewport = page.getViewport({scale: scale});
         setCanvasSize(viewport);
