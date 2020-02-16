@@ -9,6 +9,8 @@ let Canvas = new fabric.Canvas('draw-area', {
 let Pen;
 let identifier = ['enclosure', 'line'];
 function setCanvasSize(viewport) {
+    // Canvas.setWidth(viewport.width);
+    // Canvas.setHeight(viewport.height);
     Canvas.setWidth(viewport.width);
     Canvas.setHeight(viewport.height);
     //ページを遷移する時にsetWidthをすると,contextが変更される
