@@ -29,10 +29,27 @@ module.exports = {
             })
         })
     },
+    Update: (name, findData, data) => {
+        return new Promise((resolve, reject) => {
+            const collection = _db.collection(name);
+            collection.updateMany(findData, { $set:data }, (err, result) => {
+                assert.equal(err, null);
+            })
+        })
+    },
     Find: (name,query,callback) => {
         return new Promise((resolve, reject) => {
             const collection = _db.collection(name);
             collection.find(query).toArray((err, docs) => {
+                assert.equal(err, null);
+                callback(docs);
+            })
+        });
+    },
+    FindOne: (name,query,callback) => {
+        return new Promise((resolve, reject) => {
+            const collection = _db.collection(name);
+            collection.findOne(query,(err, docs) => {
                 assert.equal(err, null);
                 callback(docs);
             })
