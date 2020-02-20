@@ -99,7 +99,11 @@ clearEI.onclick = function () {
 
 //選択モード
 selectButton.onclick = function () {
-    Canvas.isDrawingMode = false;
+    if (getUserName() !== 'teacher') {
+        Canvas.isDrawingMode = false;
+    } else {
+        Canvas.isDrawingMode = !Canvas.isDrawingMode;
+    }
 };
 
 //消しゴムボタン
@@ -226,7 +230,7 @@ function removePage(data, page) {
 
 
 function AnnotationSet(pageNum) {
-    global.pageTrans = true;
+    // global.pageTrans = true;
     return new Promise(function () {
         Canvas.clear();
         const Anno = PageAnno.get(pageNum);

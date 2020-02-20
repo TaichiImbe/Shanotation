@@ -2,7 +2,7 @@ let fabric = require('fabric').fabric;
 let profile = require('./profile');
 let Canvas = new fabric.Canvas('draw-area', {
     isDrawingMode: true,
-    selection: false,
+    selection: true,
     stateful: true
 });
 // console.log(Canvas);
@@ -43,6 +43,10 @@ Canvas.on('object:selected', function (e) {
     let p = TransForm(e.target.ownMatrixCache.value);
     console.log(p);
 });
+
+Canvas.on('selected:created', function (e) {
+    console.log(e);
+})
 
 
 global.rmflag = false;
@@ -106,13 +110,17 @@ Canvas.on('object:added', function (e) {
             //     (function (object, text) {
             // })(object, text);
             // console.log(object.oCoords);
-            if (!pageTrans && getUserName() !== 'teacher') {
-                if (font) {
-                    sendObject(e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
-                } else {
-                    sendAnnotation(e.target, pageNum, getNowTime());
-                }
+            if (!pageTrans) {
+                if(getUserName() !== 'teacher') {
+            if (font) {
+                sendObject(e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
+            } else {
+                sendAnnotation(e.target, pageNum, getNowTime());
             }
+                } else {
+                    teacherSelectData(font);
+            }
+        }
         });
     }
 });

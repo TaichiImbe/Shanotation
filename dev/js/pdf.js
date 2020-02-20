@@ -76,12 +76,12 @@ function _pageRender(page) {
             // if (page._pageInfo.view[2] * scale < 720) {
             //     scale = 2;
             // } 
-            let canvasWrapper = document.getElementById('canvas-wrapper');
+            // let canvasWrapper = document.getElementById('canvas-wrapper');
             var viewport = page.getViewport({ scale: scale });
             var pdfCan = document.getElementById('pdfCan');
             var context = pdfCan.getContext('2d');
-            scale = canvasWrapper.scrollWidth / viewport.width;
-            viewport = page.getViewport({scale: scale});
+            // scale = canvasWrapper.scrollWidth / viewport.width;
+            // viewport = page.getViewport({scale: scale});
         setCanvasSize(viewport);
         // Canvas.setHeight(viewport.height)
         // Canvas.setWidth(viewport.setWidth);
