@@ -11,101 +11,92 @@ let identifier = ['enclosure', 'line'];
 let Pages = new Map();
 // var textList = new Set();
 let textList = [];
+let teacherSelect = false;
 let mylimit;
 
-/**
- *送信されてきた分析データをセット
- *
- * @param {*} ip 
- * @param {*} data
- * @param {*} oCoords
- */
-function dataset(ip, path, oCoords, pageNum, ident, text) {
-    let array = [];
-    let page = new Map();
-    if (Pages.has(pageNum)) {
-        page = Pages.get(pageNum);
-    }
-    if (page.has(ip)) {
-        array = page.get(ip);
-    }
-    text.forEach(element => {
-        array.push(new datalist(ip, path, oCoords, ident, element));
-        // array.push(new datalist(ip, path, oCoords, ident, text));
-    })
-    page.set(ip, array);
-    Pages.set(pageNum, page);
-    // console.log(Datas);
-    let inCheck = function (text) {
-        for (i = 0; i < textList.length; i++) {
-            if (textList[i].str === text.str) {
+module.exports = {
+    /**
+     *送信されてきた分析データをセット
+     *
+     * @param {*} ip 
+     * @param {*} data
+     * @param {*} oCoords
+     */
+    dataset: (ip, path, oCoords, pageNum, ident, text) => {
 
-                if (textList[i].transform[4] == text.transform[4] && textList[i].transform[5] == text.transform[5]) {
-                    return false;
+        let array = [];
+        let page = new Map();
+        if (Pages.has(pageNum)) {
+            page = Pages.get(pageNum);
+        }
+        if (page.has(ip)) {
+            array = page.get(ip);
+        }
+        text.forEach(element => {
+            array.push(new datalist(ip, path, oCoords, ident, element));
+            // array.push(new datalist(ip, path, oCoords, ident, text));
+        })
+        page.set(ip, array);
+        Pages.set(pageNum, page);
+        if (!teacherSelect) {
+            module.exports.textset(text);
+        }
+    },
+    textset: (text) => {
 
-                }
+        text.forEach(element => {
+            if (inCheck(element)) {
+                element.count = 0;
+                // textList.add(element);
+                textList.push(element);
             }
-        }
-        return true;
-    }
-    // console.log(inCheck(text));
-    text.forEach(element => {
-        if (inCheck(element)) {
-            element.count = 0;
-            // textList.add(element);
-            textList.push(element);
-        }
-    });
-}
-
+        });
+    },
 /**
  *  文字ごとに色を決める
  *
  * @param {*} page
  * @param {*} userListSize
  */
-function analys(page, userListSize) {
-    // console.log(textList);
-    // let pList = Object.assign(textList);
-    // userListSize -= 1;
-    let pList = Object.create(textList);
+    analys: (page, userListSize) => {
+        let pList = Object.create(textList);
 
-    // console.log(pList);
-    if (Pages.has(page)) {
-        let data = Pages.get(page);
-        let values = data.values();
-        for (i = 0; i < pList.length; i++) {
-            pList[i].count = 0;
-        }
-        let countList = [];
-        //ipごとにデータを分類する処理
-            let usersData = []
-        while (true) {
-            let textconsider = values.next();
-            if (!textconsider.done) {
-                let val = textconsider.value;
-                //同一文字の同一座標の同一ユーザの書き込みは追加しない
-                const dataCheck = function (data) {
-                    for (i = 0; i < usersData.length; i++) {
-                        if (usersData[i].text.str === data.text.str
-                            && usersData[i].text.transform[4] == data.text.transform[4]
-                            && usersData[i].text.transform[5] == data.text.transform[5]
-                            && usersData[i].ip === data.ip
-                        ) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                val.forEach(value => {
-                    if (dataCheck(value)) {
-                        usersData.push(value);
-                    }
-                })
-            } else {
-                break
+        // console.log(pList);
+        if (Pages.has(page)) {
+            let data = Pages.get(page);
+            let values = data.values();
+            for (i = 0; i < pList.length; i++) {
+                pList[i].count = 0;
             }
-        }
+            let countList = [];
+            //ipごとにデータを分類する処理
+            let usersData = []
+            while (true) {
+                let textconsider = values.next();
+                if (!textconsider.done) {
+                    let val = textconsider.value;
+                    //同一文字の同一座標の同一ユーザの書き込みは追加しない
+                    const dataCheck = function (data) {
+                        for (i = 0; i < usersData.length; i++) {
+                            if (usersData[i].text.str === data.text.str
+                                && usersData[i].text.transform[4] == data.text.transform[4]
+                                && usersData[i].text.transform[5] == data.text.transform[5]
+                                && usersData[i].ip === data.ip
+                            ) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                    val.forEach(value => {
+                        if (dataCheck(value)) {
+                            usersData.push(value);
+                        }
+                    })
+                } else {
+                    break
+                }
+            }
             //分類したデータに基づいて単語情報群を用いてユーザごとに書いた文字の位置をカウント
             usersData.forEach(value => {
                 for (i = 0; i < pList.length; i++) {
@@ -119,43 +110,42 @@ function analys(page, userListSize) {
                 }
             })
 
-        for (i = 0; i < pList.length; i++){
-            if (pList[i].count > 0) {
-                countList.push(pList[i]);   
+            for (i = 0; i < pList.length; i++) {
+                if (pList[i].count > 0) {
+                    countList.push(pList[i]);
+                }
             }
-        }
-        //色を決める
-        let list = [];
-        // console.log(pList);
-        // pList.forEach(function(text) {
-        for (i = 0; i < countList.length; i++) {
-            //書き込みごとに比率を求める
-            // let parth = countList[i].count / userListSize;
-            // 比率から色を決める(とりあえず決め打ち)
-            // let color = parth * (colorVariation.length - 1 - 0) + 0;
-            // console.log(color);
-            // countList[i].color = colorVariation[Math.round(color)];
-            if (mylimit) {
-                countList[i].color = getHeatMapColor(0, mylimit, countList[i].count);
-            } else {
-                countList[i].color = getHeatMapColor(0, userListSize, countList[i].count);
+            //色を決める
+            let list = [];
+            // console.log(pList);
+            // pList.forEach(function(text) {
+            for (i = 0; i < countList.length; i++) {
+                //書き込みごとに比率を求める
+                // let parth = countList[i].count / userListSize;
+                // 比率から色を決める(とりあえず決め打ち)
+                // let color = parth * (colorVariation.length - 1 - 0) + 0;
+                // console.log(color);
+                // countList[i].color = colorVariation[Math.round(color)];
+                if (mylimit) {
+                    countList[i].color = getHeatMapColor(0, mylimit, countList[i].count);
+                } else {
+                    countList[i].color = getHeatMapColor(0, userListSize, countList[i].count);
+                }
+                list.push(countList[i]);
+                // console.log(textList);
             }
-            list.push(countList[i]);
-            // console.log(textList);
+            // console.log(list);
+            return list;
         }
-        // console.log(list);
-        return list;
-    }
-
-}
-
-/**
+    },
+    /**
  * 文字列ごとに色を決める
  * 現在は使用停止
  * @param {*} page
  * @returns pathと色情報の集合
  */
-function analysString(page, userListSize) {
+    analysString: (page, userListSize) => {
+        
     let map = new Map();
     if (Pages.has(page)) {
         //テキストの一文字ごとに色を決めたい
@@ -243,9 +233,8 @@ function analysString(page, userListSize) {
 
     }
     return null;
-}
-
-/**
+    },
+    /**
  *指定した文字列の分析結果を返す
  *現在は使用停止
  * @param {*} page
@@ -253,7 +242,8 @@ function analysString(page, userListSize) {
  * @param {*} userListSize
  * @returns
  */
-function analysOne(page, text, userListSize) {
+    analysOne: (page, text, userListSize) => {
+        
 
     // var map = new Map();
     let array = [];
@@ -298,15 +288,14 @@ function analysOne(page, text, userListSize) {
         if (mylimit) {
             str.color = getHeatMapColor(0, mylimit, p);
         } else {
-            str.color = getHeatMapColor(0,userListSize,p);
+            str.color = getHeatMapColor(0, userListSize, p);
         }
         // console.log(str);
         return str;
     }
-
-}
-
-function dataRemove(userName, path, oCoords, pageNum, textList) {
+    },
+    dataRemove: (userName, path, oCoords, pageNum, textList) => {
+        
     if (Pages.has(pageNum)) {
         let userMap = Pages.get(pageNum);
         let texts = userMap.get(userName);
@@ -318,22 +307,22 @@ function dataRemove(userName, path, oCoords, pageNum, textList) {
                     if (rmtext.text.str !== text.str) {
                         if (rmtext.text.transform[4] !== text.transform[4] &&
                             rmtext.text.transform[5] !== text.transform[5]) {
-                                    newArray.push(rmtext);
+                            newArray.push(rmtext);
                         } else {
                             if (rmtext.oCoords.bl.x !== oCoords.bl.x &&
                                 rmtext.oCoords.bl.y !== oCoords.bl.y) {
-                                    newArray.push(rmtext);
+                                newArray.push(rmtext);
                             }
                             // removeArray.push(rmtext);
                         }
                     } else {
                         if (rmtext.text.transform[4] !== text.transform[4] &&
                             rmtext.text.transform[5] !== text.transform[5]) {
-                                    newArray.push(rmtext);
+                            newArray.push(rmtext);
                         } else {
                             if (rmtext.oCoords.bl.x !== oCoords.bl.x &&
                                 rmtext.oCoords.bl.y !== oCoords.bl.y) {
-                                    newArray.push(rmtext);
+                                newArray.push(rmtext);
                             }
                             // removeArray.push(rmtext);
                         }
@@ -344,61 +333,78 @@ function dataRemove(userName, path, oCoords, pageNum, textList) {
             userMap.set(userName, texts);
             Pages.set(pageNum, userMap);
         }
-        
-        
+
+
     }
-
-}
-/**
- *ユーザが消した文字列をanalysデータからも削除
- * 現在は使用停止
- * @param {*} userName
- * @param {*} path
- * @param {*} oCoords
- * @param {*} pageNum
- * @param {*} text
- */
-function dataRemoveString(userName, path, oCoords, pageNum, text) {
-    if (Pages.has(pageNum)) {
-        let userMap = new Map();
-        userMap = Pages.get(pageNum);
-        let texts = [];
-        texts = userMap.get(userName);
-        let newArray = [];
-        texts.forEach(element => {
-            if (element.text.str !== text.str) {
-                newArray.push(element);
-            } else {
-                if (element.path.length !== path.length) {
-                    newArray.push(element);
-                }
-            }
-        });
-        userMap.set(userName, newArray);
-        Pages.set(pageNum, userMap);
-    }
-
-}
-
-
-/**
- * ユーザがクリアボタンを押した時の処理
- * 
- * @param {*} name
- * @param {*} pageNum
- */
-function dataClear(name, pageNum) {
-    if (Pages.has(pageNum)) {
-        let userMap = Pages.get(pageNum);
-        if (userMap.has(name)) {
+    },
+    /**
+    *ユーザが消した文字列をanalysデータからも削除
+    * 現在は使用停止
+    * @param {*} userName
+    * @param {*} path
+    * @param {*} oCoords
+    * @param {*} pageNum
+    * @param {*} text
+    */
+    dataRemoveString: (userName, path, oCoords, pageNum, text) => {
+        if (Pages.has(pageNum)) {
+            let userMap = new Map();
+            userMap = Pages.get(pageNum);
+            let texts = [];
+            texts = userMap.get(userName);
             let newArray = [];
-            userMap.set(name, newArray);
+            texts.forEach(element => {
+                if (element.text.str !== text.str) {
+                    newArray.push(element);
+                } else {
+                    if (element.path.length !== path.length) {
+                        newArray.push(element);
+                    }
+                }
+            });
+            userMap.set(userName, newArray);
+            Pages.set(pageNum, userMap);
         }
-        Pages.set(pageNum, userMap);
-    }
-
+    },
+    /**
+    * ユーザがクリアボタンを押した時の処理
+    * 
+    * @param {*} name
+    * @param {*} pageNum
+    */
+    dataClear: (name, pageNum) => {
+        if (Pages.has(pageNum)) {
+            let userMap = Pages.get(pageNum);
+            if (userMap.has(name)) {
+                let newArray = [];
+                userMap.set(name, newArray);
+            }
+            Pages.set(pageNum, userMap);
+        }
+    },
+    /**
+     * 上限値の設定
+     */
+    setLimit: (limit) => {
+        mylimit = limit;
+    },
+    setTeacherSelection: (select) => {
+        teacherSelect = select
+    },
 }
 
+const inCheck = (text) => {
+    for (i = 0; i < textList.length; i++) {
+        if (textList[i].str === text.str) {
+
+            if (textList[i].transform[4] == text.transform[4] && textList[i].transform[5] == text.transform[5]) {
+                return false;
+
+            }
+        }
+    }
+    return true;
+}
 
 /**
  * 参考サイト
@@ -411,7 +417,7 @@ function dataClear(name, pageNum) {
  * @param {*} value
  * @returns
  */
-function getHeatMapColor( min, max, value) {
+const getHeatMapColor = (min,max,value) =>{
 
     // let pos = Math.sin(value/max);
     // console.log('min : ' + min + ' max : ' + max + ' value : ' + value);
@@ -419,16 +425,10 @@ function getHeatMapColor( min, max, value) {
     if (hue <= 0) {
         hue = 0;
     }
-    const hsv = colorsys.parseCss('hsv('+hue+',100%,100%)');
+    const hsv = colorsys.parseCss('hsv(' + hue + ',100%,100%)');
     // console.log(hsv);
     // console.log(colorsys.hsv2Hex(hsv));
     return colorsys.hsv2Hex(hsv);
-}
-
-function setLimit(limit) {
-    // if (limit) {
-        mylimit = limit; 
-    // }
 }
 
 /**
@@ -445,11 +445,3 @@ class datalist {
         this.ident = ident;
     }
 }
-
-
-exports.dataset = dataset;
-exports.analys = analys;
-exports.analysOne = analysOne;
-exports.dataRemove = dataRemove;
-exports.dataClear = dataClear;
-exports.setLimit = setLimit;

@@ -40,6 +40,7 @@ const teacher = require('./server/router/teacher');
 const replay = require('./server/router/replay');
 const replaymenu = require('./server/router/replaymenu');
 const login = require('./server/router/login');
+const userInfo = require('./server/router/userInfo');
 
 //express server
 server = app.listen(port, function () {
@@ -85,6 +86,7 @@ app.use(teacher);
 app.use(replay);
 app.use(replaymenu);
 app.use(login);
+app.use(userInfo);
 
 // app.use(passport.initialize());
 // app.use(passport.session());
@@ -278,6 +280,11 @@ io.sockets.on('connection', function (socket) {
         // if (name != 'teacher') {
                 io.sockets.emit('replayteacher', ptext, pageNum); 
         // }
+    })
+
+    socket.on('teacherSelection',(name,pageNum,text,pdfName)=> {
+        analys.setTeacherSelection(true);
+        analys.textset(text);
     })
 });
 
