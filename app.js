@@ -7,10 +7,12 @@ const router = express.Router();
 const url = require('url');
 const config = require('config');
 
-let port = config.port;
+const webconfig = require('./config/webconfig.json');
+
+let port = webconfig.port;
 let user = config.user;
 
-let os = require('os');
+const os = require('os');
 let hostname = os.hostname() || '127.0.0.1';
 
 const fabric = require('fabric').fabric;
@@ -122,7 +124,7 @@ app.get('/pdf', function (req, res, next) {
     res.sendFile(req.url);
 });
 
-const mongourl = 'mongodb://127.0.0.1:27017';
+const mongourl = webconfig.mongoaddress;
 mongodb.Connect(mongourl,'testdb');
 
 //login userList 

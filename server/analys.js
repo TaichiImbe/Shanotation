@@ -39,7 +39,7 @@ module.exports = {
         page.set(ip, array);
         Pages.set(pageNum, page);
         if (!teacherSelect) {
-            module.exports.textset(text);
+            module.exports.textset(text,pageNum);
         }
     },
     textset: (text, pageNum) => {
