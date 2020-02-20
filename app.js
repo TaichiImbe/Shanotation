@@ -284,7 +284,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('teacherSelection',(name,pageNum,text,pdfName)=> {
         analys.setTeacherSelection(true);
-        analys.textset(text);
+        analys.textset(text,pageNum);
     })
 });
 

@@ -10,7 +10,7 @@ let identifier = ['enclosure', 'line'];
  */
 let Pages = new Map();
 // var textList = new Set();
-let textList = [];
+let textList = new Map();
 let teacherSelect = false;
 let mylimit;
 
@@ -42,15 +42,20 @@ module.exports = {
             module.exports.textset(text);
         }
     },
-    textset: (text) => {
-
+    textset: (text, pageNum) => {
+        if (textList.has(pageNum)) {
+            array = textList.get(pageNum);
         text.forEach(element => {
-            if (inCheck(element)) {
+            if (inCheck(array,element)) {
                 element.count = 0;
                 // textList.add(element);
-                textList.push(element);
+                array.push(element);
             }
         });
+            textList.set(pageNum,array);
+        } else {
+            textList.set(pageNum,text);
+        }
     },
 /**
  *  文字ごとに色を決める
@@ -59,7 +64,8 @@ module.exports = {
  * @param {*} userListSize
  */
     analys: (page, userListSize) => {
-        let pList = Object.create(textList);
+        if (textList.has(page)) {
+        let pList = Object.create(textList.get(page));
 
         // console.log(pList);
         if (Pages.has(page)) {
@@ -136,6 +142,8 @@ module.exports = {
             }
             // console.log(list);
             return list;
+        }
+
         }
     },
     /**
@@ -393,11 +401,11 @@ module.exports = {
     },
 }
 
-const inCheck = (text) => {
-    for (i = 0; i < textList.length; i++) {
-        if (textList[i].str === text.str) {
+const inCheck = (array,text) => {
+    for (i = 0; i < array.length; i++) {
+        if (array[i].str === text.str) {
 
-            if (textList[i].transform[4] == text.transform[4] && textList[i].transform[5] == text.transform[5]) {
+            if (array[i].transform[4] == text.transform[4] && array[i].transform[5] == text.transform[5]) {
                 return false;
 
             }
