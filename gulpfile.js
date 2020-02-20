@@ -13,6 +13,7 @@ let transform = require('vinyl-transform');
 let buffer = require('vinyl-buffer');
 let minimist = require('minimist');
 // let app = require('./server/app');
+const babelify = require('babelify');
 let nodemon = require('nodemon');
 
 let defaultlist = ['sass', 'ejs', 'js', 'watch', 'serve'];
