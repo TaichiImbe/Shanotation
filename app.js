@@ -34,6 +34,8 @@ const mongodb = require('./server/mongodb');
 //分析処理
 const analys = require('./server/analys');
 
+const sock = require('./server/sock');
+
 const route = require('./server/router/routes');
 const main = require('./server/router/main');
 const upload = require('./server/router/upload');
@@ -135,7 +137,6 @@ io = socketIO.listen(server);
 // io.use(socket_io_session.express_session);
 // io.use(socket_io_session.passport_initialize);
 // io.use(socket_io_session.passport_session);
-
 io.sockets.on('connection', function (socket) {
     //接続時にPrivateIPを設定する.
     var handshake = socket.handshake
@@ -160,7 +161,7 @@ io.sockets.on('connection', function (socket) {
             // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/includes
             if (parser.pathname.includes('/index')) {
                 fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
-                mongodb.Insert('analys',[{userName:name,data:data,color:color,pageNum,pageNum,pdfName:pdfName,indet:'insert',time:time}]);
+                mongodb.Insert('analys',[{userName:name,data:data,color:color,pageNum:pageNum,pdfName:pdfName,indet:'insert',time:time}]);
             } else if (parser.pathname.includes('/replay')) {
                 fileio.fileWrite('replay.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
             }
@@ -285,8 +286,8 @@ io.sockets.on('connection', function (socket) {
     })
 
     socket.on('teacherSelection',(name,pageNum,text,pdfName)=> {
-        analys.setTeacherSelection(true);
-        analys.textset(text,pageNum);
+        // analys.setTeacherSelection(true);
+        // analys.textset(text,pageNum);
     })
 });
 

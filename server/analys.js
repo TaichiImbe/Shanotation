@@ -22,21 +22,21 @@ module.exports = {
      * @param {*} data
      * @param {*} oCoords
      */
-    dataset: (ip, path, oCoords, pageNum, ident, text) => {
+    dataset: (name, path, oCoords, pageNum, ident, text) => {
 
         let array = [];
         let page = new Map();
         if (Pages.has(pageNum)) {
             page = Pages.get(pageNum);
         }
-        if (page.has(ip)) {
-            array = page.get(ip);
+        if (page.has(name)) {
+            array = page.get(name);
         }
         text.forEach(element => {
-            array.push(new datalist(ip, path, oCoords, ident, element));
+            array.push(new datalist(name, path, oCoords, ident, element));
             // array.push(new datalist(ip, path, oCoords, ident, text));
         })
-        page.set(ip, array);
+        page.set(name, array);
         Pages.set(pageNum, page);
         if (!teacherSelect) {
             module.exports.textset(text,pageNum);

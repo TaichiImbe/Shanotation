@@ -11,12 +11,11 @@ let fs = require('fs');
  * @param {*} datas
  * @param {*} time
  */
-function fileWrite(filename, handshake, userName,path,color,pageNum,pdfName,ident,time) {
+function fileWrite(filename, userName,path,color,pageNum,pdfName,ident,time) {
     // console.log(datas.type);
     if (path.type == 'path') {
         let data = path.path;
         let array = new Array();
-        let ip = handshake.address.split(":");
         let str = userName + ' ' + data + ' ' + color +' '+ pageNum + ' ' + pdfName+ ' '+ident+' '+time + '\n';
         // let str = ''; 
         // for (i = 0; i < data.length; i++) {
