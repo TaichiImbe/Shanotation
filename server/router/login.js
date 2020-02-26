@@ -9,11 +9,7 @@ router.route('/login')
     })
     .post((req, res, next) => {
         req.session.userName = req.body.userName;
-        mongodb.Find('loginUser', { userName: req.body.userName}, (result) => {
-            if (result.length == 0) {
-                mongodb.Insert('loginUser', [{ userName: req.body.userName,time:Date.now()}])
-            }
-        });
+        mongodb.Insert('loginUser', [{ userName: req.body.userName,time:Date.now()}])
         res.redirect('./main?id='+req.body.userName);
     })
 
