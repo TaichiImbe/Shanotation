@@ -138,6 +138,7 @@ io = socketIO.listen(server);
 // io.use(socket_io_session.passport_initialize);
 // io.use(socket_io_session.passport_session);
 io.sockets.on('connection', function (socket) {
+    console.log('connect');
     //接続時にPrivateIPを設定する.
     var handshake = socket.handshake
     // userList.set(handshake.address);
@@ -289,7 +290,13 @@ io.sockets.on('connection', function (socket) {
         // analys.setTeacherSelection(true);
         // analys.textset(text,pageNum);
     })
+
+    socket.on('disconnect', (reason) => {
+        console.log('disconnect');
+        socket.disconnect(true);
+    })
 });
+
 
 io.use(function (socket, next) {
     // console.log(socket);

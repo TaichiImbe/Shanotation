@@ -5,10 +5,13 @@ const mongodb = require('./mongodb');
 const analys = require('./analys');
 
 let _io;
+
+let userList = new Map();
 module.exports = {
     Listen: (server) => {
         _io = socketIO.listen(server);
         _io.sockets.on('connection', (socket) => {
+            console.log('connect');
             socket.on('object', (name, data, color, oCoords, pageNum, ident, text, pdfName, time) => {
                 if (data.type === 'path') {
                     const parser = new URL(socket.handshake.headers.referer);
@@ -114,6 +117,18 @@ module.exports = {
                 analys.setTeacherSelection(true);
                 analys.textset(text,pageNum);
             })
+
+            socket.on('disconnect', (reason) => {
+                console.log('disconnect');
+                socket.disconnect(true);
+            })
         });
+    },
+    IOuse: (sessionMiddleware) => {
+
+        _io.use((socket, next) => {
+
+            sessionMiddleware(socket.request, socket.request.res, next);
+        })
     }
 }
