@@ -139,7 +139,7 @@ io = socketIO.listen(server);
 // io.use(socket_io_session.passport_session);
 io.sockets.on('connection', function (socket) {
     let parser = new URL(socket.handshake.headers.referer);
-    mongodb.Insert('activeUser', {userName:parser.searchParams.get('id')}, (docs) => {
+    mongodb.Insert('activeUser', [{userName:parser.searchParams.get('id')}], (docs) => {
 
     })
     //接続時にPrivateIPを設定する.
