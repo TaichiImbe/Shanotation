@@ -211,6 +211,7 @@ io.sockets.on('connection', function (socket) {
         let parser = new URL(socket.handshake.headers.referer);
         if (parser.pathname.includes('/index')) {
             fileio.fileWrite('removedata.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
+            mongodb.Insert('analys',[{userName:name,data:data,color:color,pageNum:pageNum,pdfName:pdfName,indet:'delete',time:time}]);
         }else if (parser.pathname.includes('/replay')){
             fileio.fileWrite('replay.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
         }
@@ -264,7 +265,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('pageTrans', (userName, ident, pageNum, pdfName, time) => {
         fileio.pageTransInfo('pageTrans.txt', userName, ident, pageNum, pdfName, time);
-        mongodb.Insert('pagetrans', [{ 'userName': userName, 'ident': ident, 'ppage': parseInt(pageNum.split(' ')[0],10), 'npage': parseInt(pageNum.split(' ')[1],10), 'pdfName': pdfName,'day':time.split(' ')[0],'time':time.split(' ')[1]}]);
+        mongodb.Insert('pagetrans', [{ 'userName': userName, 'ident': ident, 'ppage': parseInt(pageNum.split(' ')[0], 10), 'npage': parseInt(pageNum.split(' ')[1], 10), 'pdfName': pdfName, time: time }]);
     });
 
     socket.on('replayData', (name, data, color, oCoords, pageNum, ident, text, pdfName, time) => {
@@ -297,7 +298,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', (reason) => {
         let parser = new URL(socket.handshake.headers.referer);
         mongodb.FindOne('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
-            mongodb.Insert('userLog', docs, (docs) => {
+            mongodb.Insert('userLog', [{ userName:docs.userName,time:docs.time }], (docs) => {
                 mongodb.Delete('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
 
                 });
