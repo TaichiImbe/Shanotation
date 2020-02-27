@@ -118,7 +118,7 @@ Canvas.on('object:added', function (e) {
                 sendAnnotation(e.target, pageNum, getNowTime());
             }
                 } else {
-                    teacherSelectData(font);
+                    teacherFilter.setFilter(font,pageNum);
             }
         }
         });
@@ -343,14 +343,16 @@ function make(pageNum, text) {
     // } else if (ident == identifier[1]) {
     //     line = makeLine(data);
     // }
+    console.log(text);
     if (Array.isArray(text)) {
         let highLightList = [];
-        text.forEach(textinfo => {
-            highLightList.push(makeTextHiglight(textinfo, textinfo.color));
-        });
-        setPage(highLightList, pageNum);
-        AnnotationSet(global.pageNum);
-
+            text.forEach(textinfo => {
+                if (teacherFilter.checkFilter(textinfo, pageNum)) {
+                highLightList.push(makeTextHiglight(textinfo, textinfo.color));
+                }
+            });
+            setPage(highLightList, pageNum);
+            AnnotationSet(global.pageNum);
     } else if(text != null){
         line = makeTextHiglight(text.text, text.color);
         if (line !== null) {
