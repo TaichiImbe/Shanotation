@@ -138,7 +138,10 @@ io = socketIO.listen(server);
 // io.use(socket_io_session.passport_initialize);
 // io.use(socket_io_session.passport_session);
 io.sockets.on('connection', function (socket) {
-    console.log('connect');
+    let parser = new URL(socket.handshake.headers.referer);
+    mongodb.Insert('activeUser', {userName:parser.searchParams.get('id')}, (docs) => {
+
+    })
     //接続時にPrivateIPを設定する.
     var handshake = socket.handshake
     // userList.set(handshake.address);
@@ -292,7 +295,17 @@ io.sockets.on('connection', function (socket) {
     })
 
     socket.on('disconnect', (reason) => {
-        console.log('disconnect');
+        let parser = new URL(socket.handshake.headers.referer);
+        mongodb.FindOne('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
+            mongodb.Insert('userLog', docs, (docs) => {
+                mongodb.Delete('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
+
+                });
+            });
+        })
+        // console.log(parser.searchParams.get('id'));
+        // console.log('disconnect');
+        // console.log(socket.request)
         socket.disconnect(true);
     })
 });

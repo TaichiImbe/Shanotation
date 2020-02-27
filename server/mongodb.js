@@ -55,6 +55,24 @@ module.exports = {
             })
         });
     },
+    Delete: (name, query, callback) => {
+        return new Promise((resolve, reject) => {
+            const collection = _db.collection(name);
+            collection.deleteMany(query, (err, docs) => {
+                assert.equal(err, null);
+                callback(docs);
+            })
+        })
+    },
+    DeleteOne: (name, query, callback) => {
+        return new Promise((resolve, reject) => {
+            const collection = _db.collection(name);
+            collection.deleteOne(query, (err, docs) => {
+                assert.equal(err, null);
+                callback(docs);
+            })
+        })
+    },
     Close: () => {
         return new Promise((resolve, reject) => {
             _client.close();
