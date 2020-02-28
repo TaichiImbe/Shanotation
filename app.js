@@ -299,7 +299,14 @@ io.sockets.on('connection', function (socket) {
         let parser = new URL(socket.handshake.headers.referer);
         mongodb.FindOne('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
             mongodb.Insert('userLog', [{ userName:docs.userName,time:docs.time }], (docs) => {
-                mongodb.Delete('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
+
+            });
+            mongodb.Delete('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
+
+                mongodb.Find('activeUser', { }, (docs) => {
+                    if (docs.length === 0) {
+                        //分析用の蓄積データを削除する
+                    }
 
                 });
             });

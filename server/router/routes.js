@@ -4,7 +4,8 @@ let fs = require('fs');
 
 router.route('/')
     .get((req, res, next) => {
-        res.redirect('./login');
+        let pdfName = '印部_学会発表_Slide.pdf';
+        res.redirect('./index?id='+req.sessionID+'&pdfname='+pdfName);
         // res.render('./login');
     })
     .post((req, res, next) => {

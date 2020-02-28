@@ -21,19 +21,21 @@ module.exports = {
             })
         })
     },
-    Insert: (name,data) => {
+    Insert: (name,data,callback) => {
         return new Promise((resolve, reject) => {
             const collection = _db.collection(name);
             collection.insertMany(data, (err, result) => {
                 assert.equal(err, null);
+                if (callback) callback(result);
             })
         })
     },
-    Update: (name, findData, data) => {
+    Update: (name, findData, data,callback) => {
         return new Promise((resolve, reject) => {
             const collection = _db.collection(name);
             collection.updateMany(findData, { $set:data }, (err, result) => {
                 assert.equal(err, null);
+                if (callback) callback(result);
             })
         })
     },
@@ -60,7 +62,7 @@ module.exports = {
             const collection = _db.collection(name);
             collection.deleteMany(query, (err, docs) => {
                 assert.equal(err, null);
-                callback(docs);
+                if(callback) callback(docs);
             })
         })
     },
@@ -69,7 +71,7 @@ module.exports = {
             const collection = _db.collection(name);
             collection.deleteOne(query, (err, docs) => {
                 assert.equal(err, null);
-                callback(docs);
+                if(callback) callback(docs);
             })
         })
     },
