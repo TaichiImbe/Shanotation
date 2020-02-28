@@ -211,7 +211,7 @@ io.sockets.on('connection', function (socket) {
         let parser = new URL(socket.handshake.headers.referer);
         if (parser.pathname.includes('/index')) {
             fileio.fileWrite('removedata.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
-            mongodb.Insert('analys',[{userName:name,data:data,color:color,pageNum:pageNum,pdfName:pdfName,indet:'delete',time:time}]);
+            mongodb.Insert('analys',[{userName:name,data:obj,color:color,pageNum:pageNum,pdfName:pdfName,indet:'delete',time:time}]);
         }else if (parser.pathname.includes('/replay')){
             fileio.fileWrite('replay.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
         }
