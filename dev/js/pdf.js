@@ -115,8 +115,8 @@ function TransForm(transform) {
 }
 
 window.addEventListener('resize', (e) => {
-    let canvasWrapper = document.getElementById('canvas-wrapper');
-    pageRender(global.pageNum);
+    // let canvasWrapper = document.getElementById('canvas-wrapper');
+    // pageRender(global.pageNum);
 })
 
 global.pageRender = pageRender;

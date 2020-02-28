@@ -106,7 +106,7 @@ Canvas.on('object:added', function (e) {
             // var font = textCheck(object,text);
             // console.log(object.oCoords);
             var font = getSubText(object, text);
-            // console.log(font);
+            console.log(font);
             //     (function (object, text) {
             // })(object, text);
             // console.log(object.oCoords);
@@ -158,9 +158,11 @@ function getSubText(object, text) {
     let subsubtextlist = [];
     var minr = Math.sqrt(Math.pow((text.items[0].transform[4] + text.items[0].width) - oCoords.br.x, 2) + Math.pow(text.items[0].transform[5] - oCoords.br.y, 2));
     // console.log(thresh);
-    // console.log(text.items[6]);
+    // console.log(oCoords);
     for (i = 0; i < text.items.length; i++) {
-        if (oCoords.bl.y - thresh * 1.5 <= text.items[i].transform[5] && text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)) {
+        console.log(text.items[i].transform[5] >= oCoords.tl.y );
+        if (text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2) &&
+             text.items[i].transform[5] >= oCoords.tl.y - (thresh / 2)) {
             // if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
             // console.log(text.items[i]);
             subsubtextlist.push(text.items[i]);
@@ -172,16 +174,7 @@ function getSubText(object, text) {
     // console.log(subtextlist);
     if (subtextlist.length != 0) {
         str = subtextlist;
-    } else {
-        let minl = Math.sqrt(Math.pow(text.items[0].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[0].transform[5] - oCoords.bl.y, 2));
-        for (i = 1; i < text.items.length; i++) {
-
-            if (minl > Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2)) && text.items[i].transform[5] <= oCoords.bl.y) {
-                minl = Math.sqrt(Math.pow(text.items[i].transform[4] - oCoords.bl.x, 2) + Math.pow(text.items[i].transform[5] - oCoords.bl.y, 2));
-                str = text.items[i];
-            }
-        }
-    }
+    } 
 
     let charList = [];
     if (!str) {
