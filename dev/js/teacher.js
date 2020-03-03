@@ -5,12 +5,16 @@ let teacherFilter = {
         console.log(str);
         if (filter.has(pageNum)) {
             let array = filter.get(pageNum);    
-            str.forEach(element => {
-                array.push(element); 
-            });
-            filter.set(pageNum, array);
+            if (str) {
+                str.forEach(element => {
+                    array.push(element); 
+                });
+                filter.set(pageNum, array);
+            }
         } else {
-            filter.set(pageNum, str);
+            if (str) {
+                filter.set(pageNum, str);
+            }
         }
     },
     checkFilter: (str,pageNum) => {
