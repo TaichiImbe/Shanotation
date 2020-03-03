@@ -161,20 +161,23 @@ function getSubText(object, text) {
     // console.log(oCoords);
     for (i = 0; i < text.items.length; i++) {
         console.log(text.items[i].transform[5] >= oCoords.tl.y );
-        if (text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2) &&
-             text.items[i].transform[5] >= oCoords.tl.y) {
-            // if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
-            // console.log(text.items[i]);
-            subsubtextlist.push(text.items[i]);
+        if (text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)){
+            if (text.items[i].transform[5] >= oCoords.tl.y) {
+                // if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
+                // console.log(text.items[i]);
+                subsubtextlist.push(text.items[i]);
+            }
             // }
             subtextlist.push(text.items[i]);
         }
     }
     // console.log(subsubtextlist);
     // console.log(subtextlist);
-    if (subtextlist.length != 0) {
+    if (subsubtextlist.length != 0) {
+        str = subsubtextlist;
+    } else if (subtextlist.length != 0) {
         str = subtextlist;
-    } 
+    }
 
     let charList = [];
     if (!str) {
