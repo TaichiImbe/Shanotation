@@ -2,7 +2,6 @@ let filter = new Map();
 
 let teacherFilter = {
     setFilter: (str, pageNum) => {
-        console.log(str);
         if (filter.has(pageNum)) {
             let array = filter.get(pageNum);    
             if (str) {
@@ -18,7 +17,6 @@ let teacherFilter = {
         }
     },
     checkFilter: (str,pageNum) => {
-        console.log(str);
         if (filter.has(pageNum)) {
             let d = filter.get(pageNum)
             for (let i = 0; i < d.length; i++){

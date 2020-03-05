@@ -106,7 +106,6 @@ Canvas.on('object:added', function (e) {
             // var font = textCheck(object,text);
             // console.log(object.oCoords);
             var font = getSubText(object, text);
-            console.log(font);
             //     (function (object, text) {
             // })(object, text);
             // console.log(object.oCoords);
