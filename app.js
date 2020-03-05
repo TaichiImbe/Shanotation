@@ -156,7 +156,7 @@ io.sockets.on('connection', function (socket) {
     })
     //object resive
     socket.on('object', function (name, data, color, oCoords, pageNum, ident, text, pdfName, time) {
-        if (!userList.has(name)) {
+        if (!userList.has(name) && parser.pathname.includes('/index')) {
             userList.set(name, name);
         }
         if (data.type === 'path') {
