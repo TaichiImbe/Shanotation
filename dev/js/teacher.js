@@ -20,7 +20,7 @@ let teacherFilter = {
         if (filter.has(pageNum)) {
             let d = filter.get(pageNum)
             for (let i = 0; i < d.length; i++){
-                if (str.str === d[i].str) {
+                if (str.str === d[i].str && str.transform[4] === d[i].transform[4] && str.transform[5] === d[i].transform[5]) {
                     return true;
                 }
             }
