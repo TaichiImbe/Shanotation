@@ -110,16 +110,18 @@ Canvas.on('object:added', function (e) {
             // })(object, text);
             // console.log(object.oCoords);
             if (!pageTrans) {
-                if(getUserName() !== 'teacher') {
-            if (font) {
-                sendObject(e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
-            } else {
-                sendAnnotation(e.target, pageNum, getNowTime());
-            }
+                if (getUserName() !== 'teacher') {
+                    if (font) {
+                        sendObject(e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
+                    } else {
+                        sendAnnotation(e.target, pageNum, getNowTime());
+                    }
                 } else {
-                    teacherFilter.setFilter(font,pageNum);
+                    if (Canvas.freeDrawingBrush) {
+                        teacherFilter.setFilter(font, pageNum);
+                    }
+                }
             }
-        }
         });
     }
 });
@@ -136,7 +138,7 @@ Canvas.on('object:removed', function (e) {
                 font = [];
                 removeObject(object, object.oCoords, pageNum, font, ident, getNowTime())
             }
-            
+
         });
     }
     //    remvoeObject(e,pageNum); 
@@ -159,8 +161,8 @@ function getSubText(object, text) {
     // console.log(thresh);
     // console.log(oCoords);
     for (i = 0; i < text.items.length; i++) {
-        console.log(text.items[i].transform[5] >= oCoords.tl.y );
-        if (text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)){
+        console.log(text.items[i].transform[5] >= oCoords.tl.y);
+        if (text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)) {
             if (text.items[i].transform[5] >= oCoords.tl.y) {
                 // if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
                 // console.log(text.items[i]);
@@ -202,8 +204,8 @@ function getSubText(object, text) {
                             transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
                             str: text.str[i]
                         });
-                   }
-                     else {
+                    }
+                    else {
                         charList.push({
                             dir: text.dir,
                             fontName: text.fontName,
@@ -213,7 +215,7 @@ function getSubText(object, text) {
                             str: text.str[i]
                         });
                     }
-                    
+
                 }
                 if (t4 > oCoords.br.x) {
                     break;
@@ -338,17 +340,17 @@ function make(pageNum, text) {
     // } else if (ident == identifier[1]) {
     //     line = makeLine(data);
     // }
-    console.log(text);
+    Canvas.freeDrawingBrush = false;
     if (Array.isArray(text)) {
         let highLightList = [];
-            text.forEach(textinfo => {
-                if (teacherFilter.checkFilter(textinfo, pageNum)) {
+        text.forEach(textinfo => {
+            if (teacherFilter.checkFilter(textinfo, pageNum)) {
                 highLightList.push(makeTextHiglight(textinfo, textinfo.color));
-                }
-            });
-            setPage(highLightList, pageNum);
-            AnnotationSet(global.pageNum);
-    } else if(text != null){
+            }
+        });
+        setPage(highLightList, pageNum);
+        AnnotationSet(global.pageNum);
+    } else if (text != null) {
         line = makeTextHiglight(text.text, text.color);
         if (line !== null) {
             setPage(line, pageNum);
@@ -419,7 +421,7 @@ function makeReplayData(list) {
     // setPage(data, pageNum);
     if (list[5] === 'insert') {
         data.ident = 'insert';
-    // if (list[0][5] === 'insert') {
+        // if (list[0][5] === 'insert') {
         replaySet(data, pageNum);
     } else {
         data.ident = 'delete';
