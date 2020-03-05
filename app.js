@@ -151,7 +151,7 @@ io.sockets.on('connection', function (socket) {
     });
     socket.on('userName', function (name, ip) {
         socket.username = name;
-        // userList.set(name, name);
+        userList.set(name, name);
         // console.log(socket.username);
     })
     //object resive
