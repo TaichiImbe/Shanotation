@@ -139,11 +139,18 @@ io = socketIO.listen(server);
 // io.use(socket_io_session.passport_session);
 io.sockets.on('connection', function (socket) {
     let parser = new URL(socket.handshake.headers.referer);
-    mongodb.Insert('activeUser', [{userName:parser.searchParams.get('id')}], (docs) => {
+    console.log(parser.searchParams.get('id'));
+    try {
+        mongodb.Insert('activeUser', [{userName:parser.searchParams.get('id')}], (docs) => {
 
-    })
+        })
+    } catch (error) {
+        console.log(error);
+    } finally {
+
+    }
     //接続時にPrivateIPを設定する.
-    var handshake = socket.handshake
+    let handshake = socket.handshake
     // userList.set(handshake.address);
     socket.on('massage', function (data) {
         console.log('massage');
@@ -156,9 +163,10 @@ io.sockets.on('connection', function (socket) {
     })
     //object resive
     socket.on('object', function (name, data, color, oCoords, pageNum, ident, text, pdfName, time) {
-        if (!userList.has(name) && parser.pathname.includes('/index')) {
-            userList.set(name, name);
-        }
+        // if (!userList.has(name) && parser.pathname.includes('/index')) {
+        //     userList.set(name, name);
+        // }
+        mongodb.Find("activeUser", ({"userName":{"$ne":"teacher"}}), (docs) =>{
         if (data.type === 'path') {
             let parser = new URL(socket.handshake.headers.referer);
             var path = data.path;
@@ -172,7 +180,7 @@ io.sockets.on('connection', function (socket) {
             analys.dataset(name, data, oCoords, pageNum, ident, text);
             // console.log(userList);
             // console.log(userList.size);
-            let ptext = analys.analys(pageNum, userList.size);
+            let ptext = analys.analys(pageNum, docs.length);
             // let ptext = analys.analysOne(pageNum,text,userList.size);
             if (ptext == null) {
                 console.log('err');
@@ -188,6 +196,7 @@ io.sockets.on('connection', function (socket) {
         } else {
             // console.log(data);
         }
+        })
     });
 
     socket.on('annotation', (name, data, color, pageNum, pdfName, time) => {
@@ -208,6 +217,8 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('remove', function (name, obj, color, oCoords, pageNum, text, ident, pdfName, time) {
+        mongodb.Find("activeUser", ({"userName":{"$ne":"teacher"}}), (docs) => {
+
         let parser = new URL(socket.handshake.headers.referer);
         if (parser.pathname.includes('/index')) {
             fileio.fileWrite('removedata.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
@@ -216,7 +227,7 @@ io.sockets.on('connection', function (socket) {
             fileio.fileWrite('replay.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
         }
         analys.dataRemove(name, obj, oCoords, pageNum, text);
-        let ptext = analys.analys(pageNum,userList.size);
+        let ptext = analys.analys(pageNum,docs.length);
         if (name !== 'teacher') {
             if (parser.pathname.includes('/index')) {
                 io.sockets.emit('teacher', ptext, pageNum);
@@ -224,6 +235,7 @@ io.sockets.on('connection', function (socket) {
                 io.sockets.emit('replayteacher', ptext, pageNum); 
             }
         }
+        })
     });
 
     socket.on('clear', function (name, pageNum) {
@@ -298,18 +310,25 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', (reason) => {
         let parser = new URL(socket.handshake.headers.referer);
         mongodb.FindOne('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
-            mongodb.Insert('userLog', [{ userName:docs.userName,time:docs.time }], (docs) => {
-
-            });
-            mongodb.Delete('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
-
-                mongodb.Find('activeUser', { }, (docs) => {
-                    if (docs.length === 0) {
-                        //分析用の蓄積データを削除する
-                    }
+            try {
+                console.log(docs);
+                mongodb.Insert('userLog', [{ userName:docs.userName,time:docs.time }], (docs) => {
 
                 });
-            });
+                mongodb.Delete('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
+
+                    mongodb.Find('activeUser', { }, (docs) => {
+                        if (docs.length === 0) {
+                            //分析用の蓄積データを削除する
+                        }
+
+                    });
+                });
+            } catch (error) {
+                console.log(error); 
+            } finally {
+                
+            }
         })
         // console.log(parser.searchParams.get('id'));
         // console.log('disconnect');
@@ -318,6 +337,9 @@ io.sockets.on('connection', function (socket) {
     })
 });
 
+io.set('heartbeat interval', 5000);
+
+io.set('heartbeat timeout', 15000);
 
 io.use(function (socket, next) {
     // console.log(socket);
