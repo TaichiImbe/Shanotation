@@ -381,13 +381,25 @@ module.exports = {
     * @param {*} pageNum
     */
     dataClear: (name, pageNum) => {
-        if (Pages.has(pageNum)) {
-            let userMap = Pages.get(pageNum);
-            if (userMap.has(name)) {
-                let newArray = [];
-                userMap.set(name, newArray);
+        if (pageNum) {
+
+            if (Pages.has(pageNum)) {
+                let userMap = Pages.get(pageNum);
+                if (userMap.has(name)) {
+                    let newArray = [];
+                    userMap.set(name, newArray);
+                }
+                Pages.set(pageNum, userMap);
             }
-            Pages.set(pageNum, userMap);
+        } else {
+            console.log(Pages);
+            for ([key, value] of Pages) {
+                if (value.has(name)) {
+                    let newArray = [];
+                    value.set(name, newArray);
+                }
+            }
+            console.log(Pages);
         }
     },
     /**

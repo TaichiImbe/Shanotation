@@ -243,6 +243,7 @@ io.sockets.on('connection', function (socket) {
     })
 
     socket.on('reload', function (name) {
+        analys.dataClear(name);
         if (!userList.has(name)) {
             userList.set(name, name);
         }
@@ -311,7 +312,6 @@ io.sockets.on('connection', function (socket) {
         let parser = new URL(socket.handshake.headers.referer);
         mongodb.FindOne('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
             try {
-                console.log(docs);
                 mongodb.Insert('userLog', [{ userName:docs.userName,time:docs.time }], (docs) => {
 
                 });
