@@ -392,14 +392,12 @@ module.exports = {
                 Pages.set(pageNum, userMap);
             }
         } else {
-            console.log(Pages);
             for ([key, value] of Pages) {
                 if (value.has(name)) {
                     let newArray = [];
                     value.set(name, newArray);
                 }
             }
-            console.log(Pages);
         }
     },
     /**
