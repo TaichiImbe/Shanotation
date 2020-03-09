@@ -117,7 +117,7 @@ Canvas.on('object:added', function (e) {
                         sendAnnotation(e.target, pageNum, getNowTime());
                     }
                 } else {
-                    if (Canvas.freeDrawingBrush) {
+                    if (Canvas.isDrawingMode) {
                         teacherFilter.setFilter(font, pageNum);
                     }
                 }
@@ -341,7 +341,7 @@ function make(pageNum, text) {
     // } else if (ident == identifier[1]) {
     //     line = makeLine(data);
     // }
-    Canvas.freeDrawingBrush = false;
+    // Canvas.freeDrawingBrush = false;
     if (Array.isArray(text)) {
         let highLightList = [];
         text.forEach(textinfo => {
