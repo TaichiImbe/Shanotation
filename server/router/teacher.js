@@ -7,7 +7,7 @@ router.route('/teacher')
     .get((req, res, next) => {
         const userName = req.query.id;
         const pdfname = req.query.pdfname; 
-        res.render('./teacher', { pdfname: pdfname, userName: userName });
+        res.render('./teacher', { title:'先生側', pdfname: pdfname, userName: userName });
     })
 
 module.exports = router;

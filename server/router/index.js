@@ -9,7 +9,7 @@ router.route('/index')
         const userName = req.query.id;
         const pdfname = req.query.pdfname;
         // let userName = req.body.userName;
-        res.render('./index', { pdfname: pdfname, userName: userName });
+        res.render('./index', {title:'学習者側' ,pdfname: pdfname, userName: userName });
     })
 
 module.exports = router;
