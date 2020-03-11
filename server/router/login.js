@@ -6,7 +6,7 @@ const util = require('../util/util');
 
 router.route('/login')
     .get((req, res, next) => {
-        res.render('./login')
+        res.render('./login',{title:'ログイン'})
     })
     .post((req, res, next) => {
         req.session.userName = req.body.userName;

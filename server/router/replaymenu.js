@@ -10,13 +10,13 @@ router.route('/replaymenu')
             let fileList = files.filter(file => {
                 return /.*\.(pdf$|PDF$)/.test(file);
             })
-            res.render('./replaymenu', { userName:req.query.id,array: fileList });
+            res.render('./replaymenu', { title:'リプレイ' ,userName:req.query.id,array: fileList });
             // res.render('./replay', { array: fileList });
         })
     })
     .post((req, res, next) => {
         let userName = req.body.userName;
-        res.render('./replay', { userName: userName, pdfname: req.body.pdfname });
+        res.render('./replay', { title:'リプレイ' ,userName: userName, pdfname: req.body.pdfname });
     })
 router.post('/repMenu', (req, res, next) => {
     fs.readdir('pdf/', function (err, files) {

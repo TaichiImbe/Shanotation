@@ -20,7 +20,7 @@ let upload = multer({ storage: storage });
 //todo upload後の表示処理を考える
 router.route('/upload')
     .get((req, res, next) => {
-        res.render('./upload');
+        res.render('./upload',{title:'データアップロード'});
     })
     .post(upload.single('myFile'), (req, res, next) => {
         var img = fs.readFileSync(req.file.path);
