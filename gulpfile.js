@@ -34,46 +34,10 @@ gulp.task('sass', function (err) {
     err();
 });
 
-gulp.task('js',function(callback){
-    let browserified = transform(function (filename) {
-        let b = browserify(filename);
-        b.add(fileName);
-        return b.bundle();
-    })
-	let jsFiles = glob.sync('./dev/js/{!(_)*.js,**/!(_)*/!(_)*.js}');
-	if(jsFiles.length === 0){
-		callback();
-	}
-
-	let task_num = jsFiles.length;
-	let task_executed = 0;
-	let onEnd = function(){
-		if(task_num === ++task_executed){
-			callback();
-		}
-	};
-
-	jsFiles.forEach(function(file){
-		let fileName = file.replace(/.+\/(.+\.js)/, '$1');
-		let filePath = '/js/';
-        // console.log(file);
-        // console.log(filePath);
-	browserify({
-		entries: file,
-	})
-	.bundle()
-	.on('end',onEnd)
-	.pipe(source(fileName))
-	.pipe(buffer())
-	.pipe(plumber({
-		errorHandler: notify.onError('<%= error.massage %>')
-	}))
-	.pipe(gulpIf(
-		options.env === 'staging' || options.env === 'production',
-		uglify({ preserveComments: 'some'})
-	))
-	.pipe(gulp.dest('./views/'+filePath));	
-	});
+gulp.task('js', function (err) {
+	gulp.src('./dev/js/**/*.js')
+		.pipe(gulp.dest('./views/js'));
+	err();
 });
 
 gulp.task('ejs', function (err) {
