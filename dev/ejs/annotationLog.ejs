@@ -5,10 +5,14 @@
 <% annotationList.forEach((annotation) => { %>
     <tr>
         <td><%= annotation.userName %></td>
-        <td ><canvas id="<%= annotation._id%>"></canvas><%= annotation.data.path %></td>    
+        <td >
+            <canvas id="<%= annotation._id%>" width="500px" height="500px"></canvas>
+            <input type="button" class="dispData" id="td" name="<%= annotation._id%>" value=<%= annotation.data.path %> >
+        </td>    
         <td><%= annotation.pageNum %></td>
         <td><%= annotation.pdfName %></td>
         <td><%= annotation.time %></td>
     </tr>
 <% }) %>
 </table>
+<script src="../js/annotationLog.js"></script>
