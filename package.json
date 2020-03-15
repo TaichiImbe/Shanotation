@@ -21,7 +21,8 @@
     "chroma": "0.0.1",
     "colorsys": "^1.0.22",
     "ejs": "^2.7.1",
-    "mongodb": "^3.5.2"
+    "mongodb": "^3.5.2",
+    "pdfjs-dist": "^2.2.228"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -56,7 +57,6 @@
     "nodemon": "^1.19.2",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "pdfjs-dist": "^2.2.228",
     "socket.io": "^2.2.0",
     "spectrum-colorpicker": "^1.8.0",
     "uglify": "^0.1.5",

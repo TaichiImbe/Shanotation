@@ -1,5 +1,8 @@
-let fabric = require('fabric').fabric;
-let profile = require('./profile');
+// let fabric = require('fabric').fabric;
+import * as fabricjs from '/node_modules/fabric/dist/fabric.js';
+const fabric = fabricjs.fabric;
+// let profile = require('./profile');
+import * as profile from './_profile.js';
 let Canvas = new fabric.Canvas('draw-area', {
     isDrawingMode: true,
     selection: true,

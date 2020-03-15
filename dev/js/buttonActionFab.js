@@ -1,5 +1,5 @@
 let PageAnno = new Map();
-let $ = require('jquery');
+// let $ = require('jquery');
 let eraserMode = false;
 let pageTrans = false;
 
