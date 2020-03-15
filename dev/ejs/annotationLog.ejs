@@ -1,0 +1,14 @@
+<% include common/_head %>
+
+<% var annotationList %>
+<table border="1" >
+<% annotationList.forEach((annotation) => { %>
+    <tr>
+        <td><%= annotation.userName %></td>    
+        <td><%= annotation.data.path %></td>    
+        <td><%= annotation.pageNum %></td>    
+        <td><%= annotation.pdfName %></td>    
+        <td><%= annotation.time %></td>
+    </tr>
+<% }) %>
+</table>

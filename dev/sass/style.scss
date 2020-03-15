@@ -143,3 +143,14 @@
     transform-origin: 0% 0%;
   }
 }
+
+table{
+  border: 1px;
+  table-layout: fixed;
+  width: 500px;
+  tr{
+    td{
+      word-wrap: break-word;
+    }
+  }
+}

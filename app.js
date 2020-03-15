@@ -45,6 +45,7 @@ const replay = require('./server/router/replay');
 const replaymenu = require('./server/router/replaymenu');
 const login = require('./server/router/login');
 const userInfo = require('./server/router/userInfo');
+const annotationLog = require('./server/router/annotationLog');
 
 //express server
 server = app.listen(port, function () {
@@ -91,6 +92,7 @@ app.use(replay);
 app.use(replaymenu);
 app.use(login);
 app.use(userInfo);
+app.use(annotationLog);
 
 // app.use(passport.initialize());
 // app.use(passport.session());
