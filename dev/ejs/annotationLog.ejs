@@ -4,10 +4,10 @@
 <table border="1" >
 <% annotationList.forEach((annotation) => { %>
     <tr>
-        <td><%= annotation.userName %></td>    
-        <td><%= annotation.data.path %></td>    
-        <td><%= annotation.pageNum %></td>    
-        <td><%= annotation.pdfName %></td>    
+        <td><%= annotation.userName %></td>
+        <td ><canvas id="<%= annotation._id%>"></canvas><%= annotation.data.path %></td>    
+        <td><%= annotation.pageNum %></td>
+        <td><%= annotation.pdfName %></td>
         <td><%= annotation.time %></td>
     </tr>
 <% }) %>
