@@ -2,15 +2,23 @@
 
 <% var annotationList %>
 <table border="1" >
+    <tr>
+        <th>ユーザ名</th>
+        <th>書き込み</th>
+        <th>ページ</th>
+        <th>ファイル名</th>
+        <th>日時</th>
+    </tr>
 <% annotationList.forEach((annotation) => { %>
     <tr>
         <td><%= annotation.userName %></td>
-        <td >
-            <canvas id="<%= annotation._id%>" width="500px" height="500px"></canvas>
-            <input type="button" class="dispData" id="td" name="<%= annotation._id%>" value=<%= annotation.data.path %> >
+        <td class="canvas-wrapper" >
+            <canvas id="<%= 'pdf' + annotation._id %>" ></canvas>
+            <canvas id="<%= annotation._id%>" width="720px" height="540px"></canvas>
+            <input class="dispData" id="td" name="<%= annotation._id%>" value=<%= annotation.data.path %> readonly>
         </td>    
-        <td><%= annotation.pageNum %></td>
-        <td><%= annotation.pdfName %></td>
+        <td><span id="<%= 'pageNum' + annotation._id %>"><%= annotation.pageNum %></span></td>
+        <td id="<%= 'pdfName' + annotation._id %>"><%= annotation.pdfName %></td>
         <td><%= annotation.time %></td>
     </tr>
 <% }) %>

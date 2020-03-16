@@ -154,6 +154,10 @@ table{
     td{
       word-wrap: break-word;
       width: 500px;
+
+      input{
+        display: none;
+      }
     }
   }
 }
