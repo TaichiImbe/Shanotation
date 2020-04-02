@@ -1,19 +1,27 @@
-    <% include common/_head %>
+<% include common/_head %>
 </head>
 
 <body>
     <div class="container">
         <div class="row">
-
             <dvi class="col col-sm-8 mx-auto">
                 <div class="row">
-                    <form action='/login' method='post'>
-                        <input id='name' type='text' name='userName' placeholder='ユーザ名'>
-                        <input id='password' type='text' name='passWord' placeholder='パスワード'>
-                        <div>
-                            <button id='login' type='submit' value='Login'>ログイン</button>
-                        </div>
-                    </form>
+                    <h2> ログインフォーム </h2>
+                </div>
+                <div class="row">
+                    <div class="login">
+                        <form action='/login' method='post'>
+                            <div>
+                                <input id='name' type='text' name='userName' placeholder='ユーザ名'>
+                            </div>
+                            <div>
+                                <input id='password' type='text' name='passWord' placeholder='パスワード'>
+                            </div>
+                            <div>
+                                <button id='login' type='submit' value='Login'>ログイン</button>
+                            </div>
+                        </form>
+                    </div>
             </dvi>
         </div>
         <div class="row">

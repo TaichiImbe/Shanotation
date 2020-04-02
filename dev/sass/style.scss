@@ -48,8 +48,6 @@
         }
     }
 
-
-
 }
 
 .canvas-wrapper{
@@ -160,4 +158,58 @@ table{
       }
     }
   }
+}
+
+.login {
+  form{
+    div{
+      input[type="text"]{
+        margin: 15px 0;
+        border-radius: 20px;
+      }
+      button{
+        font-size: large;
+        border-radius: 20px;
+      }
+    }
+  }
+}
+
+.upload{
+  form{
+    margin: 1rem;
+    input{
+      border-radius: 10px;
+    }
+    input[type="file"]{
+      background: #099;
+    }
+  }
+}
+
+.info_header{
+      background-color: orange;
+      ul{
+        overflow: hidden;
+        margin: 0 auto;
+        padding: 0 3%;
+        width: 94%;
+        max-width: 960px;
+        list-style: none;
+
+        li{
+          position: relative;
+          float: left;
+          width: 20%;
+          
+          a{
+            display: block;
+            padding: 17px 5%;
+            width: 90%;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+          }
+        }
+      }
 }
