@@ -18,7 +18,7 @@ window.addEventListener('load', () => {
             area.add(stroke);
             const num = document.getElementById('pageNum' + element.name);
             const pdfName = document.getElementById('pdfName' + element.name);
-            _pdf(parseInt(num.innerHTML),pdfName.innerHTML,'pdf'+element.name)
+            _pdf(parseInt(num.innerHTML), pdfName.innerHTML, 'pdf' + element.name)
         };
     }
     for (let button of buttons) {
@@ -33,7 +33,7 @@ CMAP_URL = '/node_modules/pdfjs-dist/cmaps/'
 CMAP_PACKED = true;
 
 
-function _pdf(pageNum, pdfName,canvasName) {
+function _pdf(pageNum, pdfName, canvasName) {
     const url = '/pdf/' + pdfName;
     const loadingTask = pdfjsLib.getDocument({
         url: url,
@@ -44,42 +44,30 @@ function _pdf(pageNum, pdfName,canvasName) {
         pdf = pdf_;
         pdf.getPage(pageNum).then((page) => {
             _width = page.getViewport({ scale: 1 }).width;
-            _pageRender(page,canvasName);
+            _pageRender(page, canvasName);
         })
     });
 }
 
-function _pageRender(page,canvasName) {
+function _pageRender(page, canvasName) {
     var scale = 1.0;
-            //todo scaleは大きさを変更すると座標がバグるので注意
-            // テキストの方がおかしいのかな...?
-            // viewport いじってる... あれ?
-            // 変換時 viewportが設定しているよね
-            // if (page._pageInfo.view[2] * scale < 720) {
-            //     scale = 2;
-            // } 
-            // let canvasWrapper = document.getElementById('canvas-wrapper');
-            var viewport = page.getViewport({ scale: scale });
-            var pdfCan = document.getElementById(canvasName);
-            var context = pdfCan.getContext('2d');
-            // scale = canvasWrapper.scrollWidth / viewport.width;
-            // viewport = page.getViewport({scale: scale});
-        // Canvas.setHeight(viewport.height)
-        // Canvas.setWidth(viewport.setWidth);
-        pdfCan.height = viewport.height;
-        pdfCan.width = viewport.width;
+    var viewport = page.getViewport({ scale: scale });
+    var pdfCan = document.getElementById(canvasName);
+    var context = pdfCan.getContext('2d');
+    pdfCan.height = viewport.height;
+    pdfCan.width = viewport.width;
 
-        var renderContext = {
-            canvasContext: context,
-            viewport: viewport
-        };
-        page.render(renderContext);
-        page.getTextContent().then(function (textContent) {
-            // console.log(textContent);
-            textContent.items.forEach(text => {
-                var tx = pdfjsLib.Util.transform(viewport.transform, text.transform);
-                // console.log(text);
-                // console.log(tx);   
-            });
+    var renderContext = {
+        canvasContext: context,
+        viewport: viewport
+    };
+    page.render(renderContext);
+    page.getTextContent().then(function (textContent) {
+        // console.log(textContent);
+        textContent.items.forEach(text => {
+            var tx = pdfjsLib.Util.transform(viewport.transform, text.transform);
+            // console.log(text);
+            // console.log(tx);   
         });
+    });
 }
