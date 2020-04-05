@@ -1,8 +1,9 @@
-let app = require('express');
-let router = app.Router();
-let fs = require('fs');
+const app = require('express');
+const router = app.Router();
+const fs = require('fs');
 const mongodb = require('../mongodb');
 const util = require('../util/util');
+
 
 router.route('/login')
     .get((req, res, next) => {
