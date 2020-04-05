@@ -1,32 +1,18 @@
 const express = require('express');
-const fs = require('fs');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const app = express();
-const router = express.Router();
-const url = require('url');
-const config = require('config');
 
 const webconfig = require('./config/webconfig.json');
 
-let port = webconfig.port;
-let user = config.user;
+const port = webconfig.port;
 
-const os = require('os');
-let hostname = os.hostname() || '127.0.0.1';
-
-const fabric = require('fabric').fabric;
 // var sock = require('./server/sock');
 const socketIO = require('socket.io');
 let io;
-let server;
-let filename;
-
-// const passport = require('passport');
-// let local = require('passport-local');
 
 //ファイル書き出し処理
-let fileio = require('./server/fileio');
+const fileio = require('./server/fileio');
 
 //データベース
 const mongodb = require('./server/mongodb');
@@ -48,7 +34,7 @@ const userInfo = require('./server/router/userInfo');
 const annotationLog = require('./server/router/annotationLog');
 
 //express server
-server = app.listen(port, function () {
+const server = app.listen(port, function () {
     console.log('Node js is listening to PORT:' + server.address().port);
 });
 
@@ -94,32 +80,6 @@ app.use(login);
 app.use(userInfo);
 app.use(annotationLog);
 
-// app.use(passport.initialize());
-// app.use(passport.session());
-// let LocalStrategy = require('passport-local').Strategy;
-// passport.use(
-//     new LocalStrategy(
-//     {
-//         usernameField: 'userName',
-//         passwordField: 'passWord'
-//     },
-//     (username, password, done) => {
-//     if (username === "test" && password === "test") {
-//         return done(null, username)
-//     } else {
-//       console.log("login error")
-//         return done(null, false, { message: 'パスワードが正しくありません。' })
-//     }
-// }));
-
-// passport.serializeUser(function(user, done) {
-//     done(null, user);
-// });
-  
-// passport.deserializeUser(function (user, done) {
-//     done(err, user);
-// });
-
 // ファイルアップロード処理用
 // app.use(fileupload());
 
@@ -136,9 +96,7 @@ let userList = new Map();
 
 //socket connect
 io = socketIO.listen(server);
-// io.use(socket_io_session.express_session);
-// io.use(socket_io_session.passport_initialize);
-// io.use(socket_io_session.passport_session);
+
 io.sockets.on('connection', function (socket) {
     let parser = new URL(socket.handshake.headers.referer);
     console.log(parser.searchParams.get('id'));
