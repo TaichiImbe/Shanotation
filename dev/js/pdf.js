@@ -22,6 +22,7 @@ window.addEventListener('load', function () {
             _width = page.getViewport({ scale: 1 }).width;
         })
         pageRender(pageNum);
+        global.textFilter();
         $f('pageMove').textContent = '1';
         $f('pageDef').textContent = '/'+pdf.numPages;
     });

@@ -509,7 +509,7 @@ function makeEnclosure(oCoords, color) {
  * @param {*} text is pdfjs text infomation
  * @param {*} color is color code
  */
-function makeTextHiglight(text, color) {
+function makeTextHiglight(text, color,opacity = 0.5) {
     // console.log(text.height + ' ' + text.width);
     height = text.height;
     width = text.width;
@@ -519,21 +519,23 @@ function makeTextHiglight(text, color) {
         left: text.transform[4],
         width: width,
         height: height,
-        opacity: 0.5
+        opacity: opacity
     })
 
     return Highlight;
 }
 
-class newString {
-    constructor(str, height, width, transform) {
-        this.str = str;
-        this.height = height;
-        this.width = width;
-        this.transform = transform;
-    }
+function textFilter() {
+    getPdfText(global.pageNum).then((textArray) => {
+        console.log(textArray);
+        const highLightList = []
+        for (let text of textArray.items) {
+            highLightList.push(makeTextHiglight(text, '#FFF',1));
+        } 
+        setPage(highLightList, pageNum);
+        AnnotationSet(global.pageNum);
+    })
 }
-
 
 global.Canvas = Canvas;
 global.setCanvasSize = setCanvasSize;
@@ -543,3 +545,4 @@ global.makeReplayData = makeReplayData;
 global.getNowTime = getNowTime;
 
 global.getSubText = getSubText;
+global.textFilter = textFilter;
