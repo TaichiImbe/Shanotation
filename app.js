@@ -109,9 +109,6 @@ io.sockets.on('connection', function (socket) {
     } finally {
 
     }
-    //接続時にPrivateIPを設定する.
-    let handshake = socket.handshake
-    // userList.set(handshake.address);
     socket.on('massage', function (data) {
         console.log('massage');
         io.sockets.emit('massage', { value: data.value });
@@ -132,10 +129,10 @@ io.sockets.on('connection', function (socket) {
             var path = data.path;
             // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/includes
             if (parser.pathname.includes('/index')) {
-                fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+                fileio.fileWrite('analysdata.txt', name, data, color, pageNum, pdfName, 'insert', time);
                 mongodb.Insert('analys',[{userName:name,data:data,color:color,pageNum:pageNum,pdfName:pdfName,indet:'insert',time:time}]);
             } else if (parser.pathname.includes('/replay')) {
-                fileio.fileWrite('replay.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+                fileio.fileWrite('replay.txt', name, data, color, pageNum, pdfName, 'insert', time);
             }
             analys.dataset(name, data, oCoords, pageNum, ident, text);
             // console.log(userList);
@@ -162,9 +159,9 @@ io.sockets.on('connection', function (socket) {
     socket.on('annotation', (name, data, color, pageNum, pdfName, time) => {
         let parser = new URL(socket.handshake.headers.referer);
             if (parser.pathname.includes('/index')) {
-                fileio.fileWrite('analysdata.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+                fileio.fileWrite('analysdata.txt', name, data, color, pageNum, pdfName, 'insert', time);
             } else if (parser.pathname.includes('/replay')) {
-                fileio.fileWrite('replay.txt', handshake, name, data, color, pageNum, pdfName, 'insert', time);
+                fileio.fileWrite('replay.txt', name, data, color, pageNum, pdfName, 'insert', time);
             }
     })
 
@@ -181,10 +178,10 @@ io.sockets.on('connection', function (socket) {
 
         let parser = new URL(socket.handshake.headers.referer);
         if (parser.pathname.includes('/index')) {
-            fileio.fileWrite('removedata.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
+            fileio.fileWrite('removedata.txt', name, obj, color, pageNum, pdfName, 'delete', time);
             mongodb.Insert('analys',[{userName:name,data:obj,color:color,pageNum:pageNum,pdfName:pdfName,indet:'delete',time:time}]);
         }else if (parser.pathname.includes('/replay')){
-            fileio.fileWrite('replay.txt', handshake, name, obj, color, pageNum, pdfName, 'delete', time);
+            fileio.fileWrite('replay.txt', name, obj, color, pageNum, pdfName, 'delete', time);
         }
         analys.dataRemove(name, obj, oCoords, pageNum, text);
         let ptext = analys.analys(pageNum,docs.length);

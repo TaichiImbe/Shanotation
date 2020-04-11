@@ -161,9 +161,9 @@ function getSubText(object, text) {
     // console.log(thresh);
     // console.log(oCoords);
     for (i = 0; i < text.items.length; i++) {
-        console.log(text.items[i].transform[5] >= oCoords.tl.y);
+        // console.log(text.items[i].transform[5] >= oCoords.tl.y);
         if (
-        oCoords.bl.y - thresh * 1.5 <= text.items[i].transform[5] && text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)) {
+            oCoords.bl.y - thresh * 1.5 <= text.items[i].transform[5] && text.items[i].transform[5] <= oCoords.bl.y + (thresh / 2)) {
             if (text.items[i].transform[5] >= oCoords.tl.y) {
                 // if (oCoords.bl.x - thresh <= text.items[i].transform[4] && oCoords.br.x >= text.items[i].transform[4]) {
                 // console.log(text.items[i]);
@@ -342,21 +342,25 @@ function make(pageNum, text) {
     //     line = makeLine(data);
     // }
     // Canvas.freeDrawingBrush = false;
-    if (Array.isArray(text)) {
-        let highLightList = [];
-        text.forEach(textinfo => {
-            if (teacherFilter.checkFilter(textinfo, pageNum)) {
-                highLightList.push(makeTextHiglight(textinfo, textinfo.color));
-            }
-        });
-        setPage(highLightList, pageNum);
-        AnnotationSet(global.pageNum);
-    } else if (text != null) {
-        line = makeTextHiglight(text.text, text.color);
-        if (line !== null) {
-            setPage(line, pageNum);
-        }
-    }
+    opacityChange(pageNum,text);
+    AnnotationSet(global.pageNum);
+    // if (Array.isArray(text)) {
+    //     let highLightList = [];
+    //     text.forEach(textinfo => {
+    //         if (teacherFilter.checkFilter(textinfo, pageNum)) {
+    //             // highLightList.push(makeTextHiglight(textinfo, textinfo.color));
+    //             highLightList.push(makeTextHiglight(textinfo, textinfo.color, textinfo.opacity));
+    //         }
+    //     });
+    //     setPage(highLightList, pageNum);
+    //     AnnotationSet(global.pageNum);
+    // } else if (text != null) {
+    //     // line = makeTextHiglight(text.text, text.color);
+    //     line = makeTextHiglight(text.text, text.color, text.opacity);
+    //     if (line !== null) {
+    //         setPage(line, pageNum);
+    //     }
+    // }
 }
 
 /**
@@ -509,7 +513,7 @@ function makeEnclosure(oCoords, color) {
  * @param {*} text is pdfjs text infomation
  * @param {*} color is color code
  */
-function makeTextHiglight(text, color,opacity = 0.5) {
+function makeTextHiglight(text, color, opacity = 0.5) {
     // console.log(text.height + ' ' + text.width);
     height = text.height;
     width = text.width;
@@ -517,8 +521,8 @@ function makeTextHiglight(text, color,opacity = 0.5) {
         fill: color,
         top: text.transform[5] - height,
         left: text.transform[4],
-        width: width,
-        height: height,
+        width: width + (width * 0.3),
+        height: height + (height * 0.3),
         opacity: opacity
     })
 
@@ -530,11 +534,49 @@ function textFilter() {
         console.log(textArray);
         const highLightList = []
         for (let text of textArray.items) {
-            highLightList.push(makeTextHiglight(text, '#FFF',1));
-        } 
+            charList = splitText(text);
+            for (char of charList) {
+                highLightList.push(makeTextHiglight(char, '#FFF', 1));
+            }
+        }
         setPage(highLightList, pageNum);
         AnnotationSet(global.pageNum);
     })
+}
+
+function splitText(text) {
+    let charList = [];
+    let t4 = text.transform[4];
+    if (getUserName() === 'teacher') {
+        for (i = 0; i < text.str.length; i++) {
+            /*   正規表現 https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String
+                半角文字のみ取得 http://2011428.blog.fc2.com/blog-entry-79.html
+            */
+            if (text.height > text.width) {
+                charList.push({
+                    dir: text.dir,
+                    fontName: text.fontName,
+                    height: text.height,
+                    width: text.width,
+                    transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
+                    str: text.str[i]
+                });
+            }
+            else {
+                charList.push({
+                    dir: text.dir,
+                    fontName: text.fontName,
+                    height: text.height,
+                    width: text.height,
+                    transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
+                    str: text.str[i]
+                });
+            }
+            t4 += text.height;
+        }
+        return charList;
+
+    }
 }
 
 global.Canvas = Canvas;

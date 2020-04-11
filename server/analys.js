@@ -133,9 +133,13 @@ module.exports = {
                 // console.log(color);
                 // countList[i].color = colorVariation[Math.round(color)];
                 if (mylimit) {
-                    countList[i].color = getHeatMapColor(0, mylimit, countList[i].count);
+                    // countList[i].color = getHeatMapColor(0, mylimit, countList[i].count);
+                            countList[i].color = '#FFF';
+                            countList[i].opacity = getOpacityValue(0, mylimit, countList[i].count);
                 } else {
-                    countList[i].color = getHeatMapColor(0, userListSize, countList[i].count);
+                    // countList[i].color = getHeatMapColor(0, userListSize, countList[i].count);
+                            countList[i].color = '#FFF';
+                            countList[i].opacity = getOpacityValue(0, userListSize, countList[i].count);
                 }
                 list.push(countList[i]);
                 // console.log(textList);
@@ -448,7 +452,9 @@ const getHeatMapColor = (min,max,value) =>{
     // console.log(colorsys.hsv2Hex(hsv));
     return colorsys.hsv2Hex(hsv);
 }
-
+const getOpacityValue = (min = 0, max, value) => {
+    return (value - max)/(min - max);
+}
 /**
  *  分析データクラス
  *  パスのまとまり、バウンディングボックス,識別子,一緒に存在するテキスト

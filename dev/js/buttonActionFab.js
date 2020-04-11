@@ -69,6 +69,7 @@ prevButton.onclick = function () {
     });
     // pageMoveArea.value = pageNum;
     pageMoveArea.textContent = pageNum;
+    textFilter();
 }
 
 nextButton.onclick = function () {
@@ -89,6 +90,7 @@ nextButton.onclick = function () {
     });
     pageMoveArea.textContent = pageNum;
     // eraserButton.onclick();
+    textFilter();
 }
 
 //canvas上の絵を全部消す
@@ -357,6 +359,21 @@ function userHigh(annotation, page, ident) {
     }
 }
 
+function opacityChange(pageNum, text) {
+    let data = PageAnno.get(pageNum);
+    for (let t of data) {
+        for (let tx of text) {
+            let height = tx.height;
+            if (t.top === tx.transform[5] - height &&
+                t.left === tx.transform[4]) {
+                t.opacity = tx.opacity;
+                }
+        }
+    }
+    console.log(data);
+    PageAnno.set(pageNum, data);
+}
+
 global.setPage = setPage;
 global.eraserMode = eraserMode;
 global.pageTrans = pageTrans;
@@ -365,3 +382,4 @@ global.replaySet = replaySet;
 global.replayView = replayView;
 global.replayRemove = replayRemove;
 global.AnnotationSet = AnnotationSet;
+global.opacityChange = opacityChange;
