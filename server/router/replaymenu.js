@@ -18,13 +18,5 @@ router.route('/replaymenu')
         let userName = req.body.userName;
         res.render('./replay', { title:'リプレイ' ,userName: userName, pdfname: req.body.pdfname });
     })
-router.post('/repMenu', (req, res, next) => {
-    fs.readdir('pdf/', function (err, files) {
-        if (err) throw err;
-        let fileList = files.filter(file => {
-            return /.*\.(pdf$|PDF$)/.test(file);
-        })
-        res.render('./replaymenu', { userName:req.body.userName,array: fileList });
-    }) 
-})
+
 module.exports = router;

@@ -1,13 +1,11 @@
-<meta name='username' content=<%= userName %>>
-<meta name='pdfname' content=<%= pdfname %>>
 <script>
-    let meta = document.head.querySelector('[name=username]');
-    console.log(meta.content);
     function getUserName(){
-        return document.head.querySelector('[name=username]').content;
+        const params = (new URL(document.location)).searchParams;
+        return params.get('id');
     }
 
     function getPdfName(){
-        return document.head.querySelector('[name=pdfname]').content;
+        const params = (new URL(document.location)).searchParams;
+        return params.get('pdfname');
     }
 </script>

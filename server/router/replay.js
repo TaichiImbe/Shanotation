@@ -4,9 +4,9 @@ const fs = require('fs');
 
 router.route('/replay')
     .get((req, res, next) => {
-        res.render('./replay', {title:'リプレイ', userName: req.query.id ,pdfname:req.query.pdfname});
+        res.render('./replay', { title: 'リプレイ' });
     })
     .post((req, res, next) => {
-        res.render('./replay', {title:'リプレイ', userName: req.body.userName, pdfname: req.body.pdfName });
+        res.render('./replay', { title: 'リプレイ' });
     })
 module.exports = router;

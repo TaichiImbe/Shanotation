@@ -13,11 +13,10 @@ router.route('/main')
         })
     })
     .post((req, res, next) => {
-        let userName = req.body.userName;
         if (userName === 'teacher') {
-            res.render('./teacher', { pdfname: req.body.pdfname, userName: userName });
+            res.render('./teacher');
         } else {
-            res.render('./index', { pdfname: req.body.pdfname, userName: userName });
+            res.render('./index');
         }
     })
 router.post('/pageTrans', (req, res, next) => {

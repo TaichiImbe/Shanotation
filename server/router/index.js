@@ -6,10 +6,8 @@ const url = require('url');
 //index render
 router.route('/index')
     .get((req, res, next) => {
-        const userName = req.query.id;
-        const pdfname = req.query.pdfname;
         // let userName = req.body.userName;
-        res.render('./index', {title:'学習者側' ,pdfname: pdfname, userName: userName });
+        res.render('./index', {title:'学習者側'});
     })
 
 module.exports = router;

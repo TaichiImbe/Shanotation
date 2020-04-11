@@ -530,24 +530,25 @@ function makeTextHiglight(text, color, opacity = 0.5) {
 }
 
 function textFilter() {
-    getPdfText(global.pageNum).then((textArray) => {
-        console.log(textArray);
-        const highLightList = []
-        for (let text of textArray.items) {
-            charList = splitText(text);
-            for (char of charList) {
-                highLightList.push(makeTextHiglight(char, '#FFF', 1));
+    if (getUserName() === 'teacher') {
+        getPdfText(global.pageNum).then((textArray) => {
+
+            const highLightList = []
+            for (let text of textArray.items) {
+                charList = splitText(text);
+                for (char of charList) {
+                    highLightList.push(makeTextHiglight(char, '#FFF', 1));
+                }
             }
-        }
-        setPage(highLightList, pageNum);
-        AnnotationSet(global.pageNum);
-    })
+            setPage(highLightList, pageNum);
+            AnnotationSet(global.pageNum);
+        })
+    }
 }
 
 function splitText(text) {
     let charList = [];
     let t4 = text.transform[4];
-    if (getUserName() === 'teacher') {
         for (i = 0; i < text.str.length; i++) {
             /*   正規表現 https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String
                 半角文字のみ取得 http://2011428.blog.fc2.com/blog-entry-79.html
@@ -575,8 +576,6 @@ function splitText(text) {
             t4 += text.height;
         }
         return charList;
-
-    }
 }
 
 global.Canvas = Canvas;
