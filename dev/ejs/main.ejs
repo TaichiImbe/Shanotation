@@ -1,13 +1,14 @@
     <% include common/_head %>
 
 <body class="main-body">
+    <% include common/_header %>
     <div class="container">
         <div class="col-sm-8 mx-auto">
             <div class="row">
                 <% var array %>
                 <div class="col">
                     <% array.forEach(function(value,key){ %>
-                            <div >
+                            <div class="menuLayout">
                                 <% if (userName !== 'teacher') { %>
                                 <a href='/index?id=<%= userName %>&pdfname=<%= value %>'
                                  class="btn btn-light round-circle-0" type="submit" name='pdfname'><%= value %></a>
@@ -27,25 +28,6 @@
                     </form> -->
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <a href='/upload?id=<%= userName %>' class="btn btn-light round-circle-0" type="submit">
-                        アップロード
-                    </a>
-                    <a href="/replaymenu?id=<%= userName %>" class="btn btn-light round-circle-0">
-                        リプレイ
-                    </a>
-                    <!-- <form method="post" action="/pageTrans">
-                        <input type='hidden'  name='userName' value=<%= userName %>>
-                        <input class="btn btn-light round-circle-0" type="submit" value='アップロード'>
-                    </form> -->
-                    <!-- <form method="post" action="/repMenu">
-                        <input type='hidden' name='userName' value=<%= userName %>>
-                        <input  class="btn btn-light round-circle-0"  type="submit" value='リプレイ'>
-                    </form> -->
-                </div>
-            </div>
-    
         </div>
         </div>
     </div>

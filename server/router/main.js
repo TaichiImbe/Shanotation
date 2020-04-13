@@ -2,6 +2,8 @@ let app = require('express');
 let router = app.Router();
 let fs = require('fs');
 
+const menu = require('../../config/menu.json')
+
 router.route('/main')
     .get((req, res, next) => {
         fs.readdir('pdf/', function (err, files) {
@@ -9,7 +11,8 @@ router.route('/main')
             let fileList = files.filter(file => {
                 return /.*\.(pdf$|PDF$)/.test(file);
             })
-            res.render('./main', { title:'PDF選択',array: fileList ,userName:req.query.id });
+            let menuItems = menu.menu;
+            res.render('./main', { title:'PDF選択',array: fileList ,userName:req.query.id ,menuItems:menuItems});
         })
     })
     .post((req, res, next) => {

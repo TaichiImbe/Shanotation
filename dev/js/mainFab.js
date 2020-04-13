@@ -521,7 +521,7 @@ function makeTextHiglight(text, color, opacity = 0.5) {
         fill: color,
         top: text.transform[5] - height,
         left: text.transform[4],
-        width: width + (width * 0.3),
+        width: width + (width * 0.2),
         height: height + (height * 0.3),
         opacity: opacity
     })
@@ -530,6 +530,7 @@ function makeTextHiglight(text, color, opacity = 0.5) {
 }
 
 function textFilter() {
+    getPdfOperator(global.pageNum);
     if (getUserName() === 'teacher') {
         getPdfText(global.pageNum).then((textArray) => {
 

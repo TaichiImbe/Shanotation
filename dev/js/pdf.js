@@ -46,14 +46,14 @@ function getPdfPage() {
 function getPdfText(pageNum) {
     return pdf.getPage(pageNum).then(function (page) {
         let scale = 1;
-        if (page._pageInfo.view[2] * scale < 720) {
-            scale = 2;
-        } 
+        // if (page._pageInfo.view[2] * scale < 720) {
+        //     scale = 2;
+        // } 
         page.getAnnotations().then((data) => {
-            console.log(data);
+            // console.log(data);
         })
         page.getOperatorList().then((data) => {
-            console.log(data);
+            // console.log(data);
         })
         return page.getTextContent().then(function (textContent) {
             // console.log(textContent);
@@ -66,6 +66,27 @@ function getPdfText(pageNum) {
             return textContent;
         });
     });
+}
+function getPdfOperator(pageNum) {
+    return pdf.getPage(pageNum).then((page) => {
+        let scale = 1;
+        // if (page._pageInfo.view[2] * scale < 720) {
+        //     scale = 2;
+        // }
+        return page.getOperatorList().then((operationList) => {
+            for (operation of operationList.argsArray) {
+                if (operation) {
+                    if (operation.length === 3) {
+                        r = operation[0]
+                        g = operation[1]
+                        b = operation[2]
+                        console.log(operation);
+                    }
+                }
+            } 
+            return operationList;
+        })
+    })
 }
 
 function _pageRender(page) {
@@ -93,7 +114,7 @@ function _pageRender(page) {
             canvasContext: context,
             viewport: viewport
         };
-        page.render(renderContext);
+        let renderTask = page.render(renderContext);
         page.getTextContent().then(function (textContent) {
             // console.log(textContent);
             textContent.items.forEach(text => {
@@ -107,9 +128,9 @@ function _pageRender(page) {
 function TransForm(transform) {
     return pdf.getPage(pageNum).then(page => {
         let scale = 1;
-        if (page._pageInfo.view[2] * scale < 720) {
-            scale = 2;
-        } 
+        // if (page._pageInfo.view[2] * scale < 720) {
+        //     scale = 2;
+        // } 
         let viewport = page.getViewport({ scale: scale });
         return pdfjsLib.Util.transform(viewport.transform, transform);
     })
@@ -124,4 +145,5 @@ global.pageRender = pageRender;
 global.pageNum = pageNum;
 global.getPdfPage = getPdfPage;
 global.getPdfText = getPdfText;
+global.getPdfOperator = getPdfOperator;
 global.TransForm = TransForm;

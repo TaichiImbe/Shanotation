@@ -100,15 +100,15 @@ io = socketIO.listen(server);
 io.sockets.on('connection', function (socket) {
     let parser = new URL(socket.handshake.headers.referer);
     console.log(parser.searchParams.get('id'));
-    try {
-        mongodb.Insert('activeUser', [{userName:parser.searchParams.get('id')}], (docs) => {
+    // try {
+    //     mongodb.Insert('activeUser', [{userName:parser.searchParams.get('id')}], (docs) => {
 
-        })
-    } catch (error) {
-        console.log(error);
-    } finally {
+    //     })
+    // } catch (error) {
+    //     console.log(error);
+    // } finally {
 
-    }
+    // }
     socket.on('massage', function (data) {
         console.log('massage');
         io.sockets.emit('massage', { value: data.value });
@@ -265,33 +265,33 @@ io.sockets.on('connection', function (socket) {
         // analys.textset(text,pageNum);
     })
 
-    socket.on('disconnect', (reason) => {
-        let parser = new URL(socket.handshake.headers.referer);
-        mongodb.FindOne('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
-            try {
-                mongodb.Insert('userLog', [{ userName:docs.userName,time:docs.time }], (docs) => {
+    // socket.on('disconnect', (reason) => {
+    //     let parser = new URL(socket.handshake.headers.referer);
+    //     mongodb.FindOne('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
+    //         try {
+    //             mongodb.Insert('userLog', [{ userName:docs.userName,time:docs.time }], (docs) => {
 
-                });
-                mongodb.Delete('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
+    //             });
+    //             mongodb.Delete('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
 
-                    mongodb.Find('activeUser', { }, (docs) => {
-                        if (docs.length === 0) {
-                            //分析用の蓄積データを削除する
-                        }
+    //                 mongodb.Find('activeUser', { }, (docs) => {
+    //                     if (docs.length === 0) {
+    //                         //分析用の蓄積データを削除する
+    //                     }
 
-                    });
-                });
-            } catch (error) {
-                console.log(error); 
-            } finally {
+    //                 });
+    //             });
+    //         } catch (error) {
+    //             console.log(error); 
+    //         } finally {
                 
-            }
-        })
-        // console.log(parser.searchParams.get('id'));
-        // console.log('disconnect');
-        // console.log(socket.request)
-        socket.disconnect(true);
-    })
+    //         }
+    //     })
+    //     // console.log(parser.searchParams.get('id'));
+    //     // console.log('disconnect');
+    //     // console.log(socket.request)
+    //     socket.disconnect(true);
+    // })
 });
 
 io.set('heartbeat interval', 5000);

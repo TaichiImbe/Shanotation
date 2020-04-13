@@ -4,6 +4,7 @@ const fs = require('fs');
 const multer = require('multer');
 const url = require('url');
 
+const menu = require('../../config/menu.json')
 //ファイルパスの設定のファイル名の設定
 let storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -20,7 +21,8 @@ let upload = multer({ storage: storage });
 //todo upload後の表示処理を考える
 router.route('/upload')
     .get((req, res, next) => {
-        res.render('./upload',{title:'データアップロード'});
+        let menuItems = menu.menu;
+        res.render('./upload',{title:'データアップロード',userName:req.query.id,menuItems:menuItems});
     })
     .post(upload.single('myFile'), (req, res, next) => {
         var img = fs.readFileSync(req.file.path);

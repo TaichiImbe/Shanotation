@@ -3,4 +3,5 @@ views/
 *.code-workspace
 *.txt
 config/webconfig.json
+config/menu.json
 pdf/

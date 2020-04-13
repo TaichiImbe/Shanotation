@@ -1,5 +1,6 @@
     <% include common/_head %>
 <body>
+    <% include common/_header %>
     <div class="container">
         <div class="col-sm-8 mx-auto">
             <p>リプレイするpdfを選択</p>
@@ -9,7 +10,7 @@
                     <form method="post" action='/replaymenu'>
                         <input type='hidden' name='userName' value=<%= userName %>>
                         <% array.forEach(function(value,key){ %>
-                            <div >
+                            <div class="menuLayout">
                                 <a href="/replay?id=<%= userName %>&pdfname=<%= value %>" class="btn btn-light round-circle-0">
                                     <%= value %>
                                 </a>

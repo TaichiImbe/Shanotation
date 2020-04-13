@@ -2,6 +2,7 @@ const app = require('express');
 const router = app.Router();
 const fs = require('fs');
 
+const menu = require('../../config/menu.json')
 
 router.route('/replaymenu')
     .get((req, res, next) => {
@@ -10,7 +11,8 @@ router.route('/replaymenu')
             let fileList = files.filter(file => {
                 return /.*\.(pdf$|PDF$)/.test(file);
             })
-            res.render('./replaymenu', { title:'リプレイ' ,userName:req.query.id,array: fileList });
+            let menuItems = menu.menu;
+            res.render('./replaymenu', { title:'リプレイ' ,userName:req.query.id,array: fileList ,menuItems:menuItems});
             // res.render('./replay', { array: fileList });
         })
     })

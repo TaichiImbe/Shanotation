@@ -1,10 +1,7 @@
 <nav class="info_header">
     <ul>
         <% for (menuItem of menuItems){ %>
-            <li><a href="<%= menuItem.link %>?id=<%="><%= menuItem.name %></a></li>
+            <li><a href=<%= menuItem.link %>?id=<%= userName%>><%= menuItem.name %></a></li>
         <% } %>
-        <!-- <li><a href="/main">ホーム</a></li>
-        <li><a href="/upload">アップロード</a></li>
-        <li><a href="/logout">ログアウト</a></li> -->
     </ul>
 </nav>
