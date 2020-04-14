@@ -32,6 +32,7 @@ const replaymenu = require('./server/router/replaymenu');
 const login = require('./server/router/login');
 const userInfo = require('./server/router/userInfo');
 const annotationLog = require('./server/router/annotationLog');
+const logout = require('./server/router/logout');
 
 //express server
 const server = app.listen(port, function () {
@@ -79,6 +80,7 @@ app.use(replaymenu);
 app.use(login);
 app.use(userInfo);
 app.use(annotationLog);
+app.use(logout);
 
 // ファイルアップロード処理用
 // app.use(fileupload());
@@ -130,7 +132,7 @@ io.sockets.on('connection', function (socket) {
             // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/includes
             if (parser.pathname.includes('/index')) {
                 fileio.fileWrite('analysdata.txt', name, data, color, pageNum, pdfName, 'insert', time);
-                mongodb.Insert('analys',[{userName:name,data:data,color:color,pageNum:pageNum,pdfName:pdfName,indet:'insert',time:time}]);
+                mongodb.Insert('analys',[{userName:name,data:data,color:color,pageNum:pageNum,pdfName:pdfName,ident:'insert',time:time}]);
             } else if (parser.pathname.includes('/replay')) {
                 fileio.fileWrite('replay.txt', name, data, color, pageNum, pdfName, 'insert', time);
             }
@@ -179,7 +181,7 @@ io.sockets.on('connection', function (socket) {
         let parser = new URL(socket.handshake.headers.referer);
         if (parser.pathname.includes('/index')) {
             fileio.fileWrite('removedata.txt', name, obj, color, pageNum, pdfName, 'delete', time);
-            mongodb.Insert('analys',[{userName:name,data:obj,color:color,pageNum:pageNum,pdfName:pdfName,indet:'delete',time:time}]);
+            mongodb.Insert('analys',[{userName:name,data:obj,color:color,pageNum:pageNum,pdfName:pdfName,ident:'delete',time:time}]);
         }else if (parser.pathname.includes('/replay')){
             fileio.fileWrite('replay.txt', name, obj, color, pageNum, pdfName, 'delete', time);
         }
@@ -287,10 +289,10 @@ io.sockets.on('connection', function (socket) {
                 
     //         }
     //     })
-    //     // console.log(parser.searchParams.get('id'));
-    //     // console.log('disconnect');
-    //     // console.log(socket.request)
-    //     socket.disconnect(true);
+        // console.log(parser.searchParams.get('id'));
+        // console.log('disconnect');
+        // console.log(socket.request)
+        // socket.disconnect(true);
     // })
 });
 
