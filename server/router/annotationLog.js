@@ -6,7 +6,7 @@ const mongo = require('../mongodb');
 
 router.route('/annotationLog')
     .get((req, res, next)=>{
-        mongo.Find('analys', ({ 'pdfName': '印部_学会発表_Slide.pdf', 'indet':'insert'}), (result) => {
+        mongo.Find('analys', ({ 'pdfName': '印部_学会発表_Slide.pdf', 'ident':'insert'}), (result) => {
             res.render('annotationLog', {title:'書き込み一覧' ,annotationList : result });
         })
     })

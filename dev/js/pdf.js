@@ -22,7 +22,7 @@ window.addEventListener('load', function () {
             _width = page.getViewport({ scale: 1 }).width;
         })
         pageRender(pageNum);
-        global.textFilter();
+        operator.textFilter(pdf.numPages);
         $f('pageMove').textContent = '1';
         $f('pageDef').textContent = '/'+pdf.numPages;
     });
@@ -80,7 +80,7 @@ function getPdfOperator(pageNum) {
                         r = operation[0]
                         g = operation[1]
                         b = operation[2]
-                        console.log(operation);
+                        // console.log(operation);
                     }
                 }
             } 

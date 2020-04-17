@@ -87,7 +87,7 @@ Canvas.on('object:added', function (e) {
     //todo 消しゴムモードでページ繊維するときの問題を検討
     // 遷移時の送信はおそらく改善
     if (eraserMode) {
-        if (!pageTrans) {
+        if (!object.pageTrans) {
             Canvas.remove(object);
             Canvas.getObjects().forEach(element => {
                 global.rmflag = true;
@@ -109,19 +109,19 @@ Canvas.on('object:added', function (e) {
             //     (function (object, text) {
             // })(object, text);
             // console.log(object.oCoords);
-            if (!pageTrans) {
-                if (getUserName() !== 'teacher') {
+            if (getUserName() !== 'teacher') {
+                if (!object.pageTrans) {
                     if (font) {
                         sendObject(e.target, e.target.oCoords, pageNum, ident, font, getNowTime());
                     } else {
                         sendAnnotation(e.target, pageNum, getNowTime());
                     }
-                } else {
-                    if (Canvas.isDrawingMode) {
+                }
+            } else {
+                if (Canvas.isDrawingMode) {
                         teacherFilter.setFilter(font, pageNum);
                     }
                 }
-            }
         });
     }
 });
@@ -342,7 +342,7 @@ function make(pageNum, text) {
     //     line = makeLine(data);
     // }
     // Canvas.freeDrawingBrush = false;
-    opacityChange(pageNum,text);
+    operator.opacityChange(pageNum, text);
     AnnotationSet(global.pageNum);
     // if (Array.isArray(text)) {
     //     let highLightList = [];
@@ -529,56 +529,6 @@ function makeTextHiglight(text, color, opacity = 0.5) {
     return Highlight;
 }
 
-function textFilter() {
-    getPdfOperator(global.pageNum);
-    if (getUserName() === 'teacher') {
-        getPdfText(global.pageNum).then((textArray) => {
-
-            const highLightList = []
-            for (let text of textArray.items) {
-                charList = splitText(text);
-                for (char of charList) {
-                    highLightList.push(makeTextHiglight(char, '#FFF', 1));
-                }
-            }
-            setPage(highLightList, pageNum);
-            AnnotationSet(global.pageNum);
-        })
-    }
-}
-
-function splitText(text) {
-    let charList = [];
-    let t4 = text.transform[4];
-        for (i = 0; i < text.str.length; i++) {
-            /*   正規表現 https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String
-                半角文字のみ取得 http://2011428.blog.fc2.com/blog-entry-79.html
-            */
-            if (text.height > text.width) {
-                charList.push({
-                    dir: text.dir,
-                    fontName: text.fontName,
-                    height: text.height,
-                    width: text.width,
-                    transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
-                    str: text.str[i]
-                });
-            }
-            else {
-                charList.push({
-                    dir: text.dir,
-                    fontName: text.fontName,
-                    height: text.height,
-                    width: text.height,
-                    transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
-                    str: text.str[i]
-                });
-            }
-            t4 += text.height;
-        }
-        return charList;
-}
-
 global.Canvas = Canvas;
 global.setCanvasSize = setCanvasSize;
 global.Pen = Pen;
@@ -587,4 +537,4 @@ global.makeReplayData = makeReplayData;
 global.getNowTime = getNowTime;
 
 global.getSubText = getSubText;
-global.textFilter = textFilter;
+global.makeTextHiglight = makeTextHiglight;

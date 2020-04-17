@@ -1,7 +1,9 @@
 let PageAnno = new Map();
 let $ = require('jquery');
 let eraserMode = false;
-let pageTrans = false;
+
+const Operator = require('./_operator');
+const operator = new Operator();
 
 let $f = function (id) {
     return document.getElementById(id);
@@ -56,20 +58,17 @@ prevButton.onclick = function () {
         return;
     }
     let pageT = pageNum + ' ';
-    PageAnno.set(pageNum, Canvas.getObjects());
+    operator.setAnnotation(Canvas.getObjects(),pageNum);
     // Canvas.clear()
     // logPrint(PageAnno);
     pageNum--;
     pageT += pageNum;
     sendTrans('prev', pageT);
-    AnnotationSet(pageNum).then(function () {
-        global.pageTrans = false;
-    });
+    AnnotationSet(pageNum)
     pageRender(pageNum).then(function () {
     });
     // pageMoveArea.value = pageNum;
     pageMoveArea.textContent = pageNum;
-    textFilter();
 }
 
 nextButton.onclick = function () {
@@ -77,20 +76,17 @@ nextButton.onclick = function () {
         return;
     }
     let pageT = pageNum + ' ';
-    PageAnno.set(pageNum, Canvas.getObjects());
+    operator.setAnnotation(Canvas.getObjects(),pageNum);
     // Canvas.clear()
     // logPrint(PageAnno);
     pageNum++;
     pageT += pageNum;
     sendTrans('next', pageT);
-    AnnotationSet(pageNum).then(function () {
-        global.pageTrans = false;
-    });
+    AnnotationSet(pageNum)
     pageRender(pageNum).then(function () {
     });
     pageMoveArea.textContent = pageNum;
     // eraserButton.onclick();
-    textFilter();
 }
 
 //canvas上の絵を全部消す
@@ -218,32 +214,20 @@ function setPage(data, page) {
     PageAnno.set(page, collection);
 }
 
-function removePage(data, page) {
-    if (PageAnno.has(page)) {
-        let pageData = PageAnno.get(page);
-        let newReplayData = pageData.filter(annotation => {
-            ///https://marycore.jp/prog/js/array-equal/#JSON文字列による比較
-            // return JSON.stringify(annotation.path) !== JSON.stringify(data.path);
-            return annotation != data;
-        });
-        PageAnno.set(page, newReplayData);
-    }
-}
-
-
 function AnnotationSet(pageNum) {
     // global.pageTrans = true;
-    return new Promise(function () {
         Canvas.clear();
-        const Anno = PageAnno.get(pageNum);
-        // console.log(Anno);
+        const Anno = operator.getAnnotation(pageNum);
         if (Anno != null) {
             Anno.forEach(element => {
                 // console.log(element);
+                element.pageTrans = true;
                 Canvas.add(element);
             });
         }
-    })
+    // return new Promise(function () {
+    //     // console.log(Anno);
+    // })
 }
 let replayData = new Map();
 /**
@@ -269,9 +253,9 @@ function replayView(time) {
             if (parseInt(Date.parse(annotation.time)) < time) {
                 if (getUserName() !== 'teacher') {
                     if (annotation.ident === 'insert') {
-                        setPage(annotation, key);
+                        operator.setAnnotation(annotation, key);
                     } else {
-                        removePage(annotation, key);
+                        operator.removeAnnotation(annotation,key);
                     }
                 } else {
                     if (!annotation.sendFlg) {
@@ -281,7 +265,7 @@ function replayView(time) {
                 }
             } else {
                 if (getUserName() !== 'teacher') {
-                    removePage(annotation, key);
+                    operator.removeAnnotation(annotation, key);
                     if(pageNum === key){
                         if (Canvas.getObjects().includes(annotation)) {
                            
@@ -359,27 +343,12 @@ function userHigh(annotation, page, ident) {
     }
 }
 
-function opacityChange(pageNum, text) {
-    let data = PageAnno.get(pageNum);
-    for (let t of data) {
-        for (let tx of text) {
-            let height = tx.height;
-            if (t.top === tx.transform[5] - height &&
-                t.left === tx.transform[4]) {
-                t.opacity = tx.opacity;
-                }
-        }
-    }
-    console.log(data);
-    PageAnno.set(pageNum, data);
-}
-
 global.setPage = setPage;
 global.eraserMode = eraserMode;
-global.pageTrans = pageTrans;
 global.$f = $f;
 global.replaySet = replaySet;
 global.replayView = replayView;
 global.replayRemove = replayRemove;
 global.AnnotationSet = AnnotationSet;
-global.opacityChange = opacityChange;
+
+global.operator = operator;
