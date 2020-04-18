@@ -3,7 +3,7 @@ module.exports = class Operator {
         this.pagesAnnotationsList = new Map();
 
     }
-    setAnnotation(data, pageNum) {
+    setPageAnnotation(data, pageNum) {
         let dataCollection = [];
         if (Array.isArray(data)) {
             data.forEach(text => {
@@ -21,7 +21,7 @@ module.exports = class Operator {
                 dataCollection.push(data);
             }
         }
-        this.pagesAnnotationsList.set(pageNum, data);
+        this.pagesAnnotationsList.set(pageNum, dataCollection);
 
     }
 
@@ -113,12 +113,25 @@ module.exports = class Operator {
                                 highLightList.push(makeTextHiglight(char, '#FFF', 1));
                             }
                         }
-                        this.setAnnotation(highLightList, pageNum);
-                        AnnotationSet(global.pageNum);
+                        this.setPageAnnotation(highLightList, pageNum);
+                        this.setCanvasAnnotation(global.pageNum);
                     })
 
                 }
             }
         }
+    }
+
+    setCanvasAnnotation(pageNum) {
+        Canvas.clear();
+        const Anno = this.getAnnotation(pageNum);
+        if (Anno != null) {
+            Anno.forEach(element => {
+                // console.log(element);
+                element.pageTrans = true;
+                Canvas.add(element);
+            });
+        }
+
     }
 }

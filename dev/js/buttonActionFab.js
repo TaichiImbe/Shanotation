@@ -1,9 +1,11 @@
-let PageAnno = new Map();
 let $ = require('jquery');
 let eraserMode = false;
 
 const Operator = require('./_operator');
 const operator = new Operator();
+
+const ReplayOperator = require('./_replayOperator');
+const replayOperator = new ReplayOperator();
 
 let $f = function (id) {
     return document.getElementById(id);
@@ -58,13 +60,13 @@ prevButton.onclick = function () {
         return;
     }
     let pageT = pageNum + ' ';
-    operator.setAnnotation(Canvas.getObjects(),pageNum);
+    operator.setPageAnnotation(Canvas.getObjects(),pageNum);
     // Canvas.clear()
     // logPrint(PageAnno);
     pageNum--;
     pageT += pageNum;
     sendTrans('prev', pageT);
-    AnnotationSet(pageNum)
+    operator.setCanvasAnnotation(pageNum)
     pageRender(pageNum).then(function () {
     });
     // pageMoveArea.value = pageNum;
@@ -76,13 +78,13 @@ nextButton.onclick = function () {
         return;
     }
     let pageT = pageNum + ' ';
-    operator.setAnnotation(Canvas.getObjects(),pageNum);
+    operator.setPageAnnotation(Canvas.getObjects(),pageNum);
     // Canvas.clear()
     // logPrint(PageAnno);
     pageNum++;
     pageT += pageNum;
     sendTrans('next', pageT);
-    AnnotationSet(pageNum)
+    operator.setCanvasAnnotation(pageNum)
     pageRender(pageNum).then(function () {
     });
     pageMoveArea.textContent = pageNum;
@@ -189,166 +191,8 @@ drawingLine.onchange = function () {
     // Pen.brushWidth = Canvas.freeDrawingBrush.width;
 }
 
-//todo 毎回PageAnooに追加するArrayをリセット
-//      or 配列の中身をみる
-function setPage(data, page) {
-    // console.log(data);
-    let collection = [];
-    if (Array.isArray(data)) {
-        data.forEach(text => {
-            collection.push(text);
-        });
-    } else {
-
-        if (PageAnno.has(page)) {
-            collection = PageAnno.get(page);
-            // https://qiita.com/koyopro/items/8faced246d0d5ed921e0
-            if (!collection.includes(data)) {
-                collection.push(data);
-            }
-        } else {
-            collection.push(data);
-        }
-    }
-    // Canvas.add(data);
-    PageAnno.set(page, collection);
-}
-
-function AnnotationSet(pageNum) {
-    // global.pageTrans = true;
-        Canvas.clear();
-        const Anno = operator.getAnnotation(pageNum);
-        if (Anno != null) {
-            Anno.forEach(element => {
-                // console.log(element);
-                element.pageTrans = true;
-                Canvas.add(element);
-            });
-        }
-    // return new Promise(function () {
-    //     // console.log(Anno);
-    // })
-}
-let replayData = new Map();
-/**
- *リプレイ用情報の記録
- *
- * @param {*} data
- * @param {*} pageNum
- */
-function replaySet(data, pageNum) {
-    let list = [];
-    if (replayData.has(pageNum)) {
-        list = replayData.get(pageNum);
-    }
-    list.push(data);
-    replayData.set(pageNum, list);
-}
-
-function replayView(time) {
-    global.rmflag = true;
-    replayData.forEach((value, key) => {
-        value.forEach(annotation => {
-            let p = Date.parse(annotation.time);
-            if (parseInt(Date.parse(annotation.time)) < time) {
-                if (getUserName() !== 'teacher') {
-                    if (annotation.ident === 'insert') {
-                        operator.setAnnotation(annotation, key);
-                    } else {
-                        operator.removeAnnotation(annotation,key);
-                    }
-                } else {
-                    if (!annotation.sendFlg) {
-                        annotation.sendFlg = true;
-                        userHigh(annotation, key, 'insert');
-                    }
-                }
-            } else {
-                if (getUserName() !== 'teacher') {
-                    operator.removeAnnotation(annotation, key);
-                    if(pageNum === key){
-                        if (Canvas.getObjects().includes(annotation)) {
-                           
-                            Canvas.remove(annotation);
-                            
-                        }
-                    }
-                } else {
-                    annotation.sendFlg = false;
-                    userHigh(annotation, key, 'delete');
-                }
-            }
-        })
-        console.log(PageAnno);
-    });
-    global.rmflag = false;
-            AnnotationSet(pageNum);
-}
-
-function replayRemove(data, pageNum) {
-    if (replayData.has(pageNum)) {
-        let dataList = replayData.get(pageNum);
-        let newReplayData = dataList.filter(annotation => {
-            return JSON.stringify(annotation.path) !== JSON.stringify(data.path);
-        });
-        replayData.set(pageNum, newReplayData);
-    }
-}
-
-let teacherPageAnno = new Map();
-function userHigh(annotation, page, ident) {
-    if (ident === 'insert') {
-        collection = [];
-        if (teacherPageAnno.has(page)) {
-            collection = teacherPageAnno.get(page);
-            // https://qiita.com/koyopro/items/8faced246d0d5ed921e0
-            if (!collection.includes(annotation)) {
-                collection.push(annotation);
-            }
-        } else {
-            collection.push(annotation);
-        }
-         getPdfText(page).then(function (text) {
-            let font = getSubText(annotation, text);
-            if (!pageTrans) {
-                if (font) {
-                    sendObject(annotation,
-                            annotation.oCoords, page, ident, font, annotation.time);
-                }
-            }
-        });
-        teacherPageAnno.set(page, collection);
-    }
-    if (ident === 'delete') {
-        if (teacherPageAnno.has(page)) {
-            let pageData = teacherPageAnno.get(page);
-            if (pageData.includes(annotation)) {
-                getPdfText(page).then((text) => {
-                    let font = getSubText(annotation, text);
-                    if (font != null) {
-                        removeObject(annotation, annotation.oCoords, page, font, ident, annotation.time);
-                    } else {
-                        font = [];
-                        removeObject(annotation, annotation.oCoords, page, font, ident, annotation.time);
-                    }
-                })
-            }
-                let newReplayData = pageData.filter(data => {
-                ///https://marycore.jp/prog/js/array-equal/#JSON文字列による比較
-                // return JSON.stringify(annotation.path) !== JSON.stringify(data.path);
-                return annotation !== data;
-            });
-            teacherPageAnno.set(page, newReplayData); 
-        }
-    }
-}
-
-global.setPage = setPage;
 global.eraserMode = eraserMode;
 global.$f = $f;
-global.replaySet = replaySet;
-global.replayView = replayView;
-global.replayRemove = replayRemove;
-global.AnnotationSet = AnnotationSet;
 
 global.operator = operator;
+global.replayOperator = replayOperator;

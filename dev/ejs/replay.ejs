@@ -85,7 +85,7 @@
         //rangeのvalueはstring型
         timer.value = getNowTime(parseInt(this.value));
 
-        replayView(parseInt(this.value));
+        replayOperator.replayView(parseInt(this.value));
       }
       timer_range.oninput = function (e) {
         //rangeのvalueはstring型
@@ -95,7 +95,7 @@
       }
       timer.onchange = (e)=>{
         timer_range.value = Date.parse(e.target.value);
-        replayView(parseInt(Date.parse(e.target.value)));
+        replayOperator.replayView(parseInt(Date.parse(e.target.value)));
       }
       highlight.onclick = (e) =>{
         highlightReq();
