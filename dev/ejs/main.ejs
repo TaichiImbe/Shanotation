@@ -11,10 +11,10 @@
                             <div class="menuLayout">
                                 <% if (userName !== 'teacher') { %>
                                 <a href='/index?id=<%= userName %>&pdfname=<%= value %>'
-                                 class="btn btn-light round-circle-0" type="submit" name='pdfname'><%= value %></a>
+                                 type="submit" name='pdfname'><%= value %></a>
                                  <% }else{ %>
                                  <a href='/teacher?id=<%= userName %>&pdfname=<%= value %>'
-                                    class="btn btn-light round-circle-0" type="submit" name='pdfname'><%= value %></a>
+                                     type="submit" name='pdfname'><%= value %></a>
                                 <% } %>
                             </div>
                         <% }) ;%>
