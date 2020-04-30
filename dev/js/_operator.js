@@ -79,6 +79,9 @@ module.exports = class Operator {
         let data = this.pagesAnnotationsList.get(pageNum);
         if (data) {
             for (let t of data) {
+                t.opacity = 1;
+            }
+            for (let t of data) {
                 for (let tx of text) {
                     let height = tx.height;
                     if (t.top === tx.transform[5] - height &&
