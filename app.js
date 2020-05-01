@@ -132,7 +132,7 @@ io.sockets.on('connection', function (socket) {
             // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/includes
             if (parser.pathname.includes('/index')) {
                 fileio.fileWrite('analysdata.txt', name, data, color, pageNum, pdfName, 'insert', time);
-                mongodb.Insert('analys',[{userName:name,data:data,color:color,pageNum:pageNum,pdfName:pdfName,ident:'insert',time:time}]);
+                mongodb.Insert('analys',[{userName:name,data:data,data:data.path,color:color,pageNum:pageNum,pdfName:pdfName,ident:'insert',time:time}]);
             } else if (parser.pathname.includes('/replay')) {
                 fileio.fileWrite('replay.txt', name, data, color, pageNum, pdfName, 'insert', time);
             }
