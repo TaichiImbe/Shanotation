@@ -96,7 +96,7 @@ module.exports = class Operator {
                 data.push(makeTextHiglight(tx, '#fff', tx.opacity));
             }
         }
-        console.log(data);
+        // console.log(data);
         this.pagesAnnotationsList.set(pageNum, data);
     }
 

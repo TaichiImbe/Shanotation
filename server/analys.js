@@ -176,7 +176,7 @@ module.exports = {
                 }
             });
         });
-        console.log(map);
+        // console.log(map);
         //ip(ユーザ名)ごとに合計
         // map.forEach(element => {
         let count = new Map();

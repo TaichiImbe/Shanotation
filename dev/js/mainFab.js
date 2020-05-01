@@ -33,19 +33,19 @@ window.addEventListener('load', () => {
     Canvas.freeDrawingBrush.width = 5;
     Canvas.freeDrawingBrush.shadowBlur = 0;
     Canvas.hoverCursor = 'move';
-    console.log(Canvas);
+    // console.log(Canvas);
     Pen = new profile.Pencile(Canvas.freeDrawingBrush.color, Canvas.freeDrawingBrush.width, Canvas.freeDrawingBrush.shadowBlur);
     // }
 });
 
 Canvas.on('object:selected', function (e) {
-    console.log(e.target);
+    // console.log(e.target);
     let p = TransForm(e.target.ownMatrixCache.value);
-    console.log(p);
+    // console.log(p);
 });
 
 Canvas.on('selected:created', function (e) {
-    console.log(e);
+    // console.log(e);
 })
 
 
