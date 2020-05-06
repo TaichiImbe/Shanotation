@@ -10,13 +10,13 @@
         let config = request.response;
         socket = io.connect(config.address + ':' + config.port);
         socket.on('replaydata', (datas) => {
-            let splitdata = datas.split('\n');
+            // let splitdata = datas.split('\n');
             let list = [];
-            splitdata.forEach(element => {
+            datas.forEach(element => {
                 if (element !== '') {
-                    let splitElement = element.split(' ');
+                    // let splitElement = element.split(' ');
                     if(getUserName() !== 'teacher'){
-                    if (splitElement[0] === getUserName() && splitElement[4] === getPdfName()) {
+                    if (element.userName === getUserName() && element.pdfName === getPdfName()) {
                         // if(splitElement[0] === getUserName()){
 
                         // if (splitElement[1].slice(0, 1) === 'M') {
@@ -30,11 +30,11 @@
                         //     makeReplayData(list);
                         //     list = [];
                         // }
-                        replayOperator.makeReplayData(splitElement);
+                        replayOperator.makeReplayData(element);
                     }
                     }else{
-                        if(splitElement[4] === getPdfName()){
-                        replayOperator.makeReplayData(splitElement);
+                        if(element.pdfName === getPdfName()){
+                        replayOperator.makeReplayData(element);
                         }
                     }
                     // console.log(splitElement);

@@ -34,6 +34,7 @@ const userInfo = require('./server/router/userInfo');
 const annotationLog = require('./server/router/annotationLog');
 const logout = require('./server/router/logout');
 
+const until = require('./server/util/util');
 //express server
 const server = app.listen(port, function () {
     console.log('Node js is listening to PORT:' + server.address().port);
@@ -162,6 +163,7 @@ io.sockets.on('connection', function (socket) {
         let parser = new URL(socket.handshake.headers.referer);
             if (parser.pathname.includes('/index')) {
                 fileio.fileWrite('analysdata.txt', name, data, color, pageNum, pdfName, 'insert', time);
+                mongodb.Insert('analys',[{userName:name,data:data,path:data.path,color:color,pageNum:pageNum,pdfName:pdfName,ident:'insert',time:time}]);
             } else if (parser.pathname.includes('/replay')) {
                 fileio.fileWrite('replay.txt', name, data, color, pageNum, pdfName, 'insert', time);
             }
@@ -216,13 +218,21 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('getdata', (userName,pdfName,startTime,endTime,name) => {
         let datas = '';
+        const stTime = until.timeConvert(startTime);
+        const edTime = until.timeConvert(endTime);
         if (!name) {
-            datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime);
+            // datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime);
+            mongodb.Find('analys', { pdfName: pdfName,time:{"$gte":stTime,"$lte":edTime}}, (datas) => {
+                io.sockets.emit('replaydata', datas);
+            });
         } else {
-            datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime,name);
+            // datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime,name);
+            mongodb.Find('analys', { pdfName: pdfName,time:{"$gte":stTime,"$lte":edTime}}, (datas) => {
+                io.sockets.emit('replaydata', datas);
+            });
         }
         // datas = fileio.getData('replaydata.txt');
-        io.sockets.emit('replaydata', datas);
+        // io.sockets.emit('replaydata', datas);
         // fileio.getData('analysdata.txt').then((readData) => {
             // datas = readData;
             // console.log(datas);

@@ -12,42 +12,43 @@ module.exports = class ReplayOperator extends Operator {
      * @param {*} list
      */
     makeReplayData(list) {
+        console.log(list);
         let pathList = [];
-        let plist = list[1].split(',');
+        // let plist = list[1].split(',');
         const check = ((str) => {
             return str.match(/^[-|+]?[0-9]*\.[0-9]+$|^[+|-]?[0-9]+$/) ? true : false
         })
         let subList = [];
-        plist.forEach((path) => {
-            if (check(path)) {
-                subList.push(Number(path));
-            } else {
-                if (subList.length != 0) {
-                    pathList.push(subList);
-                }
-                subList = [];
-                subList.push(path);
-                // pathList.push(path);
-            }
-        })
-        if (subList.length != 0) {
-            pathList.push(subList);
-        }
+        // plist.forEach((path) => {
+        //     if (check(path)) {
+        //         subList.push(Number(path));
+        //     } else {
+        //         if (subList.length != 0) {
+        //             pathList.push(subList);
+        //         }
+        //         subList = [];
+        //         subList.push(path);
+        //         // pathList.push(path);
+        //     }
+        // })
+        // if (subList.length != 0) {
+        //     pathList.push(subList);
+        // }
         // pathList = plist;
-        let pageNum = Number(list[3]);
-        let data = makePath(pathList, list[2]);
-        let time = list[6] + " " + list[7];
-        data.userName = list[0];
-        data.time = time;
+        // let pageNum = Number(list[3]);
+        // let data = makePath(pathList, list[2]);
+        let data = makePath(list.path,list.color)
+        // let time = list[6] + " " + list[7];
+        data.userName = list.userName;
+        data.time = list.time;
         data.sendFlg = false;
         data.setCoords();
-        if (list[5] === 'insert') {
-            data.ident = 'insert';
+        data.ident = list.ident;
+        if (list.ident === 'insert') {
             // if (list[0][5] === 'insert') {
-            this.replaySet(data, pageNum);
+            this.replaySet( data,list.pageNum);
         } else {
-            data.ident = 'delete';
-            this.replayRemove(data, pageNum);
+            this.replayRemove(list.path, list.pageNum);
         }
     }
 
