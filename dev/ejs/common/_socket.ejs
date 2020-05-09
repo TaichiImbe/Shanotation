@@ -62,7 +62,7 @@
                 //     socket.emit('highlightReq',pageNum);    
                 // } , 2000)
                 
-                    console.log('req');
+                    // console.log('req');
                     make(pageNum,text);
                 }
             })
@@ -100,7 +100,7 @@
     }
 
     function removeObject(obj, oCoords, pageNum, text, ident, time) {
-        console.log(obj.stroke);
+        // console.log(obj.stroke);
         if(replayflag){
             if(getUserName() !== 'teacher'){
                 socket.emit('replayRemove', getUserName(), obj, obj.stroke, oCoords, pageNum, text, ident, getPdfName(), time);

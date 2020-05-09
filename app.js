@@ -227,7 +227,7 @@ io.sockets.on('connection', function (socket) {
             });
         } else {
             // datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime,name);
-            mongodb.Find('analys', { pdfName: pdfName,time:{"$gte":stTime,"$lte":edTime}}, (datas) => {
+            mongodb.Find('analys', {userName:userName, pdfName: pdfName,time:{"$gte":stTime,"$lte":edTime}}, (datas) => {
                 io.sockets.emit('replaydata', datas);
             });
         }

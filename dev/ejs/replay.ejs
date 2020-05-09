@@ -67,7 +67,7 @@
       */
       $f('getReplayDatas').addEventListener('click', (e) => {
         Canvas.isDrawingMode = false;
-        console.log(Date.parse($('#replay-start-time').val()));
+        // console.log(Date.parse($('#replay-start-time').val()));
         timer_range.min = parseInt(Date.parse(($('#replay-start-time').val())));
         timer_range.max = parseInt(Date.parse(($('#replay-end-time').val())));
 

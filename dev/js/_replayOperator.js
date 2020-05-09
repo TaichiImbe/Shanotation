@@ -12,7 +12,7 @@ module.exports = class ReplayOperator extends Operator {
      * @param {*} list
      */
     makeReplayData(list) {
-        console.log(list);
+        // console.log(list);
         let pathList = [];
         // let plist = list[1].split(',');
         const check = ((str) => {
@@ -48,7 +48,7 @@ module.exports = class ReplayOperator extends Operator {
             // if (list[0][5] === 'insert') {
             this.replaySet( data,list.pageNum);
         } else {
-            this.replayRemove(list.path, list.pageNum);
+            this.replayRemove(data, list.pageNum);
         }
     }
 

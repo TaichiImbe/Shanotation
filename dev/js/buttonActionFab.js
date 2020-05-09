@@ -23,7 +23,7 @@ let selectButton = $f('select'),
     pageMoveArea = $f('pageMove');
 
 pageMoveArea.addEventListener('keydown', event => {
-    console.log(event);
+    // console.log(event);
     if (event.key.search('[0-9]')) {
         return;
     }
