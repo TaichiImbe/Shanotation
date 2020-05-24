@@ -134,11 +134,11 @@ module.exports = {
                 // countList[i].color = colorVariation[Math.round(color)];
                 if (mylimit) {
                     // countList[i].color = getHeatMapColor(0, mylimit, countList[i].count);
-                            countList[i].color = '#FFF';
+                            countList[i].color = getHeatMapColor(0, mylimit, countList[i].count);
                             countList[i].opacity = getOpacityValue(0, mylimit, countList[i].count);
                 } else {
                     // countList[i].color = getHeatMapColor(0, userListSize, countList[i].count);
-                            countList[i].color = '#FFF';
+                            countList[i].color = getHeatMapColor(0, userListSize, countList[i].count);
                             countList[i].opacity = getOpacityValue(0, userListSize, countList[i].count);
                 }
                 list.push(countList[i]);

@@ -10,6 +10,9 @@ let pageNum = 1;
 let pdf = null;
 let _width = null
 // function pageload() {
+
+let pdfTextList = new Map();
+
 window.addEventListener('load', function () {
     var loadingTask = pdfjsLib.getDocument({
         url: url,
@@ -43,7 +46,28 @@ function getPdfPage() {
     return pdf.numPages;
 }
 
+function loadTextSet(pdf) {
+    return pdf.getPgae(pageNum).then((page) => {
+        let scale = 1;
+        page.getTextContent().then((textContent) => {
+            let viewport = page.getViewport({ scale: scale });
+            textContent.items.forEach(text => {
+                text.transform = pdfjsLib.Util.transform(viewport.transform, text.transform);
+                // console.log(text);
+                // console.log(text);
+            });
+            pdfTextList.set(pageNum, text);
+        })
+
+    })
+}
+
 function getPdfText(pageNum) {
+    if (pdfTextList.has(pageNum)) {
+        return new Promise((resolve,reject) => {
+            resolve(pdfTextList.get(pageNum));
+        });
+    }
     return pdf.getPage(pageNum).then(function (page) {
         let scale = 1;
         // if (page._pageInfo.view[2] * scale < 720) {
@@ -63,6 +87,7 @@ function getPdfText(pageNum) {
                 // console.log(text);
                 // console.log(text);
             });
+            pdfTextList.set(pageNum, textContent);
             return textContent;
         });
     });
