@@ -52,12 +52,16 @@
                 // console.log(data);
                 // make(data, oCoords,pageNum, identifier,text);
                 if(!replayflag){
-                make(pageNum, text);
+                    make(pageNum, text);
                 }
                 // Canvas.add(data);
             });
             socket.on('replayteacher',function(text,pageNum){
             if(replayflag){
+                beforeData = {
+                    pageNum : pageNum,
+                    text : text
+                }
                 // setInterval(()=>{
                 //     socket.emit('highlightReq',pageNum);    
                 // } , 2000)
@@ -141,6 +145,10 @@
     function teacherSelectData(text){
         socket.emit('teacherSelection',getUserName(),pageNum,text,getPdfName);
     }
+
+    // function changeSystemView(){
+    //     // socket.emit('sendRequestAnalys',pageNum);
+    // }
 
 
 </script>

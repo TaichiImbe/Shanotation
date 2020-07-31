@@ -119,9 +119,9 @@ Canvas.on('object:added', function (e) {
                 }
             } else {
                 if (Canvas.isDrawingMode) {
-                        teacherFilter.setFilter(font, pageNum);
-                    }
+                    teacherFilter.setFilter(font, pageNum);
                 }
+            }
         });
     }
 });
@@ -195,49 +195,49 @@ function getSubText(object, text) {
                 }
             }
             // chartList = list.filter(t => oCoords.bl.corner.bl.x <= t.transform[4] && t.transform[4]<= oCoords.br.corner.br.x) 
-        //     let transform = str.transform;
-        //     // console.log(text);
-        //     // console.log(str);
-        //     // let t4 = text.transform[4];
-        //     let div = text.width / (text.str.length);
-        //     let t4 = text.transform[4];
-        //     // console.log(div);
-        //     for (i = 0; i < text.str.length; i++) {
-        //         console.log(t4);
-        //         if (
-        //             t4 < oCoords.bl.x && t4 + text.height >= oCoords.bl.x
-        //             || t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
-        //             /*   正規表現 https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String
-        //                 半角文字のみ取得 http://2011428.blog.fc2.com/blog-entry-79.html
-        //             */
-        //             if (text.height > text.width) {
-        //                 charList.push({
-        //                     dir: text.dir,
-        //                     fontName: text.fontName,
-        //                     height: text.height,
-        //                     width: text.width,
-        //                     transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
-        //                     str: text.str[i]
-        //                 });
-        //             }
-        //             else {
-        //                 charList.push({
-        //                     dir: text.dir,
-        //                     fontName: text.fontName,
-        //                     height: text.height,
-        //                     width: div,
-        //                     transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
-        //                     str: text.str[i]
-        //                 });
-        //             }
+            //     let transform = str.transform;
+            //     // console.log(text);
+            //     // console.log(str);
+            //     // let t4 = text.transform[4];
+            //     let div = text.width / (text.str.length);
+            //     let t4 = text.transform[4];
+            //     // console.log(div);
+            //     for (i = 0; i < text.str.length; i++) {
+            //         console.log(t4);
+            //         if (
+            //             t4 < oCoords.bl.x && t4 + text.height >= oCoords.bl.x
+            //             || t4 >= oCoords.bl.x && oCoords.br.x >= t4) {
+            //             /*   正規表現 https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String
+            //                 半角文字のみ取得 http://2011428.blog.fc2.com/blog-entry-79.html
+            //             */
+            //             if (text.height > text.width) {
+            //                 charList.push({
+            //                     dir: text.dir,
+            //                     fontName: text.fontName,
+            //                     height: text.height,
+            //                     width: text.width,
+            //                     transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
+            //                     str: text.str[i]
+            //                 });
+            //             }
+            //             else {
+            //                 charList.push({
+            //                     dir: text.dir,
+            //                     fontName: text.fontName,
+            //                     height: text.height,
+            //                     width: div,
+            //                     transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
+            //                     str: text.str[i]
+            //                 });
+            //             }
 
-        //         }
-        //         if (t4 > oCoords.br.x) {
-        //             break;
-        //         }
-        //         // t4 += text.height;
-        //         t4 += div;
-        //     }
+            //         }
+            //         if (t4 > oCoords.br.x) {
+            //             break;
+            //         }
+            //         // t4 += text.height;
+            //         t4 += div;
+            //     }
         });
         // console.log(charList);
     } else {
@@ -357,25 +357,27 @@ function make(pageNum, text) {
     //     line = makeLine(data);
     // }
     // Canvas.freeDrawingBrush = false;
-    // if (opacityFlag) {
+    console.log(text);
+    if (opacityFlag) {
         operator.opacityChange(pageNum, text);
-    // } else {
-    //     if (Array.isArray(text)) {
-    //         let highLightList = [];
-    //     text.forEach(textinfo => {
-    //         if (teacherFilter.checkFilter(textinfo, pageNum)) {
-    //             // highLightList.push(makeTextHiglight(textinfo, textinfo.color));
-    //             highLightList.push(makeTextHiglight(textinfo, textinfo.color, textinfo.opacity));
-    //         }
-    //     });
-    //     operator.setPageAnnotation(highLightList, pageNum);
-    // } else if (text != null) {
-    //     // line = makeTextHiglight(text.text, text.color);
-    //     line = makeTextHiglight(text.text, text.color, text.opacity);
-    //     if (line !== null) {
-    //         operator.setPageAnnotation(line, pageNum);
-    //     }
-    // }
+    } else {
+        if (Array.isArray(text)) {
+            let highLightList = [];
+            text.forEach(textinfo => {
+                // if (teacherFilter.checkFilter(textinfo, pageNum)) {
+                    // highLightList.push(makeTextHiglight(textinfo, textinfo.color));
+                    highLightList.push(makeTextHiglight(textinfo, textinfo.color));
+                // }
+            });
+            operator.setPageAnnotation(highLightList, pageNum);
+        } else if (text != null) {
+            // line = makeTextHiglight(text.text, text.color);
+            line = makeTextHiglight(text.text, text.color, text.opacity);
+            if (line !== null) {
+                operator.setPageAnnotation(line, pageNum);
+            }
+        }
+    }
 
     // }
     operator.setCanvasAnnotation(global.pageNum);

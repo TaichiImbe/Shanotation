@@ -277,6 +277,11 @@ io.sockets.on('connection', function (socket) {
         // analys.textset(text,pageNum);
     })
 
+    socket.on('sendRequestAnalys', (pageNum) => {
+        let ptext = analys.analys(pageNum, userList.size);
+        io.sockets.emit('replayteacher', ptext, pageNum);
+    })
+
     // socket.on('disconnect', (reason) => {
     //     let parser = new URL(socket.handshake.headers.referer);
     //     mongodb.FindOne('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {

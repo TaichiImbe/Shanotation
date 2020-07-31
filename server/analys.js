@@ -146,9 +146,10 @@ module.exports = {
             }
             // console.log(list);
             return list;
-        }
+        } 
 
         }
+        return [];
     },
     /**
  * 文字列ごとに色を決める

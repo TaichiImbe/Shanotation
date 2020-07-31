@@ -44,6 +44,7 @@ module.exports = class Operator {
 
     splitText(text) {
         let charList = [];
+        let div = text.width / text.str.length;
         let t4 = text.transform[4];
         for (let i = 0; i < text.str.length; i++) {
             /*   正規表現 https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String
@@ -58,18 +59,19 @@ module.exports = class Operator {
                     transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
                     str: text.str[i]
                 });
+                t4 += text.width;
             }
             else {
                 charList.push({
                     dir: text.dir,
                     fontName: text.fontName,
                     height: text.height,
-                    width: text.height,
+                    width: div,
                     transform: [text.transform[0], text.transform[1], text.transform[2], text.transform[3], t4, text.transform[5]],
                     str: text.str[i]
                 });
+                t4 += div;
             }
-            t4 += text.height;
         }
         return charList;
     }
@@ -107,22 +109,29 @@ module.exports = class Operator {
             let objectList = Canvas.getObjects();
             if (objectList.length === 0) {
                 for (let pageNum = 1; pageNum <= pdfNumPages; pageNum++) {
-                    getPdfText(pageNum).then((textArray) => {
-
-                        const highLightList = []
-                        for (let text of textArray.items) {
-                            let charList = this.splitText(text);
-                            for (let char of charList) {
-                                highLightList.push(makeTextHiglight(char, '#FFF', 1));
-                            }
-                        }
-                        this.setPageAnnotation(highLightList, pageNum);
-                        this.setCanvasAnnotation(global.pageNum);
-                    })
-
+                    this.pageFilter(pageNum);
                 }
             }
         }
+    }
+
+    pageFilter(pageNum) {
+        return new Promise((resolove, reject) => {
+            getPdfText(pageNum).then((textArray) => {
+
+                const highLightList = []
+                for (let text of textArray.items) {
+                    let charList = this.splitText(text);
+                    for (let char of charList) {
+                        highLightList.push(makeTextHiglight(char, '#FFF', 1));
+                    }
+                }
+                this.setPageAnnotation(highLightList, pageNum);
+                this.setCanvasAnnotation(global.pageNum);
+                resolove();
+            })
+
+        })
     }
 
     setCanvasAnnotation(pageNum) {
@@ -136,5 +145,16 @@ module.exports = class Operator {
             });
         }
 
+    }
+
+    canvasClear(pageNum) {
+        Canvas.clear();
+        this.annotationListClear(pageNum);
+    }
+
+    annotationListClear(pageNum) {
+        if (this.pagesAnnotationsList.has(pageNum)) {
+            this.pagesAnnotationsList.set(pageNum, [])
+        }
     }
 }

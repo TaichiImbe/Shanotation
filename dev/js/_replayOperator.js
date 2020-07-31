@@ -69,8 +69,12 @@ module.exports = class ReplayOperator extends Operator {
 
     replayView(time) {
         global.rmflag = true;
-        this.replayDataList.forEach((value, key) => {
-            value.forEach(annotation => {
+        // this.replayDataList.forEach((value, key) => {
+        let key = global.pageNum;
+        let value = this.replayDataList.get(global.pageNum)
+        // this.replayDataList.forEach((value, key) => {
+            for(let annotation of value){
+            // value.forEach(annotation => {
                 let p = Date.parse(annotation.time);
                 if (parseInt(Date.parse(annotation.time)) < time) {
                     if (getUserName() !== 'teacher') {
@@ -79,6 +83,7 @@ module.exports = class ReplayOperator extends Operator {
                         } else {
                             this.removeAnnotation(annotation, key);
                         }
+                        this.setCanvasAnnotation(global.pageNum);
                     } else {
                         if (!annotation.sendFlg) {
                             annotation.sendFlg = true;
@@ -100,10 +105,10 @@ module.exports = class ReplayOperator extends Operator {
                         this.userHigh(annotation, key, 'delete');
                     }
                 }
-            })
-        });
+            }
+        // });
         global.rmflag = false;
-        this.setCanvasAnnotation(pageNum);
+        // this.setCanvasAnnotation(pageNum);
     }
 
     replayRemove(data, pageNum) {
