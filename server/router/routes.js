@@ -1,12 +1,15 @@
 let app = require('express');
 let router = app.Router();
 let fs = require('fs');
+const mongodb = require('../mongodb')
 
 router.route('/')
     .get((req, res, next) => {
-        // let pdfName = '印部_学会発表_Slide.pdf';
-        // res.redirect('./index?id='+req.sessionID+'&pdfname='+pdfName);
-        res.redirect('./login');
+       	let pdfName = '印部_学会発表_Slide.pdf';
+	mongodb.Insert('activeUser',[{userName:req.sessionID}],(docs) =>{
+        	res.redirect('./index?id='+req.sessionID+'&pdfname='+pdfName);
+	});
+        //res.redirect('./login');
         // res.render('./login');
     })
     .post((req, res, next) => {
