@@ -2,7 +2,8 @@ let app = require('express');
 let router = app.Router();
 let fs = require('fs');
 
-const webconfig = require('./config/webconfig.json');
+const webconfig = require('../../config/webconfig.json');
+
 const mongodb = require('../mongodb')
 
 router.route('/')
