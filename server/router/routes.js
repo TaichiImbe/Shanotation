@@ -1,11 +1,13 @@
 let app = require('express');
 let router = app.Router();
 let fs = require('fs');
+
+const webconfig = require('./config/webconfig.json');
 const mongodb = require('../mongodb')
 
 router.route('/')
     .get((req, res, next) => {
-       	let pdfName = '印部_学会発表_Slide.pdf';
+       	let pdfName = webconfig.pdfName;
 	mongodb.Insert('activeUser',[{userName:req.sessionID}],(docs) =>{
         	res.redirect('./index?id='+req.sessionID+'&pdfname='+pdfName);
 	});
