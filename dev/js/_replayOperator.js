@@ -108,7 +108,9 @@ module.exports = class ReplayOperator extends Operator {
             }
         // });
         global.rmflag = false;
-        // this.setCanvasAnnotation(pageNum);
+        if (getUserName() !== 'teacher') {
+            this.setCanvasAnnotation(pageNum);
+        }
     }
 
     replayRemove(data, pageNum) {
