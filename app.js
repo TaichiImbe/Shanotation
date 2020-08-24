@@ -69,7 +69,7 @@ app.use('/views', express.static(__dirname + '/views'));
 app.use('/css', express.static(__dirname + '/views/css'));
 
 // webconfig path
-app.use('/config',express.static(__dirname + '/config'))
+app.use('/config', express.static(__dirname + '/config'))
 app.set('view engine', 'ejs');
 app.use(route);
 app.use(main);
@@ -92,7 +92,7 @@ app.get('/pdf', function (req, res, next) {
 });
 
 const mongourl = webconfig.mongoaddress;
-mongodb.Connect(mongourl,'testdb');
+mongodb.Connect(mongourl, 'testdb');
 
 //login userList 
 let userList = new Map();
@@ -101,21 +101,26 @@ let userList = new Map();
 io = socketIO.listen(server);
 
 io.sockets.on('connection', function (socket) {
-    let parser = new URL(socket.handshake.headers.referer);
-    console.log(parser.searchParams.get('id'));
     try {
-        mongodb.Find('activeUser', { "userName": parser.searchParams.get('id') }, (docs) => {
-            if (docs.length === 0) {
-                mongodb.Insert('activeUser', [{userName:parser.searchParams.get('id')}], (docs) => {
-                    console.log('Insert');
-                })
-            }
+        let parser = new URL(socket.handshake.headers.referer);
+        console.log(parser.searchParams.get('id'));
+        try {
+            mongodb.Find('activeUser', { "userName": parser.searchParams.get('id') }, (docs) => {
+                if (docs.length === 0) {
+                    mongodb.Insert('activeUser', [{ userName: parser.searchParams.get('id') }], (docs) => {
+                        console.log('Insert');
+                    })
+                }
 
-        })
-    } catch (error) {
-        console.log(error);
-    } finally {
+            })
+        } catch (error) {
+            console.log(error);
+        } finally {
 
+        }
+    } catch (err) {
+        console.log(socket.handshake.headers);
+        throw (err)
     }
     socket.on('massage', function (data) {
         console.log('massage');
@@ -131,47 +136,47 @@ io.sockets.on('connection', function (socket) {
         // if (!userList.has(name) && parser.pathname.includes('/index')) {
         //     userList.set(name, name);
         // }
-        mongodb.Find("activeUser", ({"userName":{"$ne":"teacher"}}), (docs) =>{
-        if (data.type === 'path') {
-            let parser = new URL(socket.handshake.headers.referer);
-            var path = data.path;
-            // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/includes
-            if (parser.pathname.includes('/index')) {
-                fileio.fileWrite('analysdata.txt', name, data, color, pageNum, pdfName, 'insert', time);
-                mongodb.Insert('analys',[{userName:name,data:data,path:data.path,color:color,pageNum:pageNum,pdfName:pdfName,ident:'insert',time:time}]);
-            } else if (parser.pathname.includes('/replay')) {
-                fileio.fileWrite('replay.txt', name, data, color, pageNum, pdfName, 'insert', time);
-            }
-            analys.dataset(name, data, oCoords, pageNum, ident, text);
-            // console.log(userList);
-            // console.log(userList.size);
-            let ptext = analys.analys(pageNum, docs.length);
-            // let ptext = analys.analysOne(pageNum,text,userList.size);
-            if (ptext == null) {
-                console.log('err');
-            }
-            if (name !== 'teacher') {
+        mongodb.Find("activeUser", ({ "userName": { "$ne": "teacher" } }), (docs) => {
+            if (data.type === 'path') {
+                let parser = new URL(socket.handshake.headers.referer);
+                var path = data.path;
+                // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/String/includes
                 if (parser.pathname.includes('/index')) {
-                    io.sockets.emit('teacher', ptext, pageNum);
+                    fileio.fileWrite('analysdata.txt', name, data, color, pageNum, pdfName, 'insert', time);
+                    mongodb.Insert('analys', [{ userName: name, data: data, path: data.path, color: color, pageNum: pageNum, pdfName: pdfName, ident: 'insert', time: time }]);
                 } else if (parser.pathname.includes('/replay')) {
-                    io.sockets.emit('replayteacher', ptext, pageNum); 
+                    fileio.fileWrite('replay.txt', name, data, color, pageNum, pdfName, 'insert', time);
                 }
+                analys.dataset(name, data, oCoords, pageNum, ident, text);
+                // console.log(userList);
+                // console.log(userList.size);
+                let ptext = analys.analys(pageNum, docs.length);
+                // let ptext = analys.analysOne(pageNum,text,userList.size);
+                if (ptext == null) {
+                    console.log('err');
+                }
+                if (name !== 'teacher') {
+                    if (parser.pathname.includes('/index')) {
+                        io.sockets.emit('teacher', ptext, pageNum);
+                    } else if (parser.pathname.includes('/replay')) {
+                        io.sockets.emit('replayteacher', ptext, pageNum);
+                    }
+                }
+                // console.log(ptext);
+            } else {
+                // console.log(data);
             }
-            // console.log(ptext);
-        } else {
-            // console.log(data);
-        }
         })
     });
 
     socket.on('annotation', (name, data, color, pageNum, pdfName, time) => {
         let parser = new URL(socket.handshake.headers.referer);
-            if (parser.pathname.includes('/index')) {
-                fileio.fileWrite('analysdata.txt', name, data, color, pageNum, pdfName, 'insert', time);
-                mongodb.Insert('analys',[{userName:name,data:data,path:data.path,color:color,pageNum:pageNum,pdfName:pdfName,ident:'insert',time:time}]);
-            } else if (parser.pathname.includes('/replay')) {
-                fileio.fileWrite('replay.txt', name, data, color, pageNum, pdfName, 'insert', time);
-            }
+        if (parser.pathname.includes('/index')) {
+            fileio.fileWrite('analysdata.txt', name, data, color, pageNum, pdfName, 'insert', time);
+            mongodb.Insert('analys', [{ userName: name, data: data, path: data.path, color: color, pageNum: pageNum, pdfName: pdfName, ident: 'insert', time: time }]);
+        } else if (parser.pathname.includes('/replay')) {
+            fileio.fileWrite('replay.txt', name, data, color, pageNum, pdfName, 'insert', time);
+        }
     })
 
     socket.on('canvas', function (canvas) {
@@ -183,24 +188,24 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('remove', function (name, obj, color, oCoords, pageNum, text, ident, pdfName, time) {
-        mongodb.Find("activeUser", ({"userName":{"$ne":"teacher"}}), (docs) => {
+        mongodb.Find("activeUser", ({ "userName": { "$ne": "teacher" } }), (docs) => {
 
-        let parser = new URL(socket.handshake.headers.referer);
-        if (parser.pathname.includes('/index')) {
-            fileio.fileWrite('removedata.txt', name, obj, color, pageNum, pdfName, 'delete', time);
-            mongodb.Insert('analys',[{userName:name,data:obj,path:obj.path,color:color,pageNum:pageNum,pdfName:pdfName,ident:'delete',time:time}]);
-        }else if (parser.pathname.includes('/replay')){
-            fileio.fileWrite('replay.txt', name, obj, color, pageNum, pdfName, 'delete', time);
-        }
-        analys.dataRemove(name, obj, oCoords, pageNum, text);
-        let ptext = analys.analys(pageNum,docs.length);
-        if (name !== 'teacher') {
+            let parser = new URL(socket.handshake.headers.referer);
             if (parser.pathname.includes('/index')) {
-                io.sockets.emit('teacher', ptext, pageNum);
+                fileio.fileWrite('removedata.txt', name, obj, color, pageNum, pdfName, 'delete', time);
+                mongodb.Insert('analys', [{ userName: name, data: obj, path: obj.path, color: color, pageNum: pageNum, pdfName: pdfName, ident: 'delete', time: time }]);
             } else if (parser.pathname.includes('/replay')) {
-                io.sockets.emit('replayteacher', ptext, pageNum); 
+                fileio.fileWrite('replay.txt', name, obj, color, pageNum, pdfName, 'delete', time);
             }
-        }
+            analys.dataRemove(name, obj, oCoords, pageNum, text);
+            let ptext = analys.analys(pageNum, docs.length);
+            if (name !== 'teacher') {
+                if (parser.pathname.includes('/index')) {
+                    io.sockets.emit('teacher', ptext, pageNum);
+                } else if (parser.pathname.includes('/replay')) {
+                    io.sockets.emit('replayteacher', ptext, pageNum);
+                }
+            }
         })
     });
 
@@ -215,39 +220,39 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
-    socket.on('limit', function (limit,pageNum) {
+    socket.on('limit', function (limit, pageNum) {
         analys.setLimit(limit);
-        let ptext = analys.analys(pageNum,userList.size);
-        io.sockets.emit('limit_set_teacher',pageNum,ptext);
+        let ptext = analys.analys(pageNum, userList.size);
+        io.sockets.emit('limit_set_teacher', pageNum, ptext);
     });
 
-    socket.on('getdata', (userName,pdfName,startTime,endTime,name) => {
+    socket.on('getdata', (userName, pdfName, startTime, endTime, name) => {
         let datas = '';
         const stTime = until.timeConvert(startTime);
         const edTime = until.timeConvert(endTime);
         if (!name) {
             // datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime);
-            mongodb.Find('analys', { pdfName: pdfName,time:{"$gte":stTime,"$lte":edTime}}, (datas) => {
+            mongodb.Find('analys', { pdfName: pdfName, time: { "$gte": stTime, "$lte": edTime } }, (datas) => {
                 io.sockets.emit('replaydata', datas);
             });
         } else {
             // datas = fileio.getData('analysdata.txt',userName,pdfName,startTime,endTime,name);
-            mongodb.Find('analys', {userName:userName, pdfName: pdfName,time:{"$gte":stTime,"$lte":edTime}}, (datas) => {
+            mongodb.Find('analys', { userName: userName, pdfName: pdfName, time: { "$gte": stTime, "$lte": edTime } }, (datas) => {
                 io.sockets.emit('replaydata', datas);
             });
         }
         // datas = fileio.getData('replaydata.txt');
         // io.sockets.emit('replaydata', datas);
         // fileio.getData('analysdata.txt').then((readData) => {
-            // datas = readData;
-            // console.log(datas);
+        // datas = readData;
+        // console.log(datas);
         // })
 
     })
 
     socket.on('highlightReq', (pageNum) => {
         let ptext = analys.analys(pageNum, userList.size);
-        io.sockets.emit('replayteacher', ptext,pageNum);
+        io.sockets.emit('replayteacher', ptext, pageNum);
     })
 
     socket.on('pageTrans', (userName, ident, pageNum, pdfName, time) => {
@@ -258,26 +263,27 @@ io.sockets.on('connection', function (socket) {
     socket.on('replayData', (name, data, color, oCoords, pageNum, ident, text, pdfName, time) => {
         if (!userList.has(name)) {
             userList.set(name, name);
+            console.log(userList)
         }
         analys.dataset(name, data, oCoords, pageNum, ident, text);
-            let ptext = analys.analys(pageNum, userList.size);
-            if (ptext == null) {
-                console.log('err');
-            }
+        let ptext = analys.analys(pageNum, userList.size);
+        if (ptext == null) {
+            console.log('err');
+        }
         // if (name != teacher) {
-            io.sockets.emit('replayteacher', ptext, pageNum);
+        io.sockets.emit('replayteacher', ptext, pageNum);
         // }
-            
+
     });
     socket.on('replayRemove', (name, obj, color, oCoords, pageNum, text, ident, pdfName, time) => {
         analys.dataRemove(name, obj, oCoords, pageNum, text);
-        let ptext = analys.analys(pageNum,userList.size);
+        let ptext = analys.analys(pageNum, userList.size);
         // if (name != 'teacher') {
-                io.sockets.emit('replayteacher', ptext, pageNum); 
+        io.sockets.emit('replayteacher', ptext, pageNum);
         // }
     })
 
-    socket.on('teacherSelection',(name,pageNum,text,pdfName)=> {
+    socket.on('teacherSelection', (name, pageNum, text, pdfName) => {
         // analys.setTeacherSelection(true);
         // analys.textset(text,pageNum);
     })
@@ -291,7 +297,7 @@ io.sockets.on('connection', function (socket) {
         let parser = new URL(socket.handshake.headers.referer);
         mongodb.FindOne('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
             try {
-                mongodb.Insert('userLog', [{ userName:docs.userName,time:docs.time }], (docs) => {
+                mongodb.Insert('userLog', [{ userName: docs.userName, time: docs.time }], (docs) => {
 
                 });
                 mongodb.Delete('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
@@ -307,9 +313,9 @@ io.sockets.on('connection', function (socket) {
                     // });
                 });
             } catch (error) {
-                console.log(error); 
+                console.log(error);
             } finally {
-                
+
             }
         })
     })
