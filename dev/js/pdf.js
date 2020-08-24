@@ -37,7 +37,7 @@ function pageRender(pageNum) {
     // console.log(PDFJS.cMapUrl);
     return new Promise(function () {
 
-        pdf.getPage(pageNum).then((page) => _pageRender(page));
+        return pdf.getPage(pageNum).then((page) => _pageRender(page));
     })
 }
 

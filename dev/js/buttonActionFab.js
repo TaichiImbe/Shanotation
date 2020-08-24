@@ -68,6 +68,9 @@ prevButton.onclick = function () {
     sendTrans('prev', pageT);
     operator.setCanvasAnnotation(pageNum)
     pageRender(pageNum).then(function () {
+        if (replayflag) {
+            replayChangeViewSend();
+        }
     });
     // pageMoveArea.value = pageNum;
     pageMoveArea.textContent = pageNum;
@@ -86,6 +89,9 @@ nextButton.onclick = function () {
     sendTrans('next', pageT);
     operator.setCanvasAnnotation(pageNum)
     pageRender(pageNum).then(function () {
+        if (replayflag) {
+            replayChangeViewSend();
+        }
     });
     pageMoveArea.textContent = pageNum;
     // eraserButton.onclick();
