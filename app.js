@@ -119,8 +119,10 @@ io.sockets.on('connection', function (socket) {
 
         }
     } catch (err) {
-        console.log(socket.handshake.headers);
-        throw (err)
+        console.error(socket.handshake);
+        console.error(socket.handshake.headers);
+        console.error(err);
+        // throw (err)
     }
     socket.on('massage', function (data) {
         console.log('massage');
