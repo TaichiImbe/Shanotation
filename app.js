@@ -122,7 +122,7 @@ try {
             }
         } catch (err) {
             console.error(`erro${socket.handshake}`);
-            console.error(`error${ socket.handshake.headers }`);
+            console.error(`error${socket.handshake.headers}`);
             console.error(`error${err}`);
             // throw (err)
         }
@@ -298,30 +298,37 @@ try {
         })
 
         socket.on('disconnect', (reason) => {
-            let parser = new URL(socket.handshake.headers.referer);
-            mongodb.FindOne('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
-                try {
-                    mongodb.Insert('userLog', [{ userName: docs.userName, time: docs.time }], (docs) => {
+            try {
+                let parser = new URL(socket.handshake.headers.referer);
+                mongodb.FindOne('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
+                    try {
+                        mongodb.Insert('userLog', [{ userName: docs.userName, time: docs.time }], (docs) => {
 
-                    });
-                    mongodb.Delete('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
-                        console.log(parser.searchParams.get('id'));
-                        console.log('disconnect');
-                        socket.disconnect(true);
+                        });
+                        mongodb.Delete('activeUser', { userName: parser.searchParams.get('id') }, (docs) => {
+                            console.log(parser.searchParams.get('id'));
+                            console.log('disconnect');
+                            socket.disconnect(true);
 
-                        // mongodb.Find('activeUser', { }, (docs) => {
-                        //     if (docs.length === 0) {
-                        //         //分析用の蓄積データを削除する
-                        //     }
+                            // mongodb.Find('activeUser', { }, (docs) => {
+                            //     if (docs.length === 0) {
+                            //         //分析用の蓄積データを削除する
+                            //     }
 
-                        // });
-                    });
-                } catch (error) {
-                    console.log(error);
-                } finally {
+                            // });
+                        });
+                    } catch (error) {
+                        console.log(error);
+                    } finally {
 
-                }
-            })
+                    }
+                })
+
+            } catch (e) {
+                console.error(`erro${socket.handshake}`);
+                console.error(`error${socket.handshake.headers}`);
+                console.error(`error${err}`);
+            }
         })
     });
 } catch (err) {
