@@ -9,6 +9,12 @@
     request.onload = function () {
         let config = request.response;
         socket = io.connect(config.address + ':' + config.port);
+        socket.on('mecab_word',(query_list,word_list) =>{
+            data_convert(query_list,word_list)
+            // for(let word of word_list){
+            //     console.log(word);
+            // }
+        })
         socket.on('replaydata', (datas) => {
             // let splitdata = datas.split('\n');
             let list = [];

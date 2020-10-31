@@ -35,6 +35,9 @@ const annotationLog = require('./server/router/annotationLog');
 const logout = require('./server/router/logout');
 
 const until = require('./server/util/util');
+
+const meacbwrapper = require('./mecab/mecabModule');
+const mecabModule = require('./mecab/mecabModule');
 //express server
 const server = app.listen(port, function () {
     console.log('Node js is listening to PORT:' + server.address().port);
@@ -92,7 +95,7 @@ app.get('/pdf', function (req, res, next) {
 });
 
 const mongourl = webconfig.mongoaddress;
-mongodb.Connect(mongourl, 'testdb');
+mongodb.Connect(mongourl, 'tf_idf');
 
 //login userList 
 let userList = new Map();
@@ -153,6 +156,29 @@ try {
                     }
                     analys.dataset(name, data, oCoords, pageNum, ident, text);
                     // console.log(userList);
+                    let query_text = ""
+                    for(let l of text){
+                        console.log(l)
+                        query_text += l.str;
+                    }
+                    mecabModule.Object_parse(query_text).then((mecab_data) => {
+                        console.log(mecab_data);
+                        let query_list = []
+                        for (let as of mecab_data) {
+                            let a = {
+                                'term':as.kanji
+                            }
+                            query_list.push(a);
+                        }
+                        if (query_list.length > 0) {
+                            mongodb.Find('test', ({ $or: query_list}), (docs) => {
+                                console.log(docs);
+                                io.sockets.emit('mecab_word',query_list,docs); 
+                            })
+
+                        }
+                    })
+
                     // console.log(userList.size);
                     let ptext = analys.analys(pageNum, docs.length);
                     // let ptext = analys.analysOne(pageNum,text,userList.size);

@@ -1,0 +1,48 @@
+<!-- <section class='container-fluid'> <div class='col-sm-6 col-md-8'> -->
+        <div id="tf_idf_list"></div>
+<!-- </div> </section> -->
+
+<script>
+    function data_convert(query_list,data_list){
+        document_div = document.getElementById('tf_idf_list')
+
+        for (let query of query_list){
+            console.log(query);
+            document_div.innerHTML += query.term + '<br>';
+            let array = []
+            for(let data of data_list){
+                if(query.term === data.term){
+                    array.push(data);
+                }
+            }
+            console.log(array);
+            let new_array = array.sort(function(a,b){
+                // console.log(b.tf_idf < a.tf_idf);
+                if(b.c_tf_idf > a.c_tf_idf){
+                    return 1;
+                }
+                else if(b.c_tf_idf < a.c_tf_idf){
+                    return -1;
+                }
+                else{
+                    return 0;
+                }
+                // return b.tf_idf-a.tf_idf;
+            });
+            console.log(array);
+            // console.log(new_array);
+            // for (let pdf in array){
+            for (let i = 0; i < 3; i++){
+                // console.log(pdf.pdf_name);
+                document_div.innerHTML += array[i].pdf_name + '<br>';
+                // document_div.innerHTML += '<a href=/index?id='+getUserName()+'&pdfname='+pdf.pdf_name+'type="submit" name='+pdf.pdf_name+'></a><br>'
+            }
+        }
+        // for(let data of data_list){
+        //     if(getPdfName() !== data.pdf_name){
+        //         document_div.innerHTML += data.term + '<br>';
+        //         document_div.innerHTML += data.pdf_name + '<br>';
+        //     }
+        // }
+    }
+</script>
